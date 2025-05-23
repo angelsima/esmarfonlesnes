@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Matrix en blanco y negro</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: white;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<canvas id="matrixCanvas"></canvas>
+
+<script>
+  const canvas = document.getElementById('matrixCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Ajustar el canvas al tamaño de la pantalla
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  // Texto base (puedes poner tu propio Lorem Ipsum u otro texto)
+  const texto = "¿Quién soy?,
+pregunto a mis dispositivos.
+
+Tienen la respuesta completa.
+Me la niegan.
+Me lanzan migas.
+Me dicen qué me gusta,
+qué me debe gustar.
+En sus sugerencias
+me oriento.
+¡Oh, gran Fón!
+predice, te lo ruego,
+quién seré.
+compárteme 
+quien soy.
+".split(" ");
+
+  const fontSize = 18;
+  const columns = Math.floor(canvas.width / fontSize);
+
+  // Array con la posición Y actual de cada columna
+  const drops = Array(columns).fill(1);
+
+  function drawMatrix() {
+    // Fondo blanco con transparencia para simular "borrado"
+    ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#111"; // Texto negro
+    ctx.font = fontSize + "px serif";
+
+    for (let i = 0; i < drops.length; i++) {
+      const textoAleatorio = texto[Math.floor(Math.random() * texto.length)];
+      ctx.fillText(textoAleatorio, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+
+      drops[i]++;
+    }
+  }
+
+  setInterval(drawMatrix, 50);
+
+  // Redimensionar al cambiar tamaño de ventana
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
+</body>
+</html>
