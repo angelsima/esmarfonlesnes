@@ -5,21 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Texto incompleto</title>
   <style>
+    <style>
     html, body {
-       max-width: 600px;
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow: hidden; /* ← esto bloquea el scroll */
+      width: 100%;
       font-family: serif;
       background: #f8f8f8;
       color: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .contenido {
+      max-width: 600px;
       padding: 2em;
-      height: 200vh; /* simula un texto larguísimo */
+      height: 90vh;
+      overflow: hidden;
       box-sizing: border-box;
+      text-align: justify;
     }
 
     .filtro {
@@ -27,7 +33,7 @@
       bottom: 0;
       height: 4em;
       width: 100%;
-      background: linear-gradient(to bottom, transparent, #f8f8f8); 
+      background: linear-gradient(to bottom, transparent, #f8f8f8);
       pointer-events: none;
     }
   </style>
