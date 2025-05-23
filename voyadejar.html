@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Prueba de contraseña</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fafafa;
+      font-family: sans-serif;
+    }
+    .container {
+      text-align: center;
+      padding: 2em;
+      border: 1px solid #ccc;
+      border-radius: 0.5em;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      background: white;
+    }
+    .container p {
+      margin-bottom: 1em;
+    }
+    .container input {
+      padding: 0.5em;
+      font-size: 1em;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 1em;
+    }
+    .container button {
+      padding: 0.5em 1em;
+      font-size: 1em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p>[Escribe en el cuadro la frase “Voy a dejar el teléfono por hoy”]</p>
+    <input id="pass" type="password" placeholder="••••••••••••••••••" />
+    <br>
+    <button id="submit">Enviar</button>
+    <!-- Audio: asegúrate de tener coin.mp3 junto a este HTML -->
+    <audio id="coinSound" src="coin.mp3" preload="auto"></audio>
+  </div>
+
+  <script>
+    const correct = 'Voy a dejar el teléfono por hoy';
+    const input = document.getElementById('pass');
+    const btn   = document.getElementById('submit');
+    const sound = document.getElementById('coinSound');
+
+    btn.addEventListener('click', () => {
+      if (input.value === correct) {
+        sound.currentTime = 0;
+        sound.play();
+      } else {
+        alert('Frase incorrecta. Intenta de nuevo.');
+        input.value = '';
+        input.focus();
+      }
+    });
+
+    // opcional: permitir pulsar Enter
+    input.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') btn.click();
+    });
+  </script>
+</body>
+</html>
