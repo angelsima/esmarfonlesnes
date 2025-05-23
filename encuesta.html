@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Encuesta de uso de móvil</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 2em;
+      font-family: sans-serif;
+      background: #fafafa;
+      color: #333;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h1 {
+      text-align: center;
+    }
+    .pregunta {
+      margin-bottom: 1.5em;
+    }
+    .pregunta label {
+      display: block;
+      margin: 0.4em 0;
+      cursor: pointer;
+    }
+    button {
+      padding: 0.6em 1.2em;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    #resultado {
+      margin-top: 2em;
+      padding: 1em;
+      border-radius: 0.5em;
+      background: #e0f7fa;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Encuesta: ¿Cómo usas tu móvil?</h1>
+
+  <form id="encuesta">
+    <div class="pregunta">
+      <p>1. ¿Cuántas horas al día usas el móvil?</p>
+      <label><input type="radio" name="horas" value="1"> Menos de 2 horas</label>
+      <label><input type="radio" name="horas" value="2"> Entre 2 y 5 horas</label>
+      <label><input type="radio" name="horas" value="3"> Más de 5 horas</label>
+    </div>
+
+    <div class="pregunta">
+      <p>2. ¿Para qué lo usas más?</p>
+      <label><input type="radio" name="uso" value="1"> Llamadas/WhatsApp</label>
+      <label><input type="radio" name="uso" value="2"> Redes sociales</label>
+      <label><input type="radio" name="uso" value="3"> Juegos/videos</label>
+    </div>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <div id="resultado"></div>
+
+  <script>
+    const form = document.getElementById('encuesta');
+    const resultadoDiv = document.getElementById('resultado');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const datos = new FormData(form);
+      const horas = datos.get('horas');
+      const uso   = datos.get('uso');
+
+      // Aquí decides la lógica para elegir uno de los tres textos
+      let texto = '';
+
+      const score = Number(horas) + Number(uso);
+      if (score <= 2) {
+        texto = 'Texto 1: ¡Eres un usuario moderado! Tu relación con el móvil es equilibrada.';
+      } else if (score <= 4) {
+        texto = 'Texto 2: Usas el móvil de forma habitual. Quizá valga la pena revisar algún tiempo offline.';
+      } else {
+        texto = 'Texto 3: ¡Tus horas de móvil son elevadas! Considera desconectar de vez en cuando.';
+      }
+
+      // Muestra el resultado
+      resultadoDiv.textContent = texto;
+      resultadoDiv.style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
