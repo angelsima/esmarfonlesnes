@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Texto incompleto</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden; /* ← esto bloquea el scroll */
+      font-family: serif;
+      background: #f8f8f8;
+      color: #111;
+    }
+
+    .contenido {
+      padding: 2em;
+      height: 200vh; /* simula un texto larguísimo */
+      box-sizing: border-box;
+    }
+
+    .filtro {
+      position: fixed;
+      bottom: 0;
+      height: 4em;
+      width: 100%;
+      background: linear-gradient(to bottom, transparent, #f8f8f8); 
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="contenido">
+    <p>
+      Este es un texto largo que parece extenderse más allá de la pantalla. Como si pudieras hacer scroll para descubrir más, para encontrar algo. Pero no puedes. Estás atrapado en este fragmento, como si la página se hubiera congelado o recortado.
+    </p>
+    <p>
+      Quizá haya algo más allá. Tal vez no. Quizá las palabras que faltan sean las más importantes. Quizá no faltan. Quizá tú estás incompleto.
+    </p>
+    <p>
+      O quizá esto era todo.  
+      <br><br><br><br><br><br><br><br><br>
+      Fin (que nunca llega).
+    </p>
+  </div>
+  <div class="filtro"></div>
+</body>
+</html>
