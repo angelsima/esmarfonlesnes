@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acceso por reconocimiento de voz</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: sans-serif;
+      background: #fafafa;
+      color: #333;
+      text-align: center;
+    }
+    .container {
+      max-width: 400px;
+      padding: 2em;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 0.5em;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 0.6em 1.2em;
+      margin: 0.5em;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    #status {
+      margin-top: 1em;
+      font-style: italic;
+      color: #666;
+    }
+    #content {
+      margin-top: 2em;
+      display: none;
+      font-size: 1em;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Acceso por voz</h1>
+    <p>Di en voz alta la frase exacta para acceder:</p>
+    <p><strong>“Tengo adicción al móvil”</strong></p>
+    <button id="btnStart">Iniciar escucha</button>
+    <button id="btnStop" disabled>Detener</button>
+    <div id="status">Esperando comando de voz…</div>
+    <div id="content">
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum.</p>
+    </div>
+  </div>
+
+  <script>
+    // Asegurarse de que la API esté disponible
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      document.getElementById('status').textContent = 'Tu navegador no soporta reconocimiento de voz.';
+      document.getElementById('btnStart').disabled = true;
+    } else {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'es-ES';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      const btnStart = document.getElementById('btnStart');
+      const btnStop  = document.getElementById('btnStop');
+      const status   = document.getElementById('status');
+      const content  = document.getElementById('content');
+
+      const targetPhrase = 'tengo adicción al móvil';
+
+      btnStart.addEventListener('click', () => {
+        status.textContent = 'Escuchando…';
+        recognition.start();
+        btnStart.disabled = true;
+        btnStop.disabled = false;
+      });
+
+      btnStop.addEventListener('click', () => {
+        recognition.stop();
+      });
+
+      recognition.addEventListener('result', (event) => {
+        const transcript = event.results[0][0].transcript.trim().toLowerCase();
+        if (transcript === targetPhrase) {
+          status.textContent = 'Frase correcta. Acceso concedido.';
+          content.style.display = 'block';
+        } else {
+          status.textContent = `Has dicho: “${transcript}”. Frase incorrecta. Intenta de nuevo.`;
+        }
+      });
+
+      recognition.addEventListener('speechend', () => {
+        recognition.stop();
+      });
+
+      recognition.addEventListener('end', () => {
+        btnStart.disabled = false;
+        btnStop.disabled = true;
+      });
+
+      recognition.addEventListener('error', (e) => {
+        status.textContent = 'Error en reconocimiento: ' + e.error;
+        btnStart.disabled = false;
+        btnStop.disabled = true;
+      });
+    }
+  </script>
+
+</body>
+</html>
