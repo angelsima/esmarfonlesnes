@@ -1,0 +1,15 @@
+/* ------------------------
+   4. Soy mis likes; Yop
+------------------------ */
+body.yop {
+  background: linear-gradient(to bottom, #ffe6f0, #fff0f5);
+  color: #cc0066;
+  font-family: "Poppins", sans-serif;
+}
+body.yop a {
+  color: #ff3399;
+}
+body.yop h1 {
+  font-family: "Pacifico", cursive;
+  color: #ff66cc;
+}
