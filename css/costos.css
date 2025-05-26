@@ -1,7 +1,7 @@
 /* ------------------------
    3. Costos del mundo esmarfon
 ------------------------ */
-body.costos {
+body {
   background: linear-gradient(45deg, #ff00cc, #ffcc00, #00ccff);
   color: #000;
   font-family: "Comic Sans MS", cursive, sans-serif;
@@ -17,18 +17,18 @@ body.costos {
   0% { background-position: 0% 50%; }
   100% { background-position: 100% 50%; }
 }
-body.costos a {
+a {
   color: #fff;
   text-shadow: 1px 1px 2px #000;
 }
-body.costos h1 {
+h1 {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 3em;
   letter-spacing: 0.05em;
 }
  
-body.costos p {
+p {
       font-size: 1.2em;
       margin-top: 0.5em;
          }
