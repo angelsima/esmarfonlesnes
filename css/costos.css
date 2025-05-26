@@ -6,6 +6,11 @@ body.costos {
   color: #000;
   font-family: "Comic Sans MS", cursive, sans-serif;
   animation: fondoLocura 10s infinite linear;
+    display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
 }
 @keyframes fondoLocura {
   0% { background-position: 0% 50%; }
@@ -18,5 +23,11 @@ body.costos a {
 body.costos h1 {
   text-transform: uppercase;
   font-weight: bold;
-  font-size: 2.5em;
+  font-size: 3em;
+  letter-spacing: 0.05em;
 }
+ 
+body.costos p {
+      font-size: 1.2em;
+      margin-top: 0.5em;
+         }
