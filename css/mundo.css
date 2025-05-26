@@ -1,0 +1,15 @@
+/* ------------------------
+   5. El mundo tras mi esmarfon
+------------------------ */
+body.mundo {
+  background-color: #1a1a1a;
+  color: #d0d0d0;
+  font-family: "Playfair Display", serif;
+}
+body.mundo a {
+  color: #aaccff;
+}
+body.mundo h1 {
+  color: #cccccc;
+  font-style: italic;
+}
