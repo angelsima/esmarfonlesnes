@@ -1,12 +1,122 @@
+/* ------------------------
+   ESTILO BASE (común a todos)
+------------------------ */
 body {
   margin: 0;
   padding: 2em;
-  font-family: 'Courier New', monospace;
-  background-color: #0e0e0e;
-  color: #e0e0e0;
+  font-family: sans-serif;
   line-height: 1.6;
+  background-color: #fff;
+  color: #000;
 }
-main {
-  max-width: 600px;
-  margin: 0 auto;
+h1 {
+  font-size: 2em;
+  margin-bottom: 0.5em;
+}
+ol {
+  padding-left: 1.5em;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ------------------------
+   1. Loa al esmarfon
+------------------------ */
+body.loa {
+  background: linear-gradient(145deg, #f0faff, #e1f1ff);
+  color: #1a1a1a;
+  font-family: "Montserrat", sans-serif;
+}
+body.loa a {
+  color: #007bff;
+}
+body.loa h1 {
+  color: #00aaff;
+}
+
+/* ------------------------
+   2. Algoritmo = mejor yo que yo
+------------------------ */
+body.algoritmo {
+  background-color: #0d0d0d;
+  color: #33ff33;
+  font-family: "Courier New", monospace;
+}
+body.algoritmo a {
+  color: #ff3333;
+}
+body.algoritmo h1 {
+  color: #00ffcc;
+}
+
+/* ------------------------
+   3. Costos del mundo esmarfon
+------------------------ */
+body.costos {
+  background: linear-gradient(45deg, #ff00cc, #ffcc00, #00ccff);
+  color: #000;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  animation: fondoLocura 10s infinite linear;
+}
+@keyframes fondoLocura {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+body.costos a {
+  color: #fff;
+  text-shadow: 1px 1px 2px #000;
+}
+body.costos h1 {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 2.5em;
+}
+
+/* ------------------------
+   4. Soy mis likes; Yop
+------------------------ */
+body.yop {
+  background: linear-gradient(to bottom, #ffe6f0, #fff0f5);
+  color: #cc0066;
+  font-family: "Poppins", sans-serif;
+}
+body.yop a {
+  color: #ff3399;
+}
+body.yop h1 {
+  font-family: "Pacifico", cursive;
+  color: #ff66cc;
+}
+
+/* ------------------------
+   5. El mundo tras mi esmarfon
+------------------------ */
+body.tras {
+  background-color: #1a1a1a;
+  color: #d0d0d0;
+  font-family: "Playfair Display", serif;
+}
+body.tras a {
+  color: #aaccff;
+}
+body.tras h1 {
+  color: #cccccc;
+  font-style: italic;
+}
+
+/* ------------------------
+   6. Uso sano / Técnicas de combate
+------------------------ */
+body.sano {
+  background-color: #f7fff7;
+  color: #2e4d2e;
+  font-family: "Lato", sans-serif;
+}
+body.sano a {
+  color: #4caf50;
+}
+body.sano h1 {
+  color: #388e3c;
 }
