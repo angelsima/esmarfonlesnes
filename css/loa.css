@@ -1,0 +1,14 @@
+/* ------------------------
+   1. Loa al esmarfon
+------------------------ */
+body.loa {
+  background: linear-gradient(145deg, #f0faff, #e1f1ff);
+  color: #1a1a1a;
+  font-family: "Montserrat", sans-serif;
+}
+body.loa a {
+  color: #007bff;
+}
+body.loa h1 {
+  color: #00aaff;
+}
