@@ -5,22 +5,23 @@
   <title>Like infinito con halagos</title>
   <style>
     body {
-      background: #111;
-      color: white;
+      background: #fff; /* Fondo blanco */
+      color: #111; /* Texto oscuro */
       font-family: sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       overflow: hidden;
+      margin: 0;
     }
 
     .btn-container {
-      position: relative; /* importante para posicionar los halagos */
+      position: relative;
     }
 
     #like-btn {
-      background: #ff2d75;
+      background: #e84870; /* Rosa suave */
       border: none;
       border-radius: 50px;
       padding: 20px 40px;
@@ -29,25 +30,35 @@
       cursor: pointer;
       position: relative;
       z-index: 1;
-      box-shadow: 0 0 20px #ff2d75aa;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Sombra más sutil */
+      transition: transform 0.1s ease;
+    }
+
+    #like-btn:hover {
+      transform: scale(1.05);
     }
 
     .praise {
       position: absolute;
       font-size: 1.2rem;
       font-weight: bold;
+      color: #333; /* Texto oscuro */
       pointer-events: none;
-      animation: floatUp 1s ease-out forwards;
       white-space: nowrap;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
+      animation: floatUp 1.5s ease-out forwards;
+      opacity: 0.4; /* más opaco al principio */
     }
 
     @keyframes floatUp {
       0% {
-        opacity: 1;
+        opacity: 0.4;
         transform: translate(-50%, -50%) scale(1);
+      }
+      60% {
+        opacity: 1;
       }
       100% {
         opacity: 0;
@@ -89,7 +100,7 @@
     // Eliminar después de la animación
     setTimeout(() => {
       praise.remove();
-    }, 1000);
+    }, 1600); // un poco más largo que la animación
   });
 </script>
 
