@@ -1,0 +1,14 @@
+/* ------------------------
+   2. Algoritmo = mejor yo que yo
+------------------------ */
+body.algoritmo {
+  background-color: #0d0d0d;
+  color: #33ff33;
+  font-family: "Courier New", monospace;
+}
+body.algoritmo a {
+  color: #ff3333;
+}
+body.algoritmo h1 {
+  color: #00ffcc;
+}
