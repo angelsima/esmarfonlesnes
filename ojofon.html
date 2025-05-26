@@ -16,14 +16,17 @@
       background: #fafafa;
       text-align: center;
     }
+
     .wrapper {
       max-width: 90%;
     }
+
     h1 {
       font-size: 1.5em;
       margin-bottom: 2em;
       color: #222;
     }
+
     #btnDiscover {
       width: 4em;
       height: 4em;
@@ -38,32 +41,35 @@
       margin: 0 auto 2em;
     }
 
-    /* ojo estilizado */
-    .eye {
+    .eye-container {
       position: relative;
-      width: 240px;
-      height: 120px;
+      width: 300px;
+      height: 150px;
       margin: 0 auto;
-      background: white;
-      border: 4px solid #222;
-      border-radius: 120px / 60px;
-      box-shadow: inset 0 0 0 2px rgba(0,0,0,0.2);
     }
-    /* iris/pupila */
-    .pupil {
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 80px; height: 80px;
-      margin: -40px 0 0 -40px; /* centrar */
-      border-radius: 50%;
-      overflow: hidden;
-      background: #000;
-      border: 3px solid #222;
-    }
-    .pupil video {
+
+    .eye-image {
       width: 100%;
       height: auto;
-      transform: scaleX(-1); /* espejo para efecto espejo */
+      display: block;
+    }
+
+    .pupil-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 80px;
+      height: 80px;
+      transform: translate(-50%, -50%) scaleX(-1);
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #000;
+    }
+
+    .pupil-video video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .error {
@@ -77,9 +83,9 @@
     <h1>Tú miras tu esmarfon,<br>tu esmarfon a ti te mira</h1>
     <button id="btnDiscover">Descubrir</button>
 
-    <!-- ojo con pupila donde irá el vídeo -->
-    <div class="eye">
-      <div class="pupil">
+    <div class="eye-container">
+      <img src="https://pluspng.com/img-png/ojo-png--1200.png" alt="Ojo" class="eye-image">
+      <div class="pupil-video">
         <video id="preview" autoplay playsinline muted></video>
       </div>
     </div>
