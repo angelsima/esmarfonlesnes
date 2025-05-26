@@ -74,41 +74,60 @@
 
       const targetPhrase = 'tengo adicción al móvil';
 
-      btnStart.addEventListener('click', () => {
-        status.textContent = 'Escuchando…';
-        recognition.start();
-        btnStart.disabled = true;
-        btnStop.disabled = false;
-      });
+   btnStart.addEventListener('click', () => {
+  if (recognitionStarted) return; // evitar doble start
+  recognitionStarted = true;
 
-      btnStop.addEventListener('click', () => {
-        recognition.stop();
-      });
+  status.textContent = 'Escuchando…';
+  try {
+    recognition.start();
+    btnStart.disabled = true;
+    btnStop.disabled = false;
+  } catch(e) {
+    status.textContent = 'Error al iniciar reconocimiento: ' + e.message;
+  }
+});
 
-      recognition.addEventListener('result', (event) => {
-        const transcript = event.results[0][0].transcript.trim().toLowerCase();
-        if (transcript === targetPhrase) {
-          status.textContent = 'Frase correcta. Acceso concedido.';
-          content.style.display = 'block';
-        } else {
-          status.textContent = `Has dicho: “${transcript}”. Frase incorrecta. Intenta de nuevo.`;
-        }
-      });
+btnStop.addEventListener('click', () => {
+  if (!recognitionStarted) return;
+  recognition.stop();
+});
 
-      recognition.addEventListener('speechend', () => {
-        recognition.stop();
-      });
+// Variable para controlar si está iniciado
+let recognitionStarted = false;
 
-      recognition.addEventListener('end', () => {
-        btnStart.disabled = false;
-        btnStop.disabled = true;
-      });
+recognition.addEventListener('result', (event) => {
+  recognitionStarted = false; // resultado recibido, se puede reiniciar
 
-      recognition.addEventListener('error', (e) => {
-        status.textContent = 'Error en reconocimiento: ' + e.error;
-        btnStart.disabled = false;
-        btnStop.disabled = true;
-      });
+  const transcript = event.results[0][0].transcript.trim().toLowerCase();
+  if (transcript === targetPhrase) {
+    status.textContent = 'Frase correcta. Acceso concedido.';
+    content.style.display = 'block';
+  } else {
+    status.textContent = `Has dicho: “${transcript}”. Frase incorrecta. Intenta de nuevo.`;
+  }
+});
+
+recognition.addEventListener('speechend', () => {
+  recognition.stop();
+});
+
+recognition.addEventListener('end', () => {
+  recognitionStarted = false;
+  btnStart.disabled = false;
+  btnStop.disabled = true;
+});
+
+recognition.addEventListener('error', (e) => {
+  recognitionStarted = false;
+  if(e.error === 'not-allowed') {
+    status.textContent = 'Permiso denegado para usar el micrófono. Por favor, revisa los ajustes del navegador.';
+  } else {
+    status.textContent = 'Error en reconocimiento: ' + e.error;
+  }
+  btnStart.disabled = false;
+  btnStop.disabled = true;
+});
     }
   </script>
 
