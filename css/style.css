@@ -21,58 +21,6 @@ a {
   color: inherit;
 }
 
-/* ------------------------
-   1. Loa al esmarfon
------------------------- */
-body.loa {
-  background: linear-gradient(145deg, #f0faff, #e1f1ff);
-  color: #1a1a1a;
-  font-family: "Montserrat", sans-serif;
-}
-body.loa a {
-  color: #007bff;
-}
-body.loa h1 {
-  color: #00aaff;
-}
-
-/* ------------------------
-   2. Algoritmo = mejor yo que yo
------------------------- */
-body.algoritmo {
-  background-color: #0d0d0d;
-  color: #33ff33;
-  font-family: "Courier New", monospace;
-}
-body.algoritmo a {
-  color: #ff3333;
-}
-body.algoritmo h1 {
-  color: #00ffcc;
-}
-
-/* ------------------------
-   3. Costos del mundo esmarfon
------------------------- */
-body.costos {
-  background: linear-gradient(45deg, #ff00cc, #ffcc00, #00ccff);
-  color: #000;
-  font-family: "Comic Sans MS", cursive, sans-serif;
-  animation: fondoLocura 10s infinite linear;
-}
-@keyframes fondoLocura {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
-}
-body.costos a {
-  color: #fff;
-  text-shadow: 1px 1px 2px #000;
-}
-body.costos h1 {
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 2.5em;
-}
 
 /* ------------------------
    4. Soy mis likes; Yop
