@@ -19,7 +19,7 @@
       cursor: pointer;
       user-select: none;
       white-space: nowrap;
-      padding: 20px;      /* Área clicable extensa */
+      padding: 20px;
       box-sizing: content-box;
       background-color: transparent;
       pointer-events: auto;
@@ -34,34 +34,38 @@
 
 <script>
 (() => {
-  // --- Frases aleatorias (reemplázalas por las tuyas) ---
   const phrases = [
     "No tengo TDAH, tengo Instagram",
-    "No eres tú, es el scroll",
+    "No eres tú, es Tik Tok",
     "Mi cerebro tras una hora de redes sociales",
   ];
-  // Selección aleatoria al cargar
   const phraseText = phrases[Math.floor(Math.random() * phrases.length)];
-  // -------------------------------------------------------
-
   const wordsArr = phraseText.split(' ');
   let objects = [];
-  let state = 2; // 0=frase, 1=words, 2=letters
+  let state = 2; // 2=letras, 1=palabras, 0=frase
 
   function randVel() {
     return (Math.random() * 2 + 1) * (Math.random() < 0.5 ? -1 : 1);
   }
 
-  function makeObj(text, x, y, vx, vy, type, groupIndex, index = null) {
+  function makeObj(text, x, y, vx, vy, type, groupIndex) {
     const el = document.createElement('div');
     el.className = 'obj';
     el.textContent = text;
     document.body.appendChild(el);
     const rect = el.getBoundingClientRect();
-    el.dataset.type = type;        // 'phrase', 'word', 'letter'
-    el.dataset.groupIndex = groupIndex; // índice numérico único
-    if (index !== null) el.dataset.index = index;
-    return { el, text, x, y, vx, vy, w: rect.width, h: rect.height, type, groupIndex, index };
+    el.dataset.type = type;
+    el.dataset.groupIndex = groupIndex;
+    return {
+      el,
+      text,
+      x, y,
+      vx, vy,
+      w: rect.width,
+      h: rect.height,
+      type,
+      groupIndex
+    };
   }
 
   function clearAll() {
@@ -69,7 +73,7 @@
     objects = [];
   }
 
-  // Inicia con todas las letras flotando
+  // 1) Estado 2: iniciamos con todas las letras flotando
   function initLetters() {
     clearAll();
     state = 2;
@@ -82,99 +86,103 @@
     });
   }
 
-  // Regenera solo la palabra cuyo índice de grupo es groupIndex
+  // 2) Reagrupar letras de una palabra -> palabra flotante
   function regroupLetters(groupIndex) {
-    const letterObjs = objects.filter(o =>
-      o.type === 'letter' && o.groupIndex === groupIndex
-    );
+    const letterObjs = objects.filter(o => o.type === 'letter' && o.groupIndex === groupIndex);
     if (letterObjs.length === 0) return;
-
-    // Calcular posición promedio
-    const avgX = letterObjs.reduce((s, o) => s + o.x, 0) / letterObjs.length;
-    const avgY = letterObjs.reduce((s, o) => s + o.y, 0) / letterObjs.length;
-
-    // Eliminar las letras
+    const avgX = letterObjs.reduce((sum, o) => sum + o.x, 0) / letterObjs.length;
+    const avgY = letterObjs.reduce((sum, o) => sum + o.y, 0) / letterObjs.length;
     letterObjs.forEach(o => o.el.remove());
-    objects = objects.filter(o =>
-      !(o.type === 'letter' && o.groupIndex === groupIndex)
-    );
-
-    // Crear la palabra de nuevo
+    objects = objects.filter(o => !(o.type === 'letter' && o.groupIndex === groupIndex));
+    // crear palabra
     const wordText = wordsArr[groupIndex];
-    objects.push(makeObj(
-      wordText,
-      avgX, avgY,
-      randVel(), randVel(),
-      'word',
-      groupIndex
-    ));
-
-    // Si ya hay tantas palabras como palabras originales, pasamos al siguiente estado
+    objects.push(makeObj(wordText, avgX, avgY, randVel(), randVel(), 'word', groupIndex));
+    // si ya tenemos todas las palabras...
     if (objects.filter(o => o.type === 'word').length === wordsArr.length) {
       state = 1;
     }
   }
 
-  // Colapsa todas las palabras en la frase completa
+  // 3) Colapsar todas las palabras -> frase
   function collapsePhrase() {
     const wordObjs = objects.filter(o => o.type === 'word');
     if (wordObjs.length !== wordsArr.length) return;
-
-    const avgX = wordObjs.reduce((s, o) => s + o.x, 0) / wordObjs.length;
-    const avgY = wordObjs.reduce((s, o) => s + o.y, 0) / wordObjs.length;
-
-    // Eliminar palabras
+    const avgX = wordObjs.reduce((s,o) => s + o.x, 0) / wordObjs.length;
+    const avgY = wordObjs.reduce((s,o) => s + o.y, 0) / wordObjs.length;
     wordObjs.forEach(o => o.el.remove());
     objects = [];
-
-    // Crear frase
-    objects.push(makeObj(
-      phraseText,
-      avgX, avgY,
-      randVel(), randVel(),
-      'phrase',
-      null
-    ));
+    objects.push(makeObj(phraseText, avgX, avgY, randVel(), randVel(), 'phrase', null));
     state = 0;
   }
 
-  // Handler de clics
-  document.body.addEventListener('click', e => {
-    const targetObj = objects.find(o => o.el === e.target);
-    if (!targetObj) return;
+  // 4) Desintegrar frase -> letras de nuevo
+  //    (se llama a initLetters al clicar la frase)
 
-    if (targetObj.type === 'letter') {
-      regroupLetters(targetObj.groupIndex);
-    } else if (targetObj.type === 'word') {
+  document.body.addEventListener('click', e => {
+    const obj = objects.find(o => o.el === e.target);
+    if (!obj) return;
+    if (obj.type === 'letter') {
+      regroupLetters(obj.groupIndex);
+    } else if (obj.type === 'word') {
       collapsePhrase();
-    } else if (targetObj.type === 'phrase') {
+    } else if (obj.type === 'phrase') {
       initLetters();
     }
   });
 
-  // Animación de rebote
+  // Animación con rebote sólido en todos los casos
   function animate() {
     const W = window.innerWidth, H = window.innerHeight;
     objects.forEach(o => {
-      o.x += o.vx; o.y += o.vy;
-      if (o.w < W && (o.x < 0 || o.x + o.w > W)) o.vx *= -1;
-      if (o.h < H && (o.y < 0 || o.y + o.h > H)) o.vy *= -1;
+      o.x += o.vx;
+      o.y += o.vy;
+
+      // rebote horizontal
+      if (o.w <= W) {
+        if (o.x < 0) {
+          o.x = 0;
+          o.vx *= -1;
+        } else if (o.x + o.w > W) {
+          o.x = W - o.w;
+          o.vx *= -1;
+        }
+      } else {
+        // el objeto es más ancho que la pantalla: lo centramos en x
+        o.x = Math.max(0, Math.min(o.x, W - o.w));
+        o.vx = 0;
+      }
+
+      // rebote vertical
+      if (o.h <= H) {
+        if (o.y < 0) {
+          o.y = 0;
+          o.vy *= -1;
+        } else if (o.y + o.h > H) {
+          o.y = H - o.h;
+          o.vy *= -1;
+        }
+      } else {
+        o.y = Math.max(0, Math.min(o.y, H - o.h));
+        o.vy = 0;
+      }
+
       o.el.style.transform = `translate(${o.x}px,${o.y}px)`;
     });
     requestAnimationFrame(animate);
   }
 
   window.addEventListener('resize', () => {
+    // evitar que queden fuera después del resize
+    const W = window.innerWidth, H = window.innerHeight;
     objects.forEach(o => {
-      o.x = Math.min(o.x, window.innerWidth - o.w);
-      o.y = Math.min(o.y, window.innerHeight - o.h);
+      o.x = Math.min(o.x, W - o.w);
+      o.y = Math.min(o.y, H - o.h);
     });
   });
 
-  // Arranque: comenzamos desintegrados en letras
+  // arranque
   initLetters();
   animate();
-
 })();
 </script>
 
