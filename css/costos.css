@@ -7,6 +7,9 @@ body {
       color: #eee;
       font-family: sans-serif;
       position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .obj {
       position: absolute;
@@ -21,6 +24,22 @@ body {
       min-width: 40px;
       min-height: 40px;
       text-align: center;
+    }
+    .contenido {
+      max-width: 600px;
+      padding: 2em;
+      height: 90vh;
+      overflow: hidden;
+      box-sizing: border-box;
+      text-align: justify;
+    }
+  .filtro {
+      position: fixed;
+      bottom: 0;
+      height: 4em;
+      width: 100%;
+      background: linear-gradient(to bottom, transparent, #f8f8f8);
+      pointer-events: none;
     }
     h1 {
       font-size: 5em;
