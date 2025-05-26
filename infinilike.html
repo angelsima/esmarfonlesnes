@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -14,6 +13,10 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
+    }
+
+    .btn-container {
+      position: relative; /* importante para posicionar los halagos */
     }
 
     #like-btn {
@@ -36,23 +39,28 @@
       pointer-events: none;
       animation: floatUp 1s ease-out forwards;
       white-space: nowrap;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
 
     @keyframes floatUp {
       0% {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translate(-50%, -50%) scale(1);
       }
       100% {
         opacity: 0;
-        transform: translateY(-100px) scale(1.2);
+        transform: translate(-50%, -150px) scale(1.2);
       }
     }
   </style>
 </head>
 <body>
 
-<button id="like-btn">❤️ ¡Dale like!</button>
+<div class="btn-container">
+  <button id="like-btn">❤️</button>
+</div>
 
 <script>
   const praises = [
@@ -69,18 +77,14 @@
   ];
 
   const btn = document.getElementById('like-btn');
+  const container = btn.parentElement;
 
   btn.addEventListener('click', () => {
     const praise = document.createElement('div');
     praise.className = 'praise';
     praise.textContent = praises[Math.floor(Math.random() * praises.length)];
 
-    // Posicionar en el centro del botón
-    const rect = btn.getBoundingClientRect();
-    praise.style.left = rect.left + rect.width / 2 + 'px';
-    praise.style.top = rect.top + 'px';
-
-    document.body.appendChild(praise);
+    container.appendChild(praise);
 
     // Eliminar después de la animación
     setTimeout(() => {
