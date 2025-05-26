@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pang – Texto Anárquico</title>
+  <title>Pang - Texto Anárquico</title>
   <style>
     html, body {
       margin: 0; padding: 0;
@@ -19,7 +19,7 @@
       cursor: pointer;
       user-select: none;
       white-space: nowrap;
-      padding: 20px;      /* Área clicable extensa */
+      padding: 20px;
       box-sizing: content-box;
       background-color: transparent;
       pointer-events: auto;
@@ -31,37 +31,32 @@
   </style>
 </head>
 <body>
-
 <script>
 (() => {
-  // --- Frases aleatorias (reemplázalas por las tuyas) ---
   const phrases = [
     "No tengo TDAH, tengo Instagram",
     "No, no es amor, lo que tú sientes se llama adicción",
     "Mi cerebro tras una hora de redes sociales",
   ];
-  // Selección aleatoria al cargar
   const phraseText = phrases[Math.floor(Math.random() * phrases.length)];
-  // -------------------------------------------------------
-
   const wordsArr = phraseText.split(' ');
   let objects = [];
-  let state = 2; // 0=frase, 1=words, 2=letters
+  let state = 2; // start with letters
 
   function randVel() {
     return (Math.random() * 2 + 1) * (Math.random() < 0.5 ? -1 : 1);
   }
 
-  function makeObj(text, x, y, vx, vy, type, groupIndex, index = null) {
+  function makeObj(text, x, y, vx, vy, type, group, index = null) {
     const el = document.createElement('div');
     el.className = 'obj';
     el.textContent = text;
     document.body.appendChild(el);
     const rect = el.getBoundingClientRect();
-    el.dataset.type = type;        // 'phrase', 'word', 'letter'
-    el.dataset.groupIndex = groupIndex; // índice numérico único
+    el.dataset.type = type;
+    el.dataset.group = group;
     if (index !== null) el.dataset.index = index;
-    return { el, text, x, y, vx, vy, w: rect.width, h: rect.height, type, groupIndex, index };
+    return { el, text, x, y, vx, vy, w: rect.width, h: rect.height, type, group, index };
   }
 
   function clearAll() {
@@ -69,96 +64,61 @@
     objects = [];
   }
 
-  // Inicia con todas las letras flotando
   function initLetters() {
     clearAll();
     state = 2;
-    wordsArr.forEach((word, wi) => {
-      Array.from(word).forEach((letter, i) => {
+    wordsArr.forEach((w, wi) => {
+      Array.from(w).forEach((l, i) => {
         const x = Math.random() * (window.innerWidth - 40);
         const y = Math.random() * (window.innerHeight - 40);
-        objects.push(makeObj(letter, x, y, randVel(), randVel(), 'letter', wi));
+        objects.push(makeObj(l, x, y, randVel(), randVel(), 'letter', w));
       });
     });
   }
 
-  // Regenera solo la palabra cuyo índice de grupo es groupIndex
-  function regroupLetters(groupIndex) {
-    const letterObjs = objects.filter(o =>
-      o.type === 'letter' && o.groupIndex === groupIndex
-    );
+  function regroupLetters(group) {
+    const letterObjs = objects.filter(o => o.type === 'letter' && o.group === group);
     if (letterObjs.length === 0) return;
-
-    // Calcular posición promedio
     const avgX = letterObjs.reduce((s, o) => s + o.x, 0) / letterObjs.length;
     const avgY = letterObjs.reduce((s, o) => s + o.y, 0) / letterObjs.length;
-
-    // Eliminar las letras
     letterObjs.forEach(o => o.el.remove());
-    objects = objects.filter(o =>
-      !(o.type === 'letter' && o.groupIndex === groupIndex)
-    );
-
-    // Crear la palabra de nuevo
-    const wordText = wordsArr[groupIndex];
-    objects.push(makeObj(
-      wordText,
-      avgX, avgY,
-      randVel(), randVel(),
-      'word',
-      groupIndex
-    ));
-
-    // Si ya hay tantas palabras como palabras originales, pasamos al siguiente estado
+    objects = objects.filter(o => !(o.type === 'letter' && o.group === group));
+    objects.push(makeObj(group, avgX, avgY, randVel(), randVel(), 'word', group));
     if (objects.filter(o => o.type === 'word').length === wordsArr.length) {
       state = 1;
     }
   }
 
-  // Colapsa todas las palabras en la frase completa
   function collapsePhrase() {
     const wordObjs = objects.filter(o => o.type === 'word');
     if (wordObjs.length !== wordsArr.length) return;
-
     const avgX = wordObjs.reduce((s, o) => s + o.x, 0) / wordObjs.length;
     const avgY = wordObjs.reduce((s, o) => s + o.y, 0) / wordObjs.length;
-
-    // Eliminar palabras
     wordObjs.forEach(o => o.el.remove());
     objects = [];
-
-    // Crear frase
-    objects.push(makeObj(
-      phraseText,
-      avgX, avgY,
-      randVel(), randVel(),
-      'phrase',
-      null
-    ));
+    objects.push(makeObj(phraseText, avgX, avgY, randVel(), randVel(), 'phrase', null));
     state = 0;
   }
 
-  // Handler de clics
   document.body.addEventListener('click', e => {
-    const targetObj = objects.find(o => o.el === e.target);
-    if (!targetObj) return;
-
-    if (targetObj.type === 'letter') {
-      regroupLetters(targetObj.groupIndex);
-    } else if (targetObj.type === 'word') {
+    const target = objects.find(o => o.el === e.target);
+    if (!target) return;
+    if (target.type === 'letter') {
+      regroupLetters(target.group);
+    } else if (target.type === 'word') {
       collapsePhrase();
-    } else if (targetObj.type === 'phrase') {
+    } else if (target.type === 'phrase') {
       initLetters();
     }
   });
 
-  // Animación de rebote
   function animate() {
     const W = window.innerWidth, H = window.innerHeight;
     objects.forEach(o => {
       o.x += o.vx; o.y += o.vy;
-      if (o.w < W && (o.x < 0 || o.x + o.w > W)) o.vx *= -1;
-      if (o.h < H && (o.y < 0 || o.y + o.h > H)) o.vy *= -1;
+      // Rebote en todos los casos, incluso si elemento es más ancho que viewport
+      if (o.x < 0 || o.x + o.w > W) o.vx *= -1;
+      if (o.y < 0 || o.y + o.h > H) o.vy *= -1;
       o.el.style.transform = `translate(${o.x}px,${o.y}px)`;
     });
     requestAnimationFrame(animate);
@@ -171,12 +131,10 @@
     });
   });
 
-  // Arranque: comenzamos desintegrados en letras
+  // iniciar con letras
   initLetters();
   animate();
-
 })();
 </script>
-
 </body>
 </html>
