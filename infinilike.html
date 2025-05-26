@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Like infinito con halagos</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #like-btn {
+      background: #ff2d75;
+      border: none;
+      border-radius: 50px;
+      padding: 20px 40px;
+      font-size: 1.5rem;
+      color: white;
+      cursor: pointer;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 0 20px #ff2d75aa;
+    }
+
+    .praise {
+      position: absolute;
+      font-size: 1.2rem;
+      font-weight: bold;
+      pointer-events: none;
+      animation: floatUp 1s ease-out forwards;
+      white-space: nowrap;
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(1.2);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<button id="like-btn">❤️ ¡Dale like!</button>
+
+<script>
+  const praises = [
+    "¡Vaya máquina!",
+    "¡Díselo, reina!",
+    "PEC",
+    "¡Ole tú!",
+    "🔥",
+    "¡Esooo!",
+    "💅",
+    "¡Dámelo todo!",
+    "¡Bomba!",
+    "¡Apoteósica!"
+  ];
+
+  const btn = document.getElementById('like-btn');
+
+  btn.addEventListener('click', () => {
+    const praise = document.createElement('div');
+    praise.className = 'praise';
+    praise.textContent = praises[Math.floor(Math.random() * praises.length)];
+
+    // Posicionar en el centro del botón
+    const rect = btn.getBoundingClientRect();
+    praise.style.left = rect.left + rect.width / 2 + 'px';
+    praise.style.top = rect.top + 'px';
+
+    document.body.appendChild(praise);
+
+    // Eliminar después de la animación
+    setTimeout(() => {
+      praise.remove();
+    }, 1000);
+  });
+</script>
+
+</body>
+</html>
