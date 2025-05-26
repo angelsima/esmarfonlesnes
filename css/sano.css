@@ -1,0 +1,14 @@
+/* ------------------------
+   6. Uso sano 
+------------------------ */
+body.sano {
+  background-color: #f7fff7;
+  color: #2e4d2e;
+  font-family: "Lato", sans-serif;
+}
+body.sano a {
+  color: #4caf50;
+}
+body.sano h1 {
+  color: #388e3c;
+}
