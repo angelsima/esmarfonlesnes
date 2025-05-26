@@ -1,0 +1,91 @@
+body.combate {
+  background-color: #000;
+  color: #0f0;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  padding: 2rem;
+  cursor: none;
+}
+
+/* Encabezados tipo manifiesto */
+body.combate h1, body.combate h2, body.combate h3 {
+  color: red;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  border-bottom: 1px solid #0f0;
+  padding-bottom: 0.2rem;
+  margin-top: 2rem;
+}
+
+/* Enlaces disruptivos */
+body.combate a {
+  color: #000;
+  background-color: #0f0;
+  padding: 0.2rem 0.5rem;
+  text-decoration: none;
+  font-weight: bold;
+  border: 1px solid #0f0;
+  transition: all 0.2s;
+}
+body.combate a:hover {
+  background-color: red;
+  color: #fff;
+  border-color: red;
+}
+
+/* Proclamas o interrupciones radicales */
+.combate-bloque {
+  background: #111;
+  color: #f00;
+  padding: 1rem;
+  margin: 2rem 0;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: center;
+  border: 2px dashed #f00;
+  animation: glitch 1s infinite steps(2, end);
+}
+
+/* Simulación de error digital */
+@keyframes glitch {
+  0% { text-shadow: 2px 0 red, -2px 0 lime; }
+  20% { text-shadow: -2px 0 lime, 2px 0 red; }
+  40% { text-shadow: 2px 0 lime, -2px 0 red; }
+  60% { text-shadow: -2px 0 red, 2px 0 lime; }
+  80% { text-shadow: 2px 0 lime, -2px 0 red; }
+  100% { text-shadow: 0 0 red; }
+}
+
+/* Código tipo terminal */
+body.combate code {
+  background-color: #111;
+  color: #0f0;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.95rem;
+}
+
+/* Bloques de texto informativo o subversivo */
+.combate-terminal {
+  background-color: #000;
+  color: #0f0;
+  padding: 1rem;
+  font-family: monospace;
+  border-left: 5px solid red;
+  margin-top: 1.5rem;
+  white-space: pre-wrap;
+}
+
+/* Opción para invertir todo en un momento de "colapso visual" */
+.combate-colapso {
+  background: #f00 !important;
+  color: #000 !important;
+  animation: parpadeo 0.3s infinite alternate;
+}
+
+@keyframes parpadeo {
+  from { opacity: 0.5; }
+  to { opacity: 1; }
+}
