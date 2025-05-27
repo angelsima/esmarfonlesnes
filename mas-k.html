@@ -1,4 +1,4 @@
-       <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,10 +14,12 @@
             overflow-x: hidden;
         }
         
-h1 {margin-top: 30px;
-    text-align: center;
-    padding: 10px;
-}
+        h1 {
+            margin-top: 30px;
+            text-align: center;
+            padding: 10px;
+        }
+        
         #fixedHeader {
             position: fixed;
             top: 0;
@@ -63,7 +65,7 @@ h1 {margin-top: 30px;
         .skull {
             font-size: 20px;
             line-height: 20px;
-            animation: appear 0.1s ease;
+            animation: appear 0.05s ease;
         }
 
         @keyframes appear {
@@ -101,11 +103,11 @@ h1 {margin-top: 30px;
         let skullsAdded = 0;
         let animationInterval;
         let billionsCount = 0;
-        const ROW_HEIGHT = 22; // 20px skull + 2px gap
+        const ROW_HEIGHT = 22;
 
         function startAnimation() {
             document.querySelector('button').disabled = true;
-            animationInterval = setInterval(addSkull, 1);
+            animationInterval = setInterval(addSkull, 0);
         }
 
         function addSkull() {
@@ -114,32 +116,32 @@ h1 {margin-top: 30px;
                 return;
             }
 
-            const skull = document.createElement('span');
-            skull.className = 'skull';
-            skull.textContent = '💀';
-            
-            document.getElementById('skullContainer').appendChild(skull);
-            
-            total += 20000;
-            skullsAdded++;
-            
+            // Añadimos 2 calaveras por iteración
+            for(let i = 0; i < 2; i++) {
+                const skull = document.createElement('span');
+                skull.className = 'skull';
+                skull.textContent = '💀';
+                document.getElementById('skullContainer').appendChild(skull);
+                
+                total += 20000;
+                skullsAdded++;
+                
+                if(skullsAdded % 50000 === 0) {
+                    billionsCount++;
+                    showBillionMessage(billionsCount);
+                }
+            }
+
             updateCounter();
             
-            // Scroll automático cada nueva fila
-            if((skullsAdded - 1) % 10 === 0) {
+            if(skullsAdded % 10 === 0) {
                 window.scrollBy({ top: ROW_HEIGHT, behavior: 'smooth' });
-            }
-            
-            // Mensaje cada 1.000 millones (50,000 calaveras)
-            if(skullsAdded % 50000 === 0) {
-                billionsCount++;
-                showBillionMessage(billionsCount);
             }
         }
 
         function updateCounter() {
             document.getElementById('counter').textContent = 
-                `Llevamos ${(total / 1000000000).toFixed(3)} mil millones / 421.000 millones $`;
+                `Llevamos ${(total / 1000000000).toFixed(3)} mil millones / 421 mil millones $`;
         }
 
         function showBillionMessage(count) {
