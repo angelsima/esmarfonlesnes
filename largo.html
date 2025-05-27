@@ -4,10 +4,23 @@
 <head>
   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="css/contras.css" />
-  <title>Texto incompleto</title>
+    <title>Texto incompleto</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+
+:root {
+  --font-body: 'Space Mono', monospace;
+  --bg-color: #000;
+  --text-color: #f2f2f2;
+  --accent-color: #00ff88; /* Verde Matrix */
+  --space-s: 0.5rem;
+  --space-m: 1rem;
+  --space-l: 2rem;
+}
         body {
+           background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-body);
       margin: 0;
       padding: 0;
       height: 100%;
@@ -49,7 +62,7 @@
     .scroll-circle::after {
       content: "↓";
       font-size: 2.5rem;
-      color: rgba(0, 0, 0, 0.6); /* Flecha negra semitransparente */
+      color: var(--bg-color); 
       margin-top: -5px; /* Ajuste fino de posición */
     }
   </style>
