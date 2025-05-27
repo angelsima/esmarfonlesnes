@@ -6,13 +6,13 @@
     <style>
         body {
             background-color: #FFD700;
-            margin: 0;
+            margin: 0 auto;
             max-width: 600px;
             padding: 20px;
             font-family: Arial, sans-serif;
             font-weight: bold;
             overflow-x: hidden;
-           
+            min-height: 100vh;
         }
         
         h1 {
@@ -33,6 +33,7 @@
             align-items: center;
             gap: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            justify-content: center;
         }
 
         .info-block {
@@ -44,9 +45,13 @@
             max-width: 300px;
         }
 
+        .button-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
         button {
-            display: block;
-            margin: 20px auto;
             padding: 10px 20px;
             font-weight: bold;
             background: black;
@@ -54,6 +59,12 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         #skullContainer {
@@ -95,26 +106,46 @@
         <div style="font-size: 24px;">💀<h2>Sueldo medio anual = 27.000 €</h2></div>
     </div>
 
-    <button onclick="startAnimation()">Descubrir</button>
+    <div class="button-container">
+        <button onclick="startAnimation()" id="startBtn">Descubrir</button>
+        <button onclick="togglePause()" id="pauseBtn" disabled>Pausar</button>
+    </div>
     <div id="skullContainer"></div>
 
     <script>
         let total = 0;
         let skullsAdded = 0;
         let animationInterval;
-        let nextMilestone = 100000000; // 100 millones
+        let nextMilestone = 100000000;
         const ROW_HEIGHT = 22;
+        let isPaused = false;
 
         function startAnimation() {
-            document.querySelector('button').disabled = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('pauseBtn').disabled = false;
             animationInterval = setInterval(addSkull, 0);
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            const pauseBtn = document.getElementById('pauseBtn');
+            if(isPaused) {
+                clearInterval(animationInterval);
+                pauseBtn.textContent = 'Reanudar';
+            } else {
+                animationInterval = setInterval(addSkull, 0);
+                pauseBtn.textContent = 'Pausar';
+            }
         }
 
         function addSkull() {
             if(total >= 421000000000) {
                 clearInterval(animationInterval);
+                document.getElementById('pauseBtn').disabled = true;
                 return;
             }
+
+            if(isPaused) return;
 
             for(let i = 0; i < 2; i++) {
                 const skull = document.createElement('span');
@@ -122,10 +153,9 @@
                 skull.textContent = '💀';
                 document.getElementById('skullContainer').appendChild(skull);
                 
-                total += 27000; // Valor modificado a 27.000 €
+                total += 27000;
                 skullsAdded++;
                 
-                // Verificar si alcanzamos hitos de 100 millones
                 while(total >= nextMilestone) {
                     showMillionMessage(nextMilestone / 1000000);
                     nextMilestone += 100000000;
