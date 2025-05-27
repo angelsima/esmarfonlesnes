@@ -87,24 +87,25 @@ p {
  }
    /* Botón recargar */
    .reload-btn {
-  position: absolute;
+   position: fixed; 
   top: 1rem;
   right: 1rem;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
-  color: var(--accent.color);   /* flecha en verde */
+  color: var(--accent-color);   /* flecha en verde */
   z-index: 1000;
+      transition: transform 0.3s ease; /* Para animación suave */
 }
 
 .reload-btn svg {
-  width: 24px;
-  height: 24px;
+  width: 32px; /* Tamaño un poco más grande */
+  height: 32px;
   display: block;
-  fill: currentColor; /* usa el color verde definido arriba */
+  filter: drop-shadow(0 0 2px var(--accent-color)); /* Efecto neón */
 }
 
 .reload-btn:hover {
-  transform: rotate(20deg);
+  transform: rotate(360deg); 
 }
