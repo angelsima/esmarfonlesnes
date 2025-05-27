@@ -97,20 +97,7 @@ p {
 }
 
 
-    .obj {
-      position: absolute;
-      cursor: pointer;
-      user-select: none;
-      white-space: nowrap;
-      padding: 20px;
-      box-sizing: content-box;
-      background-color: transparent;
-      pointer-events: auto;
-      display: inline-block;
-      min-width: 40px;
-      min-height: 40px;
-      text-align: center;
-    }
+
     .contenido {
       max-width: 600px;
       padding: 2em;
