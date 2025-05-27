@@ -1,17 +1,19 @@
-<!DOCTYPE html>
+       <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Más-K</title>
     <style>
         body {
             background-color: #FFD700;
             margin: 0;
-            max-width: 600px
+            max-width: 600px;
             padding: 20px;
             font-family: Arial, sans-serif;
             font-weight: bold;
+            overflow-x: hidden;
         }
+        
 h1 {margin-top: 30px;
     text-align: center;
     padding: 10px;
@@ -60,13 +62,22 @@ h1 {margin-top: 30px;
 
         .skull {
             font-size: 20px;
+            line-height: 20px;
+            animation: appear 0.1s ease;
+        }
+
+        @keyframes appear {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
         }
 
         .million-message {
             width: 100%;
             text-align: center;
             padding: 10px;
-            font-size: 1.2em;
+            font-size: 1.5em;
+            background: #ff000055;
+            margin: 5px 0;
         }
     </style>
 </head>
@@ -75,7 +86,7 @@ h1 {margin-top: 30px;
         <span>🧑🏻</span>
         <span id="counter">Llevamos 0 / 421.000 millones $</span>
     </div>
-<h1>¿Cuántos asalariados hacen falta para igualar el patrimonio de Elon Musk?</h1>
+    <h1>¿Cuántos asalariados hacen falta para igualar el patrimonio de Elon Musk?</h1>
     <div class="info-block">
         <div style="font-size: 24px;">🧑🏻</div>
         <h2>Patrimonio de Elon Musk</h2>
@@ -89,11 +100,12 @@ h1 {margin-top: 30px;
         let total = 0;
         let skullsAdded = 0;
         let animationInterval;
-        let millionsCount = 0;
+        let billionsCount = 0;
+        const ROW_HEIGHT = 22; // 20px skull + 2px gap
 
         function startAnimation() {
             document.querySelector('button').disabled = true;
-            animationInterval = setInterval(addSkull, 10);
+            animationInterval = setInterval(addSkull, 1);
         }
 
         function addSkull() {
@@ -113,21 +125,27 @@ h1 {margin-top: 30px;
             
             updateCounter();
             
-            if(skullsAdded % 50 === 0) { // 50 calaveras = 1 millón
-                millionsCount++;
-                showMillionMessage(millionsCount);
+            // Scroll automático cada nueva fila
+            if((skullsAdded - 1) % 10 === 0) {
+                window.scrollBy({ top: ROW_HEIGHT, behavior: 'smooth' });
+            }
+            
+            // Mensaje cada 1.000 millones (50,000 calaveras)
+            if(skullsAdded % 50000 === 0) {
+                billionsCount++;
+                showBillionMessage(billionsCount);
             }
         }
 
         function updateCounter() {
             document.getElementById('counter').textContent = 
-                `Llevamos ${(total / 1000000).toFixed(0)} millones / 421.000 millones $`;
+                `Llevamos ${(total / 1000000000).toFixed(3)} mil millones / 421.000 millones $`;
         }
 
-        function showMillionMessage(count) {
+        function showBillionMessage(count) {
             const message = document.createElement('div');
             message.className = 'million-message';
-            message.textContent = `Ya llevamos ${count} millón${count > 1 ? 'es' : ''}`;
+            message.textContent = `🔥 YA LLEVAMOS ${count}.000 MILLONES 🔥`;
             document.getElementById('skullContainer').appendChild(message);
         }
     </script>
