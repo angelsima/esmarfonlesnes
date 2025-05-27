@@ -27,17 +27,31 @@
        font-size: 0.85rem;
   line-height: 1.4;
     }
-    .scroll-arrow {
-  position: fixed;
-  bottom: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 5.5rem;
-  color: var(--accent-color);
-  pointer-events: none; /* para que no interfiera con el scroll o clicks */
-  user-select: none;
-   z-index: 1000;
-}
+     /* Nuevo estilo para el círculo con flecha */
+    .scroll-circle {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      background-color: #00ff88;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1000;
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    }
+    
+    .scroll-circle::after {
+      content: "↓";
+      font-size: 1.5rem;
+      color: rgba(0, 0, 0, 0.6); /* Flecha negra semitransparente */
+      margin-top: -5px; /* Ajuste fino de posición */
+    }
   </style>
 </head>
 <body>
@@ -51,7 +65,7 @@
 <br>Nuestra anciana labriega, enciclopédica sabia, hunde sus dedos en la tierra suelta, y almacena en su mano una muestra de arcilla nativa depositaria y sostén de herencias etnográficas. Devuelve sus pies al umbroso hogar alzado con ladrillos bañados en sudor de agotados peones auto-edificados desde la dignidad proletaria, donde mezcla arcilla y agua simulando el ritual de una llovizna estival, resultando en barro. El ungüento alivia los pesares del aguijón y hermana a la anciana con la naturaleza en un abrazo espiritual, relicario de una Únión que ni mil legiones de desencuentros desharán.
 <br>Así, nuevamente espoleada por la pasión sacramental de subsanar el hambre, camina de vuelta a la higuera, a la alimentación consciente. Allí se detiene a sentir el árbol, a embriagarse de esperanza, y localiza un higo dador de consentimiento del cual no abreva otro ser fáunico. Entonces sí, tras inhalar diafragmáticamente y apretar el perineo, extiende cuidadosamente el índice y pulgar de su mano izquierda, seis falanges zurdas constituyentes de un oxímoron, y, con una suave pinza en forma de Ú, desprende del árbol el higo y se convierte en leyenda e inspiración de un cambio social, cambio cincelado en estos parágrafos llamados a cambiar el mundo y titulados: Manifiesto del higo rÚstico.
 </p>
-     <div class="scroll-arrow" aria-hidden="true">⬇</div>
+    <div class="scroll-circle" aria-hidden="true"></div>
     </div>
  
 </body>
