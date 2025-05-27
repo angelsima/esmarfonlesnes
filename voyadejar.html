@@ -2,43 +2,71 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prueba de frase</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uso sano del esmarfon</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f6f9; /* Fondo muy claro, casi blanco */
       display: flex;
-      align-items: center;
       justify-content: center;
-      background: #fafafa;
-      font-family: sans-serif;
+      align-items: center;
     }
+
     .container {
-      text-align: center;
+      background: #ffffff;
       padding: 2em;
-      border: 1px solid #ccc;
-      border-radius: 0.5em;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      text-align: center;
+      max-width: 420px;
       width: 90%;
-      max-width: 400px;
+      border: 1px solid #e0e6ed;
     }
+
     .container p {
+      font-size: 1.1em;
       margin-bottom: 1em;
+      color: #333;
     }
-    .container input {
-      padding: 0.5em;
-      font-size: 1em;
+
+    input[type="text"] {
       width: 100%;
-      box-sizing: border-box;
-      margin-bottom: 1em;
-    }
-    .container button {
-      padding: 0.5em 1em;
+      padding: 0.75em;
       font-size: 1em;
+      border: 1px solid #cbd6e2;
+      border-radius: 8px;
+      box-sizing: border-box;
+      outline: none;
+      margin-bottom: 1em;
+      transition: border 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: #8cc0de;
+    }
+
+    button {
+      padding: 0.6em 1.5em;
+      font-size: 1em;
+      background-color: #8cc0de; /* azul suave (puedes cambiarlo a #a8e6cf para verde menta) */
+      color: white;
+      border: none;
+      border-radius: 25px;
       cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #77b3d6;
+      transform: scale(1.03);
+    }
+
+    audio {
+      display: none;
     }
   </style>
 </head>
@@ -61,10 +89,9 @@
       if (input.value.trim() === correct) {
         sound.currentTime = 0;
         sound.play();
-         // Esperar un momento para que se escuche el sonido antes de redirigir
-      setTimeout(() => {
-        window.location.href = "infinilike.html"; // <-- Ajusta esto si el archivo se llama distinto o está en otra carpeta
-      }, 800); // 0.8 segundos de espera
+        setTimeout(() => {
+          window.location.href = "infinilike.html";
+        }, 800);
       } else {
         alert('Frase incorrecta. Intenta de nuevo.');
         input.value = '';
