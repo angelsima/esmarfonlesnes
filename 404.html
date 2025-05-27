@@ -6,6 +6,55 @@
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/contras.css" />
   <title>CUATRO CERO CUATRO</title>
+  <style>
+    
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+:root {
+  --font-body: 'Space Mono', monospace;
+  --bg-color: #000;
+  --text-color: #f2f2f2;
+  --accent-color: #00ff88; /* Verde Matrix */
+  --space-s: 0.5rem;
+  --space-m: 1rem;
+  --space-l: 2rem;
+}
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-body);
+  margin: 0;
+  padding: var(--space-l);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+h1 {
+  color: var(--text-color);
+  font-family: var(--font-body);
+  margin-top: var(--space-l);
+  line-height: 1.2;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 3em;
+  letter-spacing: 0.05em;
+}
+p {
+  font-size: 1.1em;
+  margin-top: var(--space-s);
+}
+
+.blink {
+  animation: blink 1.1s steps(2, start) infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+}
+  </style>
 </head>
 <body>
   <div class="container">
