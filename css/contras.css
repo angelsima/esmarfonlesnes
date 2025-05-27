@@ -86,20 +86,25 @@ p {
   padding: 0.1em 0.3em;
  }
    /* Botón recargar */
-    .reload-btn {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      width: 2rem;
-      height: 2rem;
-      background: transparent;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      fill: var(--accent-color);
-      transition: transform 0.2s;
-       z-index: 1000;
-    }
-    .reload-btn:hover {
-      transform: rotate(20deg);
-    }
+   .reload-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--accent.color);   /* flecha en verde */
+  z-index: 1000;
+}
+
+.reload-btn svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  fill: currentColor; /* usa el color verde definido arriba */
+}
+
+.reload-btn:hover {
+  transform: rotate(20deg);
+}
