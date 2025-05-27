@@ -23,6 +23,10 @@ body {
    background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
+     position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 }
 .container {
   max-width: 100%;   /* Full width on small screens */
