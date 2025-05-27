@@ -1,9 +1,6 @@
 /* CONTRAS DEL ESMARFON — estilo glitch crítico */
-
-/* Importar tipografía */
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
 
-/* Variables raíz */
 :root {
   --font-body: 'Space Mono', monospace;
   --bg-color: #000;
@@ -13,16 +10,7 @@
   --space-m: 1rem;
   --space-l: 2rem;
 }
-body {
-  html, body {
-     
-      overflow: hidden;
-      background: #111;
-      color: #eee;
-      font-family: sans-serif;
-    
-    }
-/* Estilo base */
+
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -30,51 +18,49 @@ body {
   margin: 0;
   padding: var(--space-l);
   line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
 }
-/* Alternancia de colores para contraste */
-.alt {
-  color: var(--accent-color);
-  background-color: var(--text-color);
-  padding: 0.1em 0.3em;
-  border-radius: 3px;
-}
-/* Contenedor central */
+
 .container {
   max-width: 100%;
   padding: 0 var(--space-m);
 }
 
-/* Títulos */
 h1, h2, h3 {
   color: var(--text-color);
   font-family: var(--font-body);
   margin-top: var(--space-l);
   line-height: 1.2;
 }
+
 h1 {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 3em;
   letter-spacing: 0.05em;
 }
-/* Enlaces */
+
 a {
   color: var(--accent-color);
   text-decoration: none;
   transition: color 0.2s;
 }
+
 a:hover, a:focus {
   color: #ffffff;
   text-shadow: 0 0 4px var(--accent-color);
 }
 
-/* Parrafos */
 p {
   font-size: 1.1em;
   margin-top: var(--space-s);
 }
 
-/* Efecto parpadeo */
 .blink {
   animation: blink 1.1s steps(2, start) infinite;
 }
@@ -83,7 +69,6 @@ p {
   50% { opacity: 0; }
 }
 
-/* Efecto shake / glitch */
 .shake {
   animation: shake 0.4s infinite;
 }
@@ -96,22 +81,9 @@ p {
   100% { transform: translate(0, 0); }
 }
 
-
-
-    .contenido {
-      max-width: 600px;
-      padding: 2em;
-      height: 90vh;
-      overflow: hidden;
-      box-sizing: border-box;
-      text-align: justify;
-    }
-  .filtro {
-      position: fixed;
-      bottom: 0;
-      height: 4em;
-      width: 100%;
-      background: linear-gradient(to bottom, transparent, #f8f8f8);
-      pointer-events: none;
-    }
- 
+.alt {
+  color: var(--accent-color);
+  background-color: var(--text-color);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+}
