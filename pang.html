@@ -4,10 +4,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="css/contras.css" />
   <title>Pang – Texto Anárquico</title>
   <style>
-     
+
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+:root {
+  --font-body: 'Space Mono', monospace;
+  --bg-color: #000;
+  --text-color: #f2f2f2;
+  --accent-color: #00ff88; /* Verde Matrix */
+  --space-s: 0.5rem;
+  --space-m: 1rem;
+  --space-l: 2rem;
+}
+    
+body {
+      margin: 0; padding: 0;
+      width: 100vw; height: 100vh;
+      overflow: hidden;
+      background: #000;
+      color: #f2f2f2;
+      position: fixed;
+    }
     .obj {
       position: absolute;
       cursor: pointer;
@@ -22,11 +40,33 @@
       min-height: 40px;
       text-align: center;
     }
+      /* Botón recargar */
+   .reload-btn {
+   position: fixed; 
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--accent-color);   /* flecha en verde */
+  z-index: 1000;
+      transition: transform 0.3s ease; /* Para animación suave */
+}
+
+.reload-btn svg {
+  width: 32px; /* Tamaño un poco más grande */
+  height: 32px;
+  display: block;
+}
+
+.reload-btn:hover {
+  transform: rotate(360deg); 
+}
   </style>
 </head>
-<body class="pang">
- <!-- Botón de recarga -->
- <button class="reload-btn" aria-label="Recargar página"
+<body>
+<button class="reload-btn" aria-label="Recargar página"
         onclick="window.location.reload()">
   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path d="M12 4V1L8 5l4 4V6a6 6 0 016 6 6 6 0 01-6 6 6 6 0 01-5.65-4H4.07a8 8 0 007.93 6 8 8 0 000-16z"/>
