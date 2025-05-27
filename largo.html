@@ -24,7 +24,21 @@
       overflow: hidden;
       box-sizing: border-box;
       text-align: justify;
+       font-size: 0.85rem;
+  line-height: 1.4;
     }
+    .scroll-arrow {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2.5rem;
+  color: accent-color;
+  pointer-events: none; /* para que no interfiera con el scroll o clicks */
+  user-select: none;
+  opacity: 0.6;
+  z-index: 1000;
+}
   </style>
 </head>
 <body>
@@ -39,7 +53,7 @@
 <br>Así, nuevamente espoleada por la pasión sacramental de subsanar el hambre, camina de vuelta a la higuera, a la alimentación consciente. Allí se detiene a sentir el árbol, a embriagarse de esperanza, y localiza un higo dador de consentimiento del cual no abreva otro ser fáunico. Entonces sí, tras inhalar diafragmáticamente y apretar el perineo, extiende cuidadosamente el índice y pulgar de su mano izquierda, seis falanges zurdas constituyentes de un oxímoron, y, con una suave pinza en forma de Ú, desprende del árbol el higo y se convierte en leyenda e inspiración de un cambio social, cambio cincelado en estos parágrafos llamados a cambiar el mundo y titulados: Manifiesto del higo rÚstico.
 
 </p>
-  
-  </div>
+    </div>
+  <div class="scroll-arrow" aria-hidden="true">⬇</div>
 </body>
 </html>
