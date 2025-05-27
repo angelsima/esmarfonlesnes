@@ -83,7 +83,5 @@ p {
 
 .alt {
   color: var(--accent-color);
-  background-color: var(--text-color);
   padding: 0.1em 0.3em;
-  border-radius: 3px;
-}
+ }
