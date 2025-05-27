@@ -98,6 +98,7 @@ p {
       cursor: pointer;
       fill: var(--accent-color);
       transition: transform 0.2s;
+       z-index: 1000;
     }
     .reload-btn:hover {
       transform: rotate(20deg);
