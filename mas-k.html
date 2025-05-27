@@ -4,7 +4,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Más-K</title>
     <style>
-        /* ... (estilos igual que antes) ... */
+        body {
+            background-color: #FFD700;
+            margin: 0;
+            max-width: 600px;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            overflow-x: hidden;
+        }
+        
+        h1 {
+            margin-top: 30px;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        #fixedHeader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #FFD700;
+            padding: 10px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .info-block {
+            text-align: center;
+            margin: 60px auto 20px;
+            padding: 20px;
+            background: #FFF700;
+            border-radius: 10px;
+            max-width: 300px;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-weight: bold;
+            background: black;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #skullContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+            margin-top: 20px;
+        }
+
+        .skull {
+            font-size: 20px;
+            line-height: 20px;
+            animation: appear 0.05s ease;
+        }
+
+        @keyframes appear {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        .million-message {
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            font-size: 1.5em;
+            background: #ff000055;
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
