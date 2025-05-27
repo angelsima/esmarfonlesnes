@@ -28,11 +28,25 @@ body {
       justify-content: center;
       align-items: center;
 }
+/* Mobile-first container */
 .container {
-  max-width: 100%;   /* Full width on small screens */
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
   padding: 0 var(--space-m);
+  box-sizing: border-box;
 }
 
+/* Ajustes progresivos */
+@media (min-width: 400px) {
+  .container { max-width: 480px; }
+}
+@media (min-width: 600px) {
+  .container { max-width: 600px; }
+}
+@media (min-width: 900px) {
+  .container { max-width: 720px; }
+}
 /* Títulos */
 h1, h2, h3 {
   font-family: var(--font-heading);
