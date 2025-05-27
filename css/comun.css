@@ -1,0 +1,58 @@
+/* ------------------------
+   ESTILO BASE (común a todos)
+------------------------ */
+:root {
+  /* Tipografía */
+  --font-body: "Merriweather", serif;
+  --font-heading: "Montserrat", sans-serif;
+  /* Espaciado */
+  --space-s: 0.5rem;
+  --space-m: 1rem;
+  --space-l: 2rem;
+  /* Colores genéricos */
+  --background-color: #fff;
+  --text-color: #333;
+  --link-color: #0066cc;
+  --link-hover: #004499;
+}
+
+body {
+  margin: 0;
+ padding: var(--space-l);
+  font-family: var(--font-body);
+   background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+.container {
+  max-width: 100%;   /* Full width on small screens */
+  padding: 0 var(--space-m);
+}
+
+/* Títulos */
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  margin-top: var(--space-l);
+  line-height: 1.2;
+}
+
+/* Enlaces */
+a {
+    color: var(--link-color);
+   text-decoration: none;
+   transition: color .2s;
+}
+a:hover, a:focus { color: var(--link-hover); }
+
+ol {
+  padding-left: 1.5em;
+}
+
+/* Adaptaciones para pantallas más grandes */
+@media (min-width: 600px) {
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
