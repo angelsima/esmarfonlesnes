@@ -2,14 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Matrix en blanco y negro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lluvia de palabras</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       background: white;
-      color: blue;
       overflow: hidden;
       height: 100%;
     }
@@ -30,41 +29,60 @@
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  // Texto base (puedes poner tu propio Lorem Ipsum u otro texto)
- const texto = "Veo la lluvia tras mi esmarfon".split(" ");
+  // Frase completa que caerá
+  const frase = "Veo la lluvia tras mi esmarfon";
+  const palabras = frase.split(" ");
+  
+  // Configuración visual
+  const fontSize = 24;
+  const velocidad = 2;
+  const colorAzul = "#0066cc"; // Tonos azules alternativos: #1a75ff, #0052cc, #3399ff
 
-  const fontSize = 18;
-  const columns = Math.floor(canvas.width / fontSize);
+  // Array para guardar las posiciones de cada palabra
+  const palabrasPosiciones = palabras.map((_, index) => ({
+    x: (index + 1) * (canvas.width / (palabras.length + 1)),
+    y: -Math.random() * canvas.height, // Comienzan en posiciones aleatorias arriba
+    velocidad: 1 + Math.random() * velocidad
+  }));
 
-  // Array con la posición Y actual de cada columna
-  const drops = Array(columns).fill(1);
-
-  function drawMatrix() {
-    // Fondo blanco con transparencia para simular "borrado"
-    ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+  function dibujarLluvia() {
+    // Fondo blanco sólido (sin transparencia para eliminar el efecto de barrido)
+    ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "#111"; // Texto negro
-    ctx.font = fontSize + "px serif";
+    ctx.fillStyle = colorAzul;
+    ctx.font = `bold ${fontSize}px 'Courier New', monospace`;
+    ctx.textAlign = "center";
 
-    for (let i = 0; i < drops.length; i++) {
-      const textoAleatorio = texto[Math.floor(Math.random() * texto.length)];
-      ctx.fillText(textoAleatorio, i * fontSize, drops[i] * fontSize);
-
-      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-        drops[i] = 0;
+    // Dibujar cada palabra en su posición
+    palabras.forEach((palabra, index) => {
+      const pos = palabrasPosiciones[index];
+      ctx.fillText(palabra, pos.x, pos.y);
+      
+      // Mover la palabra hacia abajo
+      pos.y += pos.velocidad;
+      
+      // Reiniciar posición cuando sale de la pantalla
+      if (pos.y > canvas.height + fontSize) {
+        pos.y = -fontSize;
+        pos.x = (index + 1) * (canvas.width / (palabras.length + 1));
       }
+    });
 
-      drops[i]++;
-    }
+    requestAnimationFrame(dibujarLluvia);
   }
 
-  setInterval(drawMatrix, 50);
+  // Iniciar animación
+  dibujarLluvia();
 
   // Redimensionar al cambiar tamaño de ventana
   window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    // Recalcular posiciones X al redimensionar
+    palabrasPosiciones.forEach((pos, index) => {
+      pos.x = (index + 1) * (canvas.width / (palabras.length + 1));
+    });
   });
 </script>
 </body>
