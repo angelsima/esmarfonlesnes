@@ -115,7 +115,6 @@ body.pang {
   width: 32px; /* Tamaño un poco más grande */
   height: 32px;
   display: block;
-  filter: drop-shadow(0 0 2px var(--accent-color)); /* Efecto neón */
 }
 
 .reload-btn:hover {
