@@ -53,6 +53,13 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             display: none;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .time-counter {
+            font-size: 0.9em;
+            white-space: nowrap;
         }
 
         .info-block {
@@ -122,8 +129,9 @@
         <span id="counter">Llevamos 0 / 421.000 millones €</span>
     </div>
     
-    <div id="floatingPause">
+   <div id="floatingPause">
         <button onclick="togglePause()" id="floatingPauseBtn" disabled>Pausar</button>
+        <div class="time-counter" id="timeCounter">⏳ Tiempo restante estimado: --</div>
     </div>
 
     <h1>¿Cuántos asalariados💀 hacen falta para igualar el patrimonio de Elon Musk🧑🏻?</h1>
@@ -143,20 +151,43 @@
     <div id="skullContainer"></div>
 
     <script>
+ <script>
         let total = 0;
         let skullsAdded = 0;
         let animationInterval;
+        let timeUpdateInterval;
         let nextMilestone = 100000000;
         const ROW_HEIGHT = 22;
         let isPaused = false;
+        let startTime = 0;
+        const TOTAL_TARGET = 421000000000;
 
         function startAnimation() {
+            startTime = Date.now();
             document.getElementById('startBtn').disabled = true;
             document.getElementById('pauseBtn').disabled = false;
             document.getElementById('floatingPauseBtn').disabled = false;
             document.getElementById('mainButtons').style.display = 'none';
-            document.getElementById('floatingPause').style.display = 'block';
+            document.getElementById('floatingPause').style.display = 'flex';
+            
             animationInterval = setInterval(addSkull, 0);
+            timeUpdateInterval = setInterval(updateTimeCounter, 1000);
+        }
+
+        function updateTimeCounter() {
+            if(isPaused || total >= TOTAL_TARGET) return;
+            
+            const elapsed = (Date.now() - startTime) / 1000; // en segundos
+            const amountPerSecond = total / elapsed;
+            const remaining = TOTAL_TARGET - total;
+            
+            if(amountPerSecond > 0) {
+                const secondsLeft = remaining / amountPerSecond;
+                const minutes = Math.floor(secondsLeft / 60);
+                const seconds = Math.floor(secondsLeft % 60);
+                document.getElementById('timeCounter').textContent = 
+                    `⏳ Tiempo restante estimado: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
         }
 
         function togglePause() {
@@ -169,6 +200,7 @@
                 pauseBtn.textContent = 'Reanudar';
                 floatingBtn.textContent = 'Reanudar';
             } else {
+                startTime = Date.now() - (startTime > 0 ? Date.now() - startTime : 0);
                 animationInterval = setInterval(addSkull, 0);
                 pauseBtn.textContent = 'Pausar';
                 floatingBtn.textContent = 'Pausar';
@@ -176,9 +208,11 @@
         }
 
         function addSkull() {
-            if(total >= 421000000000) {
+            if(total >= TOTAL_TARGET) {
                 clearInterval(animationInterval);
+                clearInterval(timeUpdateInterval);
                 document.getElementById('floatingPauseBtn').disabled = true;
+                document.getElementById('timeCounter').textContent = "¡Completado!";
                 return;
             }
 
