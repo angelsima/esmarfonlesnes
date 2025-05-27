@@ -61,6 +61,10 @@
       if (input.value.trim() === correct) {
         sound.currentTime = 0;
         sound.play();
+         // Esperar un momento para que se escuche el sonido antes de redirigir
+      setTimeout(() => {
+        window.location.href = "infinilike.html"; // <-- Ajusta esto si el archivo se llama distinto o está en otra carpeta
+      }, 800); // 0.8 segundos de espera
       } else {
         alert('Frase incorrecta. Intenta de nuevo.');
         input.value = '';
