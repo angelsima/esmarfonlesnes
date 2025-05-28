@@ -63,6 +63,9 @@
       scroll-snap-type: x mandatory;
       scroll-behavior: smooth;
     }
+    .slider::-webkit-scrollbar {
+  display: none; /* elimina el scrollbar que podría interferir */
+}
 
     .slide {
       flex: 0 0 100%;
@@ -181,7 +184,7 @@
   function updateDots() {
     const slideWidth = slider.clientWidth;
     const scrollLeft = slider.scrollLeft;
-    const index = Math.floor((scrollLeft + slideWidth / 2) / slideWidth); // más preciso
+    const index = Math.round(scrollLeft / slideWidth);
     if (index !== currentIndex) {
       currentIndex = index;
       dots.forEach(dot => dot.classList.remove('active'));
