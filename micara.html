@@ -91,14 +91,15 @@
       color: #111;
       font-family: 'Anton', sans-serif;
       font-weight: 900;
+text-align: center;
+padding: 0px;
       position: absolute;
       z-index: 2;
       transform: rotate(-30deg);
       pointer-events: none;
      text-transform: uppercase;
-
+ line-height: 0.8; /* Añade esta línea para reducir el espacio entre MI y CARA */
     }
-
    .dots {
     position: absolute;
     bottom: 15px;
@@ -127,41 +128,39 @@
 <body>
   <h1>Las 7 maravillas del mundo</h1>
   <div class="smartphone-frame">
-    <div class="glass-layer">
-      <div class="slider" id="slider">
+         <div class="slider" id="slider">
         <div class="slide">
           <div class="fondo-texto" style="color: #00c853;">CHICHÉN<br>ITZÁ</div>
-          <div class="superpuesto">MI CARA</div>
+          <div class="superpuesto">MI<BR>CARA</div>
         </div>
         <div class="slide">
           <div class="fondo-texto" style="color: #ff1744;">COLISEO<br>ROMANO</div>
-          <div class="superpuesto">MI CARA</div>
+          <div class="superpuesto">MI<BR>CARA</div>
         </div>
         <div class="slide">
           <div class="fondo-texto" style="color: 	#00e676;">MACHU<br> PICCHU</div>
-          <div class="superpuesto">MI CARA</div>
+          <div class="superpuesto">MI<BR>CARA</div>
         </div>
         <div class="slide">
           <div class="fondo-texto" style="color: #ffea00;">LA GRAN <br>MURALLA<br>CHINA</div>
-          <div class="superpuesto">MI CARA</div>
+          <div class="superpuesto">MI<BR>CARA</div>
         </div>
         <div class="slide">
           <div class="fondo-texto" style="color: #ff4081;">CRISTO <br>REDENTOR</div>
-          <div class="superpuesto">MI CARA</div>
+          <div class="superpuesto">MI<BR>CARA</div>
         </div>
         <div class="slide">
           <div class="fondo-texto" style="color: #2979ff;">TAJ<br>MAHAL</div>
-          <div class="superpuesto" >MI CARA</div>
+          <div class="superpuesto" >MI<BR>CARA</div>
         </div>
         <div class="slide">
           <div class="fondo-texto" style="color: #ff6d00;">PETRA</div>
-          <div class="superpuesto">MI CARA</div>
+          <div class="superpuesto">MI<BR>CARA</div>
         </div>
       </div>
       <div class="dots" id="dots"></div>
     </div>
-  </div>
-
+  
 <script>
   const slider = document.getElementById('slider');
   const dotsContainer = document.getElementById('dots');
