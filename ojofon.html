@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filtro de Vigilancia Facial Preciso</title>
+    <title>Filtro de Vigilancia Facial</title>
     <style>
         * {
             margin: 0;
@@ -226,17 +226,6 @@
             font-size: 1rem;
         }
         
-        .calibration-info {
-            background: rgba(10, 15, 30, 0.8);
-            border-radius: 15px;
-            padding: 15px;
-            margin-top: 10px;
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            max-width: 400px;
-            font-size: 0.9rem;
-            color: #a0b0ff;
-        }
-        
         .instructions {
             max-width: 500px;
             margin-top: 20px;
@@ -336,8 +325,8 @@
     
     <div class="container">
         <header>
-            <h1 class="glitch-text" data-text="VIGILANCIA PRECISA">VIGILANCIA PRECISA</h1>
-            <p class="subtitle">Calibración mejorada para alineación perfecta</p>
+            <h1 class="glitch-text" data-text="VIGILANCIA FACIAL">VIGILANCIA FACIAL</h1>
+            <p class="subtitle">Recuadro verde preciso sobre movimientos faciales</p>
         </header>
         
         <div class="camera-frame">
@@ -352,7 +341,6 @@
         
         <div class="controls">
             <button id="startButton" class="btn">ACTIVAR VIGILANCIA</button>
-            <button id="calibrateButton" class="btn">CALIBRAR</button>
             <button id="stopButton" class="btn btn-off">DESACTIVAR</button>
         </div>
         
@@ -361,24 +349,20 @@
             <div id="error"></div>
         </div>
         
-        <div class="calibration-info">
-            <p>Si el cuadro no está alineado, haz clic en CALIBRAR y mantén tu rostro centrado</p>
-        </div>
-        
         <div class="instructions">
-            <p>Este filtro detecta tu rostro con precisión y muestra un recuadro verde sobre la zona con mayor movimiento.</p>
-            <p>La calibración automática asegura que el cuadro esté perfectamente alineado con tu rostro.</p>
+            <p>Este filtro detecta tu rostro y muestra un recuadro verde sobre la zona con mayor movimiento.</p>
+            <p>Mueve tus cejas, ojos o boca para ver el efecto de vigilancia.</p>
             
             <div class="features">
-                <div class="feature">Calibración precisa</div>
-                <div class="feature">Detección mejorada</div>
-                <div class="feature">Alineación perfecta</div>
-                <div class="feature">Sin desfase</div>
+                <div class="feature">Detección precisa</div>
+                <div class="feature">Recuadro verde</div>
+                <div class="feature">Movimiento facial</div>
+                <div class="feature">Efecto vigilancia</div>
             </div>
         </div>
         
         <div class="footer">
-            Filtro de vigilancia facial con calibración avanzada
+            Filtro de vigilancia facial con tecnología MediaPipe
         </div>
     </div>
 
@@ -394,7 +378,6 @@
         const overlayCanvas = document.getElementById('overlayCanvas');
         const ctx = overlayCanvas.getContext('2d');
         const startButton = document.getElementById('startButton');
-        const calibrateButton = document.getElementById('calibrateButton');
         const stopButton = document.getElementById('stopButton');
         const statusEl = document.getElementById('status');
         const errorEl = document.getElementById('error');
@@ -409,8 +392,6 @@
         let currentBox = { x: 0, y: 0, width: 0, height: 0 };
         let lastMovementTime = 0;
         let faceDetected = false;
-        let calibrationOffset = { x: 0, y: 0 };
-        let isCalibrating = false;
         
         // Crear partículas decorativas
         function createParticles() {
@@ -489,38 +470,6 @@
             }
         }
         
-        // Función para calibrar la posición
-        function calibratePosition() {
-            if (!faceDetected) {
-                errorEl.textContent = "No se detectó rostro. Por favor, colócate frente a la cámara.";
-                return;
-            }
-            
-            isCalibrating = true;
-            statusEl.innerHTML = '<span class="status-pulse"></span> Calibrando... Mantén tu posición';
-            
-            // Calcular el centro del rostro detectado
-            const faceCenterX = currentBox.x + currentBox.width / 2;
-            const faceCenterY = currentBox.y + currentBox.height / 2;
-            
-            // Calcular el centro del video
-            const videoCenterX = videoElement.videoWidth / 2;
-            const videoCenterY = videoElement.videoHeight / 2;
-            
-            // Calcular la diferencia (desfase)
-            calibrationOffset.x = videoCenterX - faceCenterX;
-            calibrationOffset.y = videoCenterY - faceCenterY;
-            
-            // Aplicar la calibración
-            setTimeout(() => {
-                isCalibrating = false;
-                statusEl.innerHTML = '<span class="status-pulse"></span> Calibración completada!';
-                setTimeout(() => {
-                    statusEl.innerHTML = '<span class="status-pulse"></span> Vigilancia ACTIVA';
-                }, 2000);
-            }, 1000);
-        }
-        
         // Procesar resultados de Face Mesh
         function onFaceMeshResults(results) {
             // Configurar el canvas al tamaño del video
@@ -537,18 +486,11 @@
                 const movementArea = findMovementArea(landmarks);
                 
                 if (movementArea) {
-                    // Aplicar calibración
-                    movementArea.x += calibrationOffset.x;
-                    movementArea.y += calibrationOffset.y;
-                    
                     // Actualizar el recuadro de movimiento
                     updateMovementBox(movementArea.x, movementArea.y, movementArea.width, movementArea.height);
                     movementBox.querySelector('.box-label').textContent = movementArea.label;
                     movementBox.style.display = 'block';
                     lastMovementTime = Date.now();
-                    
-                    // Guardar la posición actual para referencia
-                    currentBox = movementArea;
                 } else {
                     // Ocultar el recuadro después de 1 segundo sin movimiento
                     if (Date.now() - lastMovementTime > 1000) {
@@ -669,11 +611,6 @@
                 camera.start();
                 statusEl.innerHTML = '<span class="status-pulse"></span> Vigilancia ACTIVA - Mueve tu rostro';
             }
-        });
-        
-        // Botón de calibración
-        calibrateButton.addEventListener('click', () => {
-            calibratePosition();
         });
         
         // Detener la detección
