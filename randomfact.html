@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datos que no pediste</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f2f2f2;
+      font-family: 'Helvetica Neue', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      text-align: center;
+      color: #333;
+    }
+
+    #dato {
+      font-size: 1.5rem;
+      margin: 30px;
+      max-width: 600px;
+      min-height: 100px;
+      transition: opacity 0.3s ease;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      background-color: #4a90e2;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #357ab7;
+    }
+  </style>
+</head>
+<body>
+  <div id="dato">Este libro también tiene datos que no has pedido y que cambiarán tu día:</div>
+  <button onclick="mostrarDato()">Dame un dato</button>
+
+  <script>
+    const datos = [
+      "Los pulpos tienen tres corazones.",
+      "Tu cuerpo brilla en la oscuridad (pero no lo ves).",
+      "Hay más combinaciones en un cubo Rubik que átomos en el universo.",
+      "Tu esqueleto se renueva cada 10 años.",
+      "Las vacas tienen mejores amigas y sufren cuando las separan.",
+      "Los árboles se comunican mediante redes de hongos: el 'Wood Wide Web'.",
+      "La luz de muchas estrellas ya proviene de estrellas que han muerto.",
+      "La miel no caduca. Se ha encontrado comestible tras 3.000 años.",
+      "Un caracol puede dormir durante tres años seguidos.",
+      "La música afecta el sabor: lo agudo intensifica lo dulce.",
+      "Cada minuto se suben 500 h de vídeo a YouTube.",
+      "El emoji de la berenjena fue censurado en Instagram.",
+      "Compartes un 60% de tu ADN con los plátanos.",
+      "Hay más objetos bajo el mar que en todos los museos juntos.",
+      "Tu boca tiene más bacterias que personas hay en el planeta.",
+      "Las arañas no son insectos: tienen ocho patas, no seis.",
+      "Los flamencos no nacen rosas: se tiñen por lo que comen.",
+      "La biblioteca más grande del mundo está en EE.UU., pero no la visitas.",
+      "Algunos tiburones viven más de 500 años.",
+      "Cada vez que lees esto, un libro sonríe discretamente."
+    ];
+
+    function mostrarDato() {
+      const dato = datos[Math.floor(Math.random() * datos.length)];
+      const div = document.getElementById("dato");
+      div.style.opacity = 0;
+      setTimeout(() => {
+        div.textContent = dato;
+        div.style.opacity = 1;
+      }, 200);
+    }
+  </script>
+</body>
+</html>
