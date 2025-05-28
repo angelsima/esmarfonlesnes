@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filtro de Vigilancia Decorativo</title>
+    <title>Filtro de Vigilancia Facial</title>
     <style>
         * {
             margin: 0;
@@ -68,8 +68,6 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
             border: 15px solid #111;
             background: #000;
-            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
-            transition: transform 0.5s ease;
         }
         
         #videoElement {
@@ -112,13 +110,14 @@
             border: 3px solid #00ff88;
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
             z-index: 4;
-            transition: all 0.5s ease;
+            transition: all 0.3s ease-out;
             border-radius: 15px;
             background: rgba(0, 255, 136, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            pointer-events: none;
         }
         
         .box-pulse {
@@ -135,6 +134,18 @@
             0% { transform: scale(1); opacity: 0.8; }
             50% { transform: scale(1.1); opacity: 0.3; }
             100% { transform: scale(1); opacity: 0.8; }
+        }
+        
+        .box-label {
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 3px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .controls {
@@ -314,8 +325,8 @@
     
     <div class="container">
         <header>
-            <h1 class="glitch-text" data-text="FILTRO VIGILANCIA">FILTRO VIGILANCIA</h1>
-            <p class="subtitle">Tu movimiento facial detectado con estilo</p>
+            <h1 class="glitch-text" data-text="VIGILANCIA FACIAL">VIGILANCIA FACIAL</h1>
+            <p class="subtitle">Recuadro verde preciso sobre movimientos faciales</p>
         </header>
         
         <div class="camera-frame">
@@ -324,42 +335,48 @@
             <div class="scan-line"></div>
             <div id="movementBox" class="movement-box">
                 <div class="box-pulse"></div>
-                <div class="box-text">MOVIMIENTO DETECTADO</div>
+                <div class="box-label">MOVIMIENTO</div>
             </div>
         </div>
         
         <div class="controls">
-            <button id="startButton" class="btn">ACTIVAR FILTRO</button>
+            <button id="startButton" class="btn">ACTIVAR VIGILANCIA</button>
             <button id="stopButton" class="btn btn-off">DESACTIVAR</button>
         </div>
         
         <div class="status-container">
-            <div id="status"><span class="status-pulse"></span> Filtro inactivo</div>
+            <div id="status"><span class="status-pulse"></span> Esperando activación</div>
             <div id="error"></div>
         </div>
         
         <div class="instructions">
-            <p>Este filtro decorativo detecta tu rostro y muestra un recuadro verde alrededor de tu cara.</p>
-            <p>Cuando te mueves, el recuadro sigue tus movimientos creando un efecto de vigilancia estético.</p>
+            <p>Este filtro detecta tu rostro y muestra un recuadro verde sobre la zona con mayor movimiento.</p>
+            <p>Mueve tus cejas, ojos o boca para ver el efecto de vigilancia.</p>
             
             <div class="features">
-                <div class="feature">Efecto visual</div>
-                <div class="feature">Diseño decorativo</div>
-                <div class="feature">Estilo TikTok</div>
-                <div class="feature">Fácil de usar</div>
+                <div class="feature">Detección precisa</div>
+                <div class="feature">Recuadro verde</div>
+                <div class="feature">Movimiento facial</div>
+                <div class="feature">Efecto vigilancia</div>
             </div>
         </div>
         
         <div class="footer">
-            Filtro decorativo de vigilancia facial - Para uso estético
+            Filtro de vigilancia facial con tecnología MediaPipe
         </div>
     </div>
+
+    <!-- Incluimos MediaPipe para detección facial -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
 
     <script>
         // Elementos DOM
         const videoElement = document.getElementById('videoElement');
-        const canvasElement = document.getElementById('overlayCanvas');
-        const ctx = canvasElement.getContext('2d');
+        const overlayCanvas = document.getElementById('overlayCanvas');
+        const ctx = overlayCanvas.getContext('2d');
         const startButton = document.getElementById('startButton');
         const stopButton = document.getElementById('stopButton');
         const statusEl = document.getElementById('status');
@@ -368,10 +385,13 @@
         const particlesEl = document.getElementById('particles');
         
         // Variables globales
+        let faceMesh = null;
+        let camera = null;
         let detectionActive = false;
-        let facePosition = { x: 0, y: 0, width: 0, height: 0 };
-        let animationFrameId = null;
-        let isFirstDetection = true;
+        let lastPositions = {};
+        let currentBox = { x: 0, y: 0, width: 0, height: 0 };
+        let lastMovementTime = 0;
+        let faceDetected = false;
         
         // Crear partículas decorativas
         function createParticles() {
@@ -407,118 +427,209 @@
             }
         }
         
-        // Iniciar la cámara y detección
-        startButton.addEventListener('click', async () => {
+        // Inicializar Face Mesh
+        async function initFaceMesh() {
+            statusEl.innerHTML = '<span class="status-pulse"></span> Inicializando detector facial...';
+            
+            faceMesh = new FaceMesh({
+                locateFile: (file) => {
+                    return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+                }
+            });
+            
+            faceMesh.setOptions({
+                maxNumFaces: 1,
+                refineLandmarks: true,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            });
+            
+            faceMesh.onResults(onFaceMeshResults);
+            
+            statusEl.innerHTML = '<span class="status-pulse"></span> Iniciando cámara...';
+            
             try {
-                // Obtener acceso a la cámara
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { 
-                        facingMode: 'user',
-                        width: { ideal: 640 },
-                        height: { ideal: 480 }
+                camera = new Camera(videoElement, {
+                    onFrame: async () => {
+                        if (detectionActive) {
+                            await faceMesh.send({image: videoElement});
+                        }
                     },
-                    audio: false
+                    width: 640,
+                    height: 480,
+                    facingMode: 'user'
                 });
                 
-                videoElement.srcObject = stream;
-                statusEl.innerHTML = '<span class="status-pulse"></span> Filtro activo - ¡Sonríe!';
+                await camera.start();
                 detectionActive = true;
-                
-                // Esperar a que el video esté cargado
-                videoElement.onloadedmetadata = () => {
-                    canvasElement.width = videoElement.videoWidth;
-                    canvasElement.height = videoElement.videoHeight;
-                    
-                    // Posición inicial del recuadro (centro)
-                    facePosition = {
-                        x: canvasElement.width / 2 - 100,
-                        y: canvasElement.height / 2 - 100,
-                        width: 200,
-                        height: 200
-                    };
-                    
-                    updateMovementBox();
-                    movementBox.style.display = 'block';
-                    
-                    // Iniciar la animación
-                    animateDetection();
-                };
+                statusEl.innerHTML = '<span class="status-pulse"></span> Vigilancia ACTIVA - Mueve tu rostro';
             } catch (err) {
-                console.error("Error al acceder a la cámara:", err);
-                errorEl.textContent = 'Error: ' + err.message;
-                statusEl.textContent = "Error de acceso";
+                console.error("Error al iniciar cámara:", err);
+                errorEl.textContent = "Error: " + err.message;
+                statusEl.innerHTML = '<span class="status-pulse"></span> Error al iniciar cámara';
+            }
+        }
+        
+        // Procesar resultados de Face Mesh
+        function onFaceMeshResults(results) {
+            // Configurar el canvas al tamaño del video
+            overlayCanvas.width = videoElement.videoWidth;
+            overlayCanvas.height = videoElement.videoHeight;
+            
+            ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+            
+            if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+                faceDetected = true;
+                const landmarks = results.multiFaceLandmarks[0];
+                
+                // Encontrar el área con mayor movimiento
+                const movementArea = findMovementArea(landmarks);
+                
+                if (movementArea) {
+                    // Actualizar el recuadro de movimiento
+                    updateMovementBox(movementArea.x, movementArea.y, movementArea.width, movementArea.height);
+                    movementBox.querySelector('.box-label').textContent = movementArea.label;
+                    movementBox.style.display = 'block';
+                    lastMovementTime = Date.now();
+                } else {
+                    // Ocultar el recuadro después de 1 segundo sin movimiento
+                    if (Date.now() - lastMovementTime > 1000) {
+                        movementBox.style.display = 'none';
+                    }
+                }
+            } else {
+                faceDetected = false;
+                movementBox.style.display = 'none';
+            }
+        }
+        
+        // Encontrar el área con mayor movimiento facial
+        function findMovementArea(landmarks) {
+            const areas = [
+                { name: "ceja izquierda", points: [70, 63, 105, 66, 107] },
+                { name: "ceja derecha", points: [300, 293, 334, 296, 336] },
+                { name: "ojo izquierdo", points: [33, 133, 144, 145, 153, 154, 155] },
+                { name: "ojo derecho", points: [362, 263, 373, 374, 380, 381, 382] },
+                { name: "boca", points: [61, 146, 91, 181, 84, 17, 314, 405, 321] }
+            ];
+            
+            let maxMovement = 0;
+            let selectedArea = null;
+            
+            for (const area of areas) {
+                let totalMovement = 0;
+                let validPoints = 0;
+                
+                for (const pointIndex of area.points) {
+                    const point = landmarks[pointIndex];
+                    const pointKey = `${area.name}-${pointIndex}`;
+                    const currentPos = {x: point.x, y: point.y};
+                    
+                    if (lastPositions[pointKey]) {
+                        const dx = currentPos.x - lastPositions[pointKey].x;
+                        const dy = currentPos.y - lastPositions[pointKey].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        totalMovement += distance;
+                        validPoints++;
+                    }
+                    
+                    lastPositions[pointKey] = currentPos;
+                }
+                
+                if (validPoints > 0) {
+                    const avgMovement = totalMovement / validPoints;
+                    
+                    if (avgMovement > maxMovement) {
+                        maxMovement = avgMovement;
+                        selectedArea = area;
+                    }
+                }
+            }
+            
+            // Umbral de movimiento para considerar significativo
+            if (maxMovement > 0.005) {
+                if (selectedArea) {
+                    // Calcular el cuadro delimitador para el área seleccionada
+                    return calculateAreaBoundingBox(landmarks, selectedArea.points, selectedArea.name);
+                }
+            }
+            
+            return null;
+        }
+        
+        // Calcular el cuadro delimitador para un área
+        function calculateAreaBoundingBox(landmarks, indices, label) {
+            let minX = Infinity, minY = Infinity;
+            let maxX = -Infinity, maxY = -Infinity;
+            
+            for (const index of indices) {
+                const point = landmarks[index];
+                const x = point.x * overlayCanvas.width;
+                const y = point.y * overlayCanvas.height;
+                
+                if (x < minX) minX = x;
+                if (y < minY) minY = y;
+                if (x > maxX) maxX = x;
+                if (y > maxY) maxY = y;
+            }
+            
+            // Agregar un pequeño margen
+            const margin = 15;
+            const width = Math.max(40, (maxX - minX) + margin * 2);
+            const height = Math.max(40, (maxY - minY) + margin * 2);
+            const x = Math.max(0, minX - margin);
+            const y = Math.max(0, minY - margin);
+            
+            return {
+                x: x,
+                y: y,
+                width: Math.min(overlayCanvas.width - x, width),
+                height: Math.min(overlayCanvas.height - y, height),
+                label: label.toUpperCase()
+            };
+        }
+        
+        // Actualizar el recuadro de movimiento
+        function updateMovementBox(x, y, width, height) {
+            movementBox.style.left = `${x}px`;
+            movementBox.style.top = `${y}px`;
+            movementBox.style.width = `${width}px`;
+            movementBox.style.height = `${height}px`;
+        }
+        
+        // Iniciar la detección
+        startButton.addEventListener('click', async () => {
+            if (!faceMesh) {
+                errorEl.textContent = "";
+                startButton.disabled = true;
+                startButton.textContent = "Inicializando...";
+                await initFaceMesh();
+                startButton.disabled = false;
+                startButton.textContent = "ACTIVAR VIGILANCIA";
+            } else if (!detectionActive) {
+                detectionActive = true;
+                camera.start();
+                statusEl.innerHTML = '<span class="status-pulse"></span> Vigilancia ACTIVA - Mueve tu rostro';
             }
         });
         
         // Detener la detección
         stopButton.addEventListener('click', () => {
-            detectionActive = false;
-            if (videoElement.srcObject) {
-                videoElement.srcObject.getTracks().forEach(track => track.stop());
-                videoElement.srcObject = null;
+            if (camera) {
+                detectionActive = false;
+                camera.stop();
+                ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+                movementBox.style.display = 'none';
+                statusEl.innerHTML = '<span class="status-pulse"></span> Vigilancia DETENIDA';
             }
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-            }
-            movementBox.style.display = 'none';
-            statusEl.innerHTML = '<span class="status-pulse"></span> Filtro desactivado';
         });
-        
-        // Simular detección facial con movimiento aleatorio
-        function animateDetection() {
-            if (!detectionActive) return;
-            
-            // Limpiar canvas
-            ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-            
-            // Simular movimiento de la cara
-            simulateFaceMovement();
-            
-            // Actualizar el recuadro
-            updateMovementBox();
-            
-            // Continuar la animación
-            animationFrameId = requestAnimationFrame(animateDetection);
-        }
-        
-        // Simular movimiento de la cara (decorativo)
-        function simulateFaceMovement() {
-            // Mover suavemente hacia un punto aleatorio
-            const targetX = canvasElement.width / 2 + (Math.random() - 0.5) * 100;
-            const targetY = canvasElement.height / 2 + (Math.random() - 0.5) * 80;
-            const targetWidth = 180 + Math.random() * 40;
-            const targetHeight = 220 + Math.random() * 40;
-            
-            // Suavizar el movimiento
-            facePosition.x += (targetX - facePosition.x) * 0.1;
-            facePosition.y += (targetY - facePosition.y) * 0.1;
-            facePosition.width += (targetWidth - facePosition.width) * 0.1;
-            facePosition.height += (targetHeight - facePosition.height) * 0.1;
-            
-            // Limitar el tamaño
-            facePosition.width = Math.max(150, Math.min(250, facePosition.width));
-            facePosition.height = Math.max(180, Math.min(280, facePosition.height));
-        }
-        
-        // Actualizar el recuadro de movimiento
-        function updateMovementBox() {
-            movementBox.style.left = `${facePosition.x}px`;
-            movementBox.style.top = `${facePosition.y}px`;
-            movementBox.style.width = `${facePosition.width}px`;
-            movementBox.style.height = `${facePosition.height}px`;
-        }
         
         // Inicializar
         window.addEventListener('load', () => {
             createParticles();
-            // Mostrar el recuadro en posición central inicialmente
-            facePosition = {
-                x: 50,
-                y: 100,
-                width: 300,
-                height: 350
-            };
-            updateMovementBox();
+            // Configurar el canvas con el tamaño esperado
+            overlayCanvas.width = 640;
+            overlayCanvas.height = 480;
         });
     </script>
 </body>
