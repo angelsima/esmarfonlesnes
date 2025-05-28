@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Segundo Cerebro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600&family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0ff;
+            font-family: 'Exo 2', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .tech-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(100, 100, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(100, 255, 200, 0.1) 0%, transparent 20%),
+                linear-gradient(45deg, transparent 49%, rgba(0, 255, 200, 0.05) 50%, transparent 51%),
+                linear-gradient(135deg, transparent 49%, rgba(0, 200, 255, 0.05) 50%, transparent 51%);
+            z-index: -1;
+        }
+        
+        .glowing-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(100, 100, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(100, 100, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 800px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .digital-header {
+            margin-bottom: 50px;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            background: linear-gradient(to right, #00f2fe, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 15%;
+            width: 70%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #00f2fe, transparent);
+            border-radius: 50%;
+            filter: blur(2px);
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            color: #a0a0ff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 20px;
+        }
+        
+        .poem-container {
+            background: rgba(10, 15, 40, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 
+                0 0 30px rgba(0, 200, 255, 0.2),
+                inset 0 0 20px rgba(0, 200, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .poem-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #00f2fe, #4facfe, transparent);
+            animation: scanline 8s linear infinite;
+        }
+        
+        @keyframes scanline {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        
+        .poem {
+            font-size: 1.8rem;
+            line-height: 1.8;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .poem-line {
+            margin: 25px 0;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .highlight {
+            color: #00f2fe;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.7);
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #00f2fe, transparent);
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+        
+        .tech-icon {
+            font-size: 2.5rem;
+            margin: 0 15px;
+            color: #4facfe;
+            text-shadow: 0 0 15px rgba(79, 172, 254, 0.6);
+            vertical-align: middle;
+            display: inline-block;
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0.7; transform: scale(1); }
+        }
+        
+        .brain-icon {
+            display: inline-block;
+            margin: 0 15px;
+            vertical-align: middle;
+            position: relative;
+            top: -5px;
+        }
+        
+        .digital-footer {
+            margin-top: 40px;
+            font-size: 1.2rem;
+            color: #a0a0ff;
+            letter-spacing: 1px;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(5px);
+            opacity: 0.7;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .floating-element:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 242, 254, 0.1);
+            top: 10%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+        
+        .floating-element:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            background: rgba(79, 172, 254, 0.1);
+            top: 60%;
+            left: 70%;
+            animation-delay: -5s;
+        }
+        
+        .floating-element:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            background: rgba(100, 100, 255, 0.1);
+            top: 30%;
+            left: 80%;
+            animation-delay: -10s;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(20px, 30px) rotate(120deg); }
+            66% { transform: translate(-20px, -20px) rotate(240deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+        
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            z-index: -1;
+        }
+        
+        .glow-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(0, 242, 254, 0.15);
+            top: 20%;
+            left: 10%;
+        }
+        
+        .glow-2 {
+            width: 400px;
+            height: 400px;
+            background: rgba(79, 172, 254, 0.1);
+            bottom: 10%;
+            right: 10%;
+        }
+        
+        .binary-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            color: rgba(100, 200, 255, 0.1);
+            font-family: monospace;
+            font-size: 18px;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .poem { font-size: 1.5rem; }
+            .subtitle { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="tech-bg"></div>
+    <div class="glowing-grid"></div>
+    
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+    </div>
+    
+    <div class="container">
+        <div class="digital-header">
+            <h1>MI SEGUNDO CEREBRO</h1>
+            <div class="subtitle">LA EVOLUCIÓN DIGITAL DE LA MENTE</div>
+        </div>
+        
+        <div class="poem-container">
+            <div class="poem">
+                <div class="poem-line">
+                    <span class="highlight">He volcado</span>
+                </div>
+                
+                <div class="poem-line">
+                    <span class="tech-icon">&#x1F4BE;</span>
+                    <span class="highlight">mis datos</span>
+                </div>
+                
+                <div class="poem-line">
+                    <span class="tech-icon">&#x1F4A1;</span>
+                    <span class="highlight">mis ideas</span>
+                </div>
+                
+                <div class="poem-line">
+                    <span class="tech-icon">&#x1F550;</span>
+                    <span class="highlight">mis hábitos</span>
+                </div>
+                
+                <div class="poem-line">
+                    <span class="tech-icon">&#x1F631;</span>
+                    <span class="highlight">mis miedos</span>
+                </div>
+                
+                <div class="poem-line">
+                    <span class="tech-icon">&#x1F4BC;</span>
+                    <span class="highlight">mis recuerdos</span>
+                    <span class="tech-icon">&#x1F4AD;</span>
+                    <span class="highlight">y mis fantasías</span>
+                </div>
+                
+                <div class="poem-line">
+                    <span class="tech-icon">&#x1F310;</span>
+                    <span>en</span>
+                    <span class="highlight">Notion</span>
+                </div>
+                
+                <div class="poem-line" style="margin-top: 40px;">
+                    <span>para crear</span>
+                </div>
+                
+                <div class="poem-line">
+                    <span class="brain-icon">🧠</span>
+                    <span class="highlight" style="font-size: 2.2rem;">my second brain</span>
+                    <span class="brain-icon">💻</span>
+                </div>
+                
+                <div class="poem-line" style="margin-top: 40px;">
+                    <span class="highlight" style="color: #ff6b6b; text-shadow: 0 0 10px rgba(255, 107, 107, 0.7);">
+                        Ahora no encuentro el primero
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="digital-footer">
+            LA EVOLUCIÓN DIGITAL ES IRREVERSIBLE
+        </div>
+    </div>
+    
+    <div class="binary-rain" id="binaryRain"></div>
+    
+    <script>
+        // Crear efecto de lluvia binaria
+        const binaryRain = document.getElementById('binaryRain');
+        const characters = ['0', '1'];
+        
+        for (let i = 0; i < 100; i++) {
+            const element = document.createElement('div');
+            element.textContent = getRandomCharacters(20);
+            element.style.position = 'absolute';
+            element.style.top = Math.random() * 100 + '%';
+            element.style.left = Math.random() * 100 + '%';
+            element.style.opacity = Math.random() * 0.3 + 0.1;
+            element.style.animation = `rain ${Math.random() * 10 + 10}s linear infinite`;
+            element.style.animationDelay = Math.random() * 5 + 's';
+            element.style.fontSize = Math.random() * 10 + 10 + 'px';
+            binaryRain.appendChild(element);
+        }
+        
+        function getRandomCharacters(length) {
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters[Math.floor(Math.random() * characters.length)];
+            }
+            return result;
+        }
+        
+        // Agregar estilos para la animación de lluvia
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes rain {
+                to {
+                    transform: translateY(100vh);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Destellos aleatorios
+        setInterval(() => {
+            const elements = document.querySelectorAll('.poem-line');
+            const randomLine = elements[Math.floor(Math.random() * elements.length)];
+            
+            const flash = document.createElement('div');
+            flash.style.position = 'absolute';
+            flash.style.width = '100%';
+            flash.style.height = '100%';
+            flash.style.top = '0';
+            flash.style.left = '0';
+            flash.style.background = 'radial-gradient(circle, rgba(0, 242, 254, 0.3), transparent)';
+            flash.style.borderRadius = '20px';
+            flash.style.animation = 'flash 0.5s ease-out';
+            randomLine.appendChild(flash);
+            
+            setTimeout(() => {
+                flash.remove();
+            }, 500);
+        }, 2000);
+        
+        // Agregar estilos para el destello
+        const flashStyle = document.createElement('style');
+        flashStyle.textContent = `
+            @keyframes flash {
+                0% { opacity: 0; transform: scale(0.5); }
+                50% { opacity: 1; transform: scale(1); }
+                100% { opacity: 0; transform: scale(1.5); }
+            }
+        `;
+        document.head.appendChild(flashStyle);
+    </script>
+</body>
+</html>
