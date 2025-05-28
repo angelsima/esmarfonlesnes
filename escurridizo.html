@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contras del Esmarfon</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: 'Arial Black', Impact, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .escurre-texto {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(180deg);
+      font-size: 2em;
+      color: #D50000; /* rojo error intenso */
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px 30px;
+      border: 3px solid #D50000;
+      border-radius: 10px;
+      animation: parpadeo 1.2s infinite;
+      transition: transform 0.5s ease, top 0.5s, left 0.5s;
+      text-align: center;
+      max-width: 90vw;
+    }
+
+    @keyframes parpadeo {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="escurre-texto" id="escurreTexto">
+  ERROR: TU ESMAFON TE DESORIENTA
+</div>
+
+<script>
+  const texto = document.getElementById('escurreTexto');
+
+  // Ángulos de rotación problemáticos y posiciones desorientadas
+  const rotaciones = [180, 270, 90, 0, 360];
+  const posiciones = [
+    { top: '10%', left: '10%' },
+    { top: '80%', left: '15%' },
+    { top: '20%', left: '75%' },
+    { top: '50%', left: '50%' },
+    { top: '70%', left: '50%' },
+  ];
+
+  let estado = 0;
+
+  function desorientar() {
+    estado = (estado + 1) % rotaciones.length;
+    texto.style.transform = `translate(-50%, -50%) rotate(${rotaciones[estado]}deg)`;
+    texto.style.top = posiciones[estado].top;
+    texto.style.left = posiciones[estado].left;
+  }
+
+  // Detecta cambio de orientación
+  window.addEventListener("orientationchange", () => {
+    setTimeout(desorientar, 300);
+  });
+</script>
+
+</body>
+</html>
