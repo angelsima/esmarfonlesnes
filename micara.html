@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Selfie Tipográfica</title>
+  <title>Las 7 maravillas</title>
   <style>
     * {
       box-sizing: border-box;
@@ -66,9 +66,9 @@
     }
 
     .fondo-texto {
-      font-size: 2em;
+      font-size: 3em;
            font-family: 'Arial Black', Impact, sans-serif;
-      font-weight: bold;
+      font-weight: 900;
       text-align: center;
       position: absolute;
       z-index: 1;
@@ -114,6 +114,7 @@
   </style>
 </head>
 <body>
+  <h1>Las 7 maravillas del mundo</h1>
   <div class="smartphone-frame">
     <div class="glass-layer">
       <div class="slider" id="slider">
@@ -155,6 +156,7 @@
   const dotsContainer = document.getElementById('dots');
   const slides = slider.querySelectorAll('.slide');
   let currentIndex = 0;
+  let isScrolling = false;
 
   // Crear dots
   slides.forEach((_, i) => {
@@ -169,7 +171,7 @@
   function updateDots() {
     const slideWidth = slider.clientWidth;
     const scrollLeft = slider.scrollLeft;
-    const index = Math.round(scrollLeft / slideWidth);
+    const index = Math.floor((scrollLeft + slideWidth / 2) / slideWidth); // más preciso
     if (index !== currentIndex) {
       currentIndex = index;
       dots.forEach(dot => dot.classList.remove('active'));
@@ -177,24 +179,34 @@
     }
   }
 
-  // Aumentar tolerancia al scroll
+  // Desacelerar sensibilidad del scroll
   slider.addEventListener('scroll', () => {
     clearTimeout(slider._scrollTimeout);
-    slider._scrollTimeout = setTimeout(updateDots, 250); // menos sensible
+    slider._scrollTimeout = setTimeout(updateDots, 400); // más tolerancia
   });
 
-  // Flechas del teclado
+  // Teclado con protección anti doble scroll
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') {
-      currentIndex = Math.min(currentIndex + 1, slides.length - 1);
+    if (isScrolling) return; // prevenir múltiple scroll
+    if (e.key === 'ArrowRight' && currentIndex < slides.length - 1) {
+      currentIndex++;
+      isScrolling = true;
       slider.scrollTo({ left: currentIndex * slider.clientWidth, behavior: 'smooth' });
-      updateDots();
-    } else if (e.key === 'ArrowLeft') {
-      currentIndex = Math.max(currentIndex - 1, 0);
+      setTimeout(() => {
+        updateDots();
+        isScrolling = false;
+      }, 600); // tiempo de scroll animado
+    } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+      currentIndex--;
+      isScrolling = true;
       slider.scrollTo({ left: currentIndex * slider.clientWidth, behavior: 'smooth' });
-      updateDots();
+      setTimeout(() => {
+        updateDots();
+        isScrolling = false;
+      }, 600);
     }
   });
 </script>
+
 </body>
 </html>
