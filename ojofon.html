@@ -1,483 +1,567 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gran Hermano - Detector Facial</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      padding: 20px;
-      text-align: center;
-    }
-    
-    .container {
-      max-width: 1000px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 30px;
-      z-index: 10;
-    }
-    
-    header {
-      text-align: center;
-      padding: 20px;
-      background: rgba(0, 0, 20, 0.6);
-      border-radius: 20px;
-      border: 1px solid rgba(0, 255, 136, 0.3);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(10px);
-      width: 100%;
-    }
-    
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 15px;
-      color: #00ff88;
-      text-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
-      letter-spacing: 1px;
-    }
-    
-    .subtitle {
-      font-size: 1.2rem;
-      color: #a0e6ff;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    
-    .eye-container {
-      position: relative;
-      width: 100%;
-      max-width: 700px;
-      aspect-ratio: 16/9;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
-      border: 3px solid rgba(0, 255, 136, 0.5);
-    }
-    
-    #videoContainer {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      background: #000;
-    }
-    
-    #preview {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scaleX(-1);
-    }
-    
-    #overlayCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-    }
-    
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-      margin-top: 10px;
-    }
-    
-    .btn {
-      background: rgba(0, 255, 136, 0.15);
-      color: #00ff88;
-      border: 2px solid #00ff88;
-      padding: 14px 30px;
-      border-radius: 50px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s;
-      backdrop-filter: blur(5px);
-      min-width: 200px;
-      box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
-    }
-    
-    .btn:hover {
-      background: rgba(0, 255, 136, 0.3);
-      transform: translateY(-3px);
-      box-shadow: 0 5px 20px rgba(0, 255, 136, 0.5);
-    }
-    
-    .btn:active {
-      transform: translateY(1px);
-    }
-    
-    .btn-off {
-      background: rgba(255, 77, 109, 0.15);
-      color: #ff4d6d;
-      border: 2px solid #ff4d6d;
-      box-shadow: 0 0 15px rgba(255, 77, 109, 0.3);
-    }
-    
-    .btn-off:hover {
-      background: rgba(255, 77, 109, 0.3);
-      box-shadow: 0 5px 20px rgba(255, 77, 109, 0.5);
-    }
-    
-    .instructions {
-      background: rgba(0, 0, 20, 0.6);
-      border-radius: 15px;
-      padding: 25px;
-      margin-top: 20px;
-      border: 1px solid rgba(0, 255, 136, 0.2);
-      max-width: 700px;
-      text-align: left;
-    }
-    
-    .instructions h2 {
-      color: #00ff88;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-    
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    
-    .feature {
-      background: rgba(0, 255, 136, 0.1);
-      color: #00ff88;
-      padding: 10px 20px;
-      border-radius: 50px;
-      border: 1px solid rgba(0, 255, 136, 0.3);
-      font-size: 0.9rem;
-    }
-    
-    .status {
-      margin-top: 15px;
-      font-size: 1.1rem;
-      min-height: 30px;
-      color: #00ff88;
-      text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-    }
-    
-    .error {
-      color: #ff4d6d;
-      margin-top: 15px;
-      font-size: 1.1rem;
-      min-height: 30px;
-    }
-    
-    .footer {
-      margin-top: 30px;
-      color: #a0a0dd;
-      font-size: 0.9rem;
-    }
-    
-    /* Efectos visuales de fondo */
-    .bg-effects {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      overflow: hidden;
-    }
-    
-    .circle {
-      position: absolute;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
-      animation: float 15s infinite linear;
-    }
-    
-    @keyframes float {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      100% { transform: translate(100px, 100px) rotate(360deg); }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detección Facial en Tiempo Real</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            z-index: 10;
+        }
+        
+        header {
+            text-align: center;
+            padding: 25px 40px;
+            background: rgba(10, 15, 40, 0.85);
+            border-radius: 20px;
+            border: 2px solid rgba(0, 255, 136, 0.5);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #00ff88, #00ddff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: #c0e6ff;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            aspect-ratio: 16/9;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            border: 3px solid rgba(0, 255, 136, 0.6);
+            background: #000;
+        }
+        
+        #videoElement {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+            display: block;
+        }
+        
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 2px solid #00ff88;
+            padding: 16px 35px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            min-width: 220px;
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn:hover {
+            background: rgba(0, 255, 136, 0.35);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 255, 136, 0.5);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-off {
+            background: rgba(255, 77, 109, 0.2);
+            color: #ff4d6d;
+            border: 2px solid #ff4d6d;
+            box-shadow: 0 0 25px rgba(255, 77, 109, 0.3);
+        }
+        
+        .btn-off:hover {
+            background: rgba(255, 77, 109, 0.35);
+            box-shadow: 0 8px 30px rgba(255, 77, 109, 0.5);
+        }
+        
+        .status-container {
+            background: rgba(10, 15, 40, 0.8);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-top: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        #status {
+            color: #00ff88;
+            font-size: 1.3rem;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        #status::before {
+            content: "•";
+            color: #00ff88;
+            font-size: 2rem;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.2; }
+            50% { opacity: 1; }
+            100% { opacity: 0.2; }
+        }
+        
+        #error {
+            color: #ff4d6d;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            min-height: 30px;
+        }
+        
+        .instructions {
+            background: rgba(10, 15, 40, 0.8);
+            border-radius: 15px;
+            padding: 25px 35px;
+            margin-top: 20px;
+            border: 1px solid rgba(0, 255, 136, 0.25);
+            width: 100%;
+            max-width: 700px;
+            text-align: left;
+        }
+        
+        .instructions h2 {
+            color: #00ff88;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+        
+        .instructions ul {
+            padding-left: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .instructions li {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: #e0f0ff;
+        }
+        
+        .instructions li::marker {
+            color: #00ff88;
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .feature {
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #a0b0ff;
+            font-size: 1rem;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0, 255, 136, 0.3);
+            border-radius: 50%;
+            border-top-color: #00ff88;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Efectos de partículas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.2) 0%, transparent 70%);
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 0.8; }
+            100% { transform: translate(100px, 100px) rotate(360deg); opacity: 0; }
+        }
+    </style>
 </head>
 <body>
-  <div class="bg-effects" id="bgEffects"></div>
-  
-  <div class="container">
-    <header>
-      <h1>TÚ MIRAS TU ESMRFON, TU ESMRFON A TI TE MIRA</h1>
-      <p class="subtitle">Detección de movimientos faciales en tiempo real con contornos verdes</p>
-    </header>
+    <div class="particles" id="particles"></div>
     
-    <div class="eye-container">
-      <div id="videoContainer">
-        <video id="preview" autoplay playsinline muted></video>
-        <canvas id="overlayCanvas"></canvas>
-      </div>
+    <div class="container">
+        <header>
+            <h1>TÚ MIRAS TU ESMRFON<br>TU ESMRFON A TI TE MIRA</h1>
+            <p class="subtitle">Detección de movimientos faciales en tiempo real con contornos verdes</p>
+        </header>
+        
+        <div class="video-container">
+            <video id="videoElement" autoplay playsinline muted></video>
+            <canvas id="canvas"></canvas>
+        </div>
+        
+        <div class="controls">
+            <button id="startButton" class="btn">
+                <span>INICIAR DETECCIÓN</span>
+            </button>
+            <button id="stopButton" class="btn btn-off">
+                <span>DETENER</span>
+            </button>
+        </div>
+        
+        <div class="status-container">
+            <div id="status">Presiona "INICIAR DETECCIÓN" para comenzar</div>
+            <div id="error"></div>
+        </div>
+        
+        <div class="instructions">
+            <h2>Cómo funciona la detección facial</h2>
+            <ul>
+                <li>El sistema detecta <strong>468 puntos clave</strong> en tu rostro usando inteligencia artificial</li>
+                <li>Cuando mueves cualquier parte de tu cara (ojos, cejas, boca), se dibujan <strong>contornos verdes</strong> alrededor del movimiento</li>
+                <li>Los contornos se actualizan <strong>en tiempo real</strong> según tu movimiento</li>
+                <li>Usa buena iluminación y mantén tu rostro frente a la cámara para mejores resultados</li>
+            </ul>
+            
+            <div class="features">
+                <div class="feature">Detección de cejas</div>
+                <div class="feature">Seguimiento de ojos</div>
+                <div class="feature">Movimiento de boca</div>
+                <div class="feature">Expresiones faciales</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Sistema de detección facial en tiempo real | Tecnología MediaPipe de Google
+        </div>
     </div>
-    
-    <div class="controls">
-      <button id="btnStart" class="btn">INICIAR DETECCIÓN</button>
-      <button id="btnStop" class="btn btn-off">DETENER</button>
-    </div>
-    
-    <p id="status" class="status">Presiona "INICIAR DETECCIÓN" para comenzar</p>
-    <p id="error" class="error"></p>
-    
-    <div class="instructions">
-      <h2>Cómo funciona:</h2>
-      <ul>
-        <li>▶ El sistema detecta automáticamente tu rostro usando IA</li>
-        <li>▶ Cuando mueves cualquier parte de tu cara (ojos, cejas, boca), se dibujan contornos verdes alrededor del movimiento</li>
-        <li>▶ Los contornos se actualizan en tiempo real según tu movimiento</li>
-        <li>▶ Usa buena iluminación para mejores resultados</li>
-      </ul>
-      
-      <div class="features">
-        <div class="feature">Detección de cejas</div>
-        <div class="feature">Seguimiento de ojos</div>
-        <div class="feature">Movimiento de boca</div>
-        <div class="feature">Expresiones faciales</div>
-      </div>
-    </div>
-    
-    <div class="footer">
-      Sistema de detección facial en tiempo real | Tecnología AI
-    </div>
-  </div>
 
-  <!-- Incluimos la biblioteca de seguimiento facial -->
-  <script src="https://cdn.jsdelivr.net/npm/clmtrackr@1.1.2/build/clmtrackr.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/clmtrackr@1.1.2/models/model_pca_20_svm.js"></script>
-  
-  <script>
-    // Elementos DOM
-    const btnStart = document.getElementById('btnStart');
-    const btnStop = document.getElementById('btnStop');
-    const video = document.getElementById('preview');
-    const overlayCanvas = document.getElementById('overlayCanvas');
-    const ctx = overlayCanvas.getContext('2d');
-    const statusEl = document.getElementById('status');
-    const errorEl = document.getElementById('error');
-    const bgEffects = document.getElementById('bgEffects');
-    
-    // Variables globales
-    let stream = null;
-    let ctracker = null;
-    let detectionActive = false;
-    let lastPositions = {};
-    const movementThreshold = 3;
-    
-    // Crear efectos de fondo
-    function createBackgroundEffects() {
-      const colors = ['rgba(0, 255, 136, 0.1)', 'rgba(41, 121, 255, 0.1)', 'rgba(255, 109, 0, 0.1)'];
-      for (let i = 0; i < 15; i++) {
-        const circle = document.createElement('div');
-        circle.classList.add('circle');
+    <!-- Incluimos MediaPipe para detección facial -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+
+    <script>
+        // Elementos DOM
+        const videoElement = document.getElementById('videoElement');
+        const canvasElement = document.getElementById('canvas');
+        const canvasCtx = canvasElement.getContext('2d');
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const statusEl = document.getElementById('status');
+        const errorEl = document.getElementById('error');
+        const particlesEl = document.getElementById('particles');
         
-        // Tamaño aleatorio
-        const size = Math.random() * 300 + 100;
-        circle.style.width = `${size}px`;
-        circle.style.height = `${size}px`;
+        // Variables globales
+        let faceMesh = null;
+        let camera = null;
+        let detectionActive = false;
+        let lastPositions = {};
+        const movementThreshold = 0.015; // Umbral de movimiento (ajustable)
+        const greenColor = '#00ff88';
         
-        // Posición aleatoria
-        circle.style.left = `${Math.random() * 100}%`;
-        circle.style.top = `${Math.random() * 100}%`;
-        
-        // Color aleatorio
-        circle.style.background = `radial-gradient(circle, ${colors[Math.floor(Math.random() * colors.length)]} 0%, transparent 70%)`;
-        
-        // Animación
-        circle.style.animation = `float ${15 + Math.random() * 20}s infinite linear`;
-        circle.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
-        
-        bgEffects.appendChild(circle);
-      }
-    }
-    
-    // Inicializar el rastreador facial
-    function initFaceTracking() {
-      // Configurar el canvas al tamaño del video
-      overlayCanvas.width = video.videoWidth;
-      overlayCanvas.height = video.videoHeight;
-      
-      // Inicializar el tracker
-      ctracker = new clm.tracker();
-      ctracker.init();
-      ctracker.start(video);
-      
-      // Iniciar la detección de movimiento
-      detectionActive = true;
-      statusEl.textContent = "Detección ACTIVA - Mueve tu rostro";
-      detectMovement();
-    }
-    
-    // Detectar movimientos faciales
-    function detectMovement() {
-      if (!detectionActive) return;
-      
-      // Obtener las posiciones actuales de los puntos faciales
-      const positions = ctracker.getCurrentPosition();
-      
-      if (positions) {
-        // Limpiar el canvas pero mantener un poco de transparencia para efecto de rastro
-        ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-        ctx.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-        
-        // Dibujar todos los puntos faciales (para referencia)
-        for (let i = 0; i < positions.length; i++) {
-          const point = positions[i];
-          ctx.beginPath();
-          ctx.arc(point[0], point[1], 2, 0, 2 * Math.PI);
-          ctx.fillStyle = 'rgba(0, 255, 136, 0.3)';
-          ctx.fill();
+        // Crear partículas de fondo
+        function createParticles() {
+            const colors = [
+                'rgba(0, 255, 136, 0.15)',
+                'rgba(41, 121, 255, 0.15)',
+                'rgba(255, 109, 0, 0.15)',
+                'rgba(255, 77, 109, 0.15)'
+            ];
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Tamaño aleatorio
+                const size = Math.random() * 300 + 150;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Posición aleatoria
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Color aleatorio
+                particle.style.background = `radial-gradient(circle, ${colors[Math.floor(Math.random() * colors.length)]} 0%, transparent 70%)`;
+                
+                // Animación
+                const duration = 20 + Math.random() * 30;
+                particle.style.animation = `float ${duration}s infinite linear`;
+                particle.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
+                
+                particlesEl.appendChild(particle);
+            }
         }
         
-        // Detectar movimiento en áreas clave
-        detectMovementArea(positions, 18, 22, 'ceja derecha');    // Ceja derecha
-        detectMovementArea(positions, 23, 27, 'ceja izquierda');  // Ceja izquierda
-        detectMovementArea(positions, 28, 31, 'ojo derecho');     // Ojo derecho
-        detectMovementArea(positions, 32, 35, 'ojo izquierdo');   // Ojo izquierdo
-        detectMovementArea(positions, 48, 59, 'boca');            // Boca
-      }
-      
-      // Continuar la detección
-      requestAnimationFrame(detectMovement);
-    }
-    
-    // Detectar movimiento en un área específica
-    function detectMovementArea(positions, startIdx, endIdx, areaName) {
-      let movementDetected = false;
-      
-      // Verificar el movimiento para cada punto en el área
-      for (let i = startIdx; i <= endIdx; i++) {
-        const point = positions[i];
-        
-        if (lastPositions[i]) {
-          const dx = point[0] - lastPositions[i][0];
-          const dy = point[1] - lastPositions[i][1];
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          
-          if (distance > movementThreshold) {
-            movementDetected = true;
-            break;
-          }
+        // Inicializar Face Mesh
+        async function initFaceMesh() {
+            statusEl.innerHTML = '<span class="loading"></span> Inicializando detector facial...';
+            
+            faceMesh = new FaceMesh({
+                locateFile: (file) => {
+                    return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+                }
+            });
+            
+            faceMesh.setOptions({
+                maxNumFaces: 1,
+                refineLandmarks: true,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            });
+            
+            faceMesh.onResults(onFaceMeshResults);
+            
+            statusEl.textContent = "Detector facial listo. Iniciando cámara...";
+            
+            try {
+                camera = new Camera(videoElement, {
+                    onFrame: async () => {
+                        if (detectionActive) {
+                            await faceMesh.send({image: videoElement});
+                        }
+                    },
+                    width: 1280,
+                    height: 720,
+                    facingMode: 'user'
+                });
+                
+                await camera.start();
+                detectionActive = true;
+                statusEl.textContent = "Cámara activa. Detectando movimientos faciales...";
+            } catch (err) {
+                console.error("Error al iniciar cámara:", err);
+                errorEl.textContent = "Error: " + err.message;
+                statusEl.textContent = "Error al iniciar cámara";
+            }
         }
         
-        // Guardar la posición actual para la próxima comparación
-        lastPositions[i] = [point[0], point[1]];
-      }
-      
-      // Dibujar contorno si se detectó movimiento
-      if (movementDetected) {
-        drawFeatureContour(positions, startIdx, endIdx, '#00ff88');
-      }
-    }
-    
-    // Dibujar contorno alrededor de un grupo de puntos
-    function drawFeatureContour(positions, start, end, color) {
-      ctx.beginPath();
-      ctx.moveTo(positions[start][0], positions[start][1]);
-      
-      for (let i = start + 1; i <= end; i++) {
-        ctx.lineTo(positions[i][0], positions[i][1]);
-      }
-      
-      // Cerrar el contorno
-      ctx.closePath();
-      
-      // Estilo del contorno
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 3;
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 15;
-      ctx.stroke();
-      
-      // Restablecer sombra
-      ctx.shadowBlur = 0;
-    }
-    
-    // Iniciar la detección
-    btnStart.addEventListener('click', async () => {
-      errorEl.textContent = '';
-      
-      try {
-        // Obtener acceso a la cámara
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { 
-            facingMode: 'user',
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          },
-          audio: false
+        // Procesar resultados de Face Mesh
+        function onFaceMeshResults(results) {
+            canvasCtx.save();
+            canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+            
+            if (results.multiFaceLandmarks) {
+                for (const landmarks of results.multiFaceLandmarks) {
+                    // Dibujar contorno del rostro
+                    drawFaceContour(landmarks, 10, 334, greenColor);
+                    
+                    // Detectar movimientos en áreas específicas
+                    detectMovementArea(landmarks, 159, 145, 33, "ceja izquierda", greenColor); // Ceja izquierda
+                    detectMovementArea(landmarks, 386, 374, 263, "ceja derecha", greenColor); // Ceja derecha
+                    detectMovementArea(landmarks, 133, 33, 246, "ojo izquierdo", greenColor); // Ojo izquierdo
+                    detectMovementArea(landmarks, 362, 263, 466, "ojo derecho", greenColor); // Ojo derecho
+                    detectMovementArea(landmarks, 61, 291, 0, "boca", greenColor); // Boca
+                }
+            }
+            
+            canvasCtx.restore();
+        }
+        
+        // Dibujar contorno del rostro
+        function drawFaceContour(landmarks, start, end, color) {
+            canvasCtx.beginPath();
+            
+            // Parte superior
+            for (let i = start; i <= end; i++) {
+                const point = landmarks[i];
+                if (i === start) {
+                    canvasCtx.moveTo(point.x * canvasElement.width, point.y * canvasElement.height);
+                } else {
+                    canvasCtx.lineTo(point.x * canvasElement.width, point.y * canvasElement.height);
+                }
+            }
+            
+            canvasCtx.strokeStyle = color;
+            canvasCtx.lineWidth = 2;
+            canvasCtx.stroke();
+        }
+        
+        // Detectar movimiento en un área específica
+        function detectMovementArea(landmarks, point1, point2, point3, areaName, color) {
+            const keyPoints = [point1, point2, point3];
+            let totalMovement = 0;
+            
+            for (const pointIndex of keyPoints) {
+                const point = landmarks[pointIndex];
+                const pointKey = `${areaName}-${pointIndex}`;
+                const currentPos = {x: point.x, y: point.y};
+                
+                if (lastPositions[pointKey]) {
+                    const dx = currentPos.x - lastPositions[pointKey].x;
+                    const dy = currentPos.y - lastPositions[pointKey].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    totalMovement += distance;
+                }
+                
+                lastPositions[pointKey] = currentPos;
+            }
+            
+            // Si el movimiento supera el umbral, dibujar contorno
+            if (totalMovement > movementThreshold) {
+                drawAreaContour(landmarks, keyPoints, color);
+            }
+        }
+        
+        // Dibujar contorno alrededor de un área
+        function drawAreaContour(landmarks, points, color) {
+            canvasCtx.beginPath();
+            
+            for (let i = 0; i < points.length; i++) {
+                const point = landmarks[points[i]];
+                if (i === 0) {
+                    canvasCtx.moveTo(point.x * canvasElement.width, point.y * canvasElement.height);
+                } else {
+                    canvasCtx.lineTo(point.x * canvasElement.width, point.y * canvasElement.height);
+                }
+            }
+            
+            // Cerrar el contorno
+            const firstPoint = landmarks[points[0]];
+            canvasCtx.lineTo(firstPoint.x * canvasElement.width, firstPoint.y * canvasElement.height);
+            
+            canvasCtx.strokeStyle = color;
+            canvasCtx.lineWidth = 2;
+            canvasCtx.stroke();
+        }
+        
+        // Iniciar la detección
+        startButton.addEventListener('click', async () => {
+            if (!faceMesh) {
+                errorEl.textContent = "";
+                startButton.disabled = true;
+                startButton.innerHTML = '<span class="loading"></span> Iniciando...';
+                await initFaceMesh();
+                startButton.disabled = false;
+                startButton.textContent = "INICIAR DETECCIÓN";
+            } else if (!detectionActive) {
+                detectionActive = true;
+                statusEl.textContent = "Detección activa. Mueve tu rostro...";
+            }
         });
         
-        video.srcObject = stream;
-        statusEl.textContent = "Cámara activa - Iniciando detección...";
+        // Detener la detección
+        stopButton.addEventListener('click', () => {
+            if (camera) {
+                detectionActive = false;
+                camera.stop();
+                canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+                statusEl.textContent = "Detección detenida";
+                faceMesh = null;
+            }
+        });
         
-        // Esperar a que el video esté cargado
-        video.onloadedmetadata = () => {
-          initFaceTracking();
-        };
-      } catch (err) {
-        console.error("Error al acceder a la cámara:", err);
-        errorEl.textContent = 'Error: ' + err.message + '. Asegúrate de permitir el acceso a la cámara.';
-        statusEl.textContent = "Error de acceso";
-      }
-    });
-    
-    // Detener la detección
-    btnStop.addEventListener('click', () => {
-      if (stream) {
-        // Detener el seguimiento
-        detectionActive = false;
-        
-        // Detener la transmisión de la cámara
-        stream.getTracks().forEach(track => track.stop());
-        stream = null;
-        
-        // Limpiar el canvas
-        ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-        
-        // Reiniciar el tracker
-        if (ctracker) {
-          ctracker.stop();
-          ctracker.reset();
+        // Ajustar el canvas al tamaño del video
+        function resizeCanvas() {
+            if (videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
+                canvasElement.width = videoElement.videoWidth;
+                canvasElement.height = videoElement.videoHeight;
+            }
         }
         
-        statusEl.textContent = "Detección DETENIDA";
-      }
-    });
-    
-    // Inicializar efectos de fondo
-    createBackgroundEffects();
-    
-    // Manejar cambios de tamaño de ventana
-    window.addEventListener('resize', () => {
-      if (video.videoWidth > 0 && video.videoHeight > 0) {
-        overlayCanvas.width = video.videoWidth;
-        overlayCanvas.height = video.videoHeight;
-      }
-    });
-  </script>
+        // Inicializar
+        videoElement.addEventListener('loadedmetadata', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+        createParticles();
+    </script>
 </body>
 </html>
