@@ -85,30 +85,34 @@
       z-index: 2;
       transform: rotate(-25deg);
       pointer-events: none;
-      letter-spacing: 0.08em; /* más separación entre letras */
+      letter-spacing: 0.12em; /* más separación entre letras */
+       text-transform: uppercase;
+    padding: 0.2em 0.4em;
     }
 
-    .dots {
-      position: absolute;
-      bottom: 15px;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      z-index: 4;
-    }
+   .dots {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    z-index: 4;
+  }
 
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      border-color: #888;
-      transition: background 0.3s;
-    }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #888;
+    background: transparent;
+    transition: background 0.3s, transform 0.2s;
+  }
 
-    .dot.active {
-      background: #888;
-    }
+  .dot.active {
+    background: #888;
+    transform: scale(1.2);
+  }
   </style>
 </head>
 <body>
@@ -132,49 +136,51 @@
     </div>
   </div>
 
-  <script>
-    const slider = document.getElementById('slider');
-    const dotsContainer = document.getElementById('dots');
-    const slides = slider.querySelectorAll('.slide');
-    let currentIndex = 0;
+<script>
+  const slider = document.getElementById('slider');
+  const dotsContainer = document.getElementById('dots');
+  const slides = slider.querySelectorAll('.slide');
+  let currentIndex = 0;
 
-    // Crear dots según cantidad de slides
-    slides.forEach((_, i) => {
-      const dot = document.createElement('div');
-      dot.classList.add('dot');
-      if (i === 0) dot.classList.add('active');
-      dotsContainer.appendChild(dot);
-    });
+  // Crear dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.classList.add('dot');
+    if (i === 0) dot.classList.add('active');
+    dotsContainer.appendChild(dot);
+  });
 
-    const dots = dotsContainer.querySelectorAll('.dot');
+  const dots = dotsContainer.querySelectorAll('.dot');
 
-    // Actualizar dots según scroll
-    function updateDots() {
-      const slideWidth = slider.clientWidth;
-      const scrollLeft = slider.scrollLeft;
-      const index = Math.round(scrollLeft / slideWidth);
+  function updateDots() {
+    const slideWidth = slider.clientWidth;
+    const scrollLeft = slider.scrollLeft;
+    const index = Math.round(scrollLeft / slideWidth);
+    if (index !== currentIndex) {
       currentIndex = index;
       dots.forEach(dot => dot.classList.remove('active'));
       if (dots[index]) dots[index].classList.add('active');
     }
+  }
 
-    slider.addEventListener('scroll', () => {
-      clearTimeout(slider._scrollTimeout);
-      slider._scrollTimeout = setTimeout(updateDots, 100);
-    });
+  // Aumentar tolerancia al scroll
+  slider.addEventListener('scroll', () => {
+    clearTimeout(slider._scrollTimeout);
+    slider._scrollTimeout = setTimeout(updateDots, 250); // menos sensible
+  });
 
-    // Soporte para flechas ← →
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') {
-        currentIndex = Math.min(currentIndex + 1, slides.length - 1);
-        slider.scrollTo({ left: currentIndex * slider.clientWidth, behavior: 'smooth' });
-        updateDots();
-      } else if (e.key === 'ArrowLeft') {
-        currentIndex = Math.max(currentIndex - 1, 0);
-        slider.scrollTo({ left: currentIndex * slider.clientWidth, behavior: 'smooth' });
-        updateDots();
-      }
-    });
-  </script>
+  // Flechas del teclado
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') {
+      currentIndex = Math.min(currentIndex + 1, slides.length - 1);
+      slider.scrollTo({ left: currentIndex * slider.clientWidth, behavior: 'smooth' });
+      updateDots();
+    } else if (e.key === 'ArrowLeft') {
+      currentIndex = Math.max(currentIndex - 1, 0);
+      slider.scrollTo({ left: currentIndex * slider.clientWidth, behavior: 'smooth' });
+      updateDots();
+    }
+  });
+</script>
 </body>
 </html>
