@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vigilancia Facial</title>
+    <title>Filtro de Vigilancia Decorativo</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0a1a, #1a1a3a);
+            background: linear-gradient(45deg, #0a0a1a, #1a1a3a);
             color: #fff;
             min-height: 100vh;
             display: flex;
@@ -26,33 +26,30 @@
         }
         
         .container {
-            max-width: 800px;
+            max-width: 100%;
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 25px;
+            gap: 20px;
             z-index: 10;
         }
         
         header {
             text-align: center;
             padding: 20px;
-            background: rgba(10, 15, 30, 0.8);
-            border-radius: 15px;
-            border: 1px solid rgba(0, 255, 136, 0.4);
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
             width: 100%;
+            max-width: 500px;
         }
         
         h1 {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             margin-bottom: 10px;
-            color: #00ff88;
-            text-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+            background: linear-gradient(to right, #00ff88, #00ddff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
             letter-spacing: 1px;
-            line-height: 1.2;
         }
         
         .subtitle {
@@ -61,16 +58,18 @@
             opacity: 0.9;
         }
         
-        .video-container {
+        .camera-frame {
             position: relative;
             width: 100%;
-            max-width: 500px;
-            aspect-ratio: 1;
-            border-radius: 10px;
+            max-width: 400px;
+            aspect-ratio: 9/16;
+            border-radius: 30px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
-            border: 3px solid rgba(0, 255, 136, 0.3);
+            border: 15px solid #111;
             background: #000;
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+            transition: transform 0.5s ease;
         }
         
         #videoElement {
@@ -81,13 +80,61 @@
             display: block;
         }
         
-        #canvas {
+        #overlayCanvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 5;
+            z-index: 2;
+        }
+        
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(0, 255, 136, 0.5);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
+            z-index: 3;
+            animation: scan 3s infinite ease-in-out;
+        }
+        
+        @keyframes scan {
+            0% { top: 0; }
+            50% { top: 100%; }
+            100% { top: 0; }
+        }
+        
+        .movement-box {
+            position: absolute;
+            border: 3px solid #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
+            z-index: 4;
+            transition: all 0.5s ease;
+            border-radius: 15px;
+            background: rgba(0, 255, 136, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .box-pulse {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            background: rgba(0, 255, 136, 0.1);
+            animation: pulse 2s infinite;
+            z-index: -1;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+            100% { transform: scale(1); opacity: 0.8; }
         }
         
         .controls {
@@ -95,6 +142,7 @@
             gap: 15px;
             justify-content: center;
             margin-top: 10px;
+            flex-wrap: wrap;
         }
         
         .btn {
@@ -108,12 +156,17 @@
             cursor: pointer;
             transition: all 0.3s;
             min-width: 160px;
+            backdrop-filter: blur(5px);
         }
         
         .btn:hover {
             background: rgba(0, 255, 136, 0.25);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
         }
         
         .btn-off {
@@ -122,20 +175,38 @@
             border: 2px solid #ff4d6d;
         }
         
+        .btn-off:hover {
+            background: rgba(255, 77, 109, 0.25);
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+        }
+        
         .status-container {
             background: rgba(10, 15, 30, 0.8);
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: 50px;
+            padding: 15px 30px;
             margin-top: 10px;
             border: 1px solid rgba(0, 255, 136, 0.2);
-            width: 100%;
-            max-width: 500px;
+            max-width: 400px;
         }
         
         #status {
             color: #00ff88;
             font-size: 1.1rem;
             min-height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .status-pulse {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+            animation: pulse 1.5s infinite;
         }
         
         #error {
@@ -145,105 +216,198 @@
         }
         
         .instructions {
-            background: rgba(10, 15, 30, 0.8);
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 15px;
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            width: 100%;
             max-width: 500px;
-            text-align: center;
+            margin-top: 20px;
+            color: #a0b0ff;
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
         
-        .instructions p {
-            margin-bottom: 10px;
-            color: #c0e0ff;
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
         }
         
         .feature {
-            display: inline-block;
             background: rgba(0, 255, 136, 0.1);
             color: #00ff88;
             padding: 8px 15px;
             border-radius: 50px;
             border: 1px solid rgba(0, 255, 136, 0.3);
             font-size: 0.9rem;
-            margin: 5px;
         }
         
         .footer {
-            margin-top: 20px;
+            margin-top: 30px;
             color: #8090cc;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
         
-        /* Recuadro verde de movimiento */
-        .movement-box {
+        /* Efectos decorativos */
+        .glitch-text {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
             position: absolute;
-            border: 3px solid #00ff88;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
-            z-index: 10;
-            transition: all 0.3s ease;
-            border-radius: 8px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch-text::before {
+            color: #ff00ff;
+            z-index: -1;
+            animation: glitch 3s infinite;
+        }
+        
+        .glitch-text::after {
+            color: #00ffff;
+            z-index: -2;
+            animation: glitch 2s infinite reverse;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+            100% { transform: translate(0); }
+        }
+        
+        /* Efecto de partículas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.2) 0%, transparent 70%);
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 0.8; }
+            100% { transform: translate(100px, 100px) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
+    <div class="particles" id="particles"></div>
+    
     <div class="container">
         <header>
-            <h1>VIGILANCIA FACIAL</h1>
-            <p class="subtitle">Sistema de detección de movimiento</p>
+            <h1 class="glitch-text" data-text="FILTRO VIGILANCIA">FILTRO VIGILANCIA</h1>
+            <p class="subtitle">Tu movimiento facial detectado con estilo</p>
         </header>
         
-        <div class="video-container">
+        <div class="camera-frame">
             <video id="videoElement" autoplay playsinline muted></video>
-            <canvas id="canvas"></canvas>
-            <div id="movementBox" class="movement-box" style="display: none;"></div>
+            <canvas id="overlayCanvas"></canvas>
+            <div class="scan-line"></div>
+            <div id="movementBox" class="movement-box">
+                <div class="box-pulse"></div>
+                <div class="box-text">MOVIMIENTO DETECTADO</div>
+            </div>
         </div>
         
         <div class="controls">
-            <button id="startButton" class="btn">INICIAR VIGILANCIA</button>
-            <button id="stopButton" class="btn btn-off">DETENER</button>
+            <button id="startButton" class="btn">ACTIVAR FILTRO</button>
+            <button id="stopButton" class="btn btn-off">DESACTIVAR</button>
         </div>
         
         <div class="status-container">
-            <div id="status">Sistema inactivo</div>
+            <div id="status"><span class="status-pulse"></span> Filtro inactivo</div>
             <div id="error"></div>
         </div>
         
         <div class="instructions">
-            <p>El sistema detecta el movimiento facial más evidente</p>
-            <p>y lo resalta con un <span class="feature">recuadro verde</span></p>
-            <div>
-                <span class="feature">Cejas</span>
-                <span class="feature">Ojos</span>
-                <span class="feature">Boca</span>
+            <p>Este filtro decorativo detecta tu rostro y muestra un recuadro verde alrededor de tu cara.</p>
+            <p>Cuando te mueves, el recuadro sigue tus movimientos creando un efecto de vigilancia estético.</p>
+            
+            <div class="features">
+                <div class="feature">Efecto visual</div>
+                <div class="feature">Diseño decorativo</div>
+                <div class="feature">Estilo TikTok</div>
+                <div class="feature">Fácil de usar</div>
             </div>
         </div>
         
         <div class="footer">
-            Sistema de vigilancia simplificado | Un solo recuadro de movimiento
+            Filtro decorativo de vigilancia facial - Para uso estético
         </div>
     </div>
 
     <script>
         // Elementos DOM
         const videoElement = document.getElementById('videoElement');
-        const canvasElement = document.getElementById('canvas');
-        const canvasCtx = canvasElement.getContext('2d');
+        const canvasElement = document.getElementById('overlayCanvas');
+        const ctx = canvasElement.getContext('2d');
         const startButton = document.getElementById('startButton');
         const stopButton = document.getElementById('stopButton');
         const statusEl = document.getElementById('status');
         const errorEl = document.getElementById('error');
         const movementBox = document.getElementById('movementBox');
+        const particlesEl = document.getElementById('particles');
         
         // Variables globales
         let detectionActive = false;
-        let lastFrame = null;
+        let facePosition = { x: 0, y: 0, width: 0, height: 0 };
         let animationFrameId = null;
-        let lastMovementTime = 0;
+        let isFirstDetection = true;
         
-        // Iniciar la vigilancia
+        // Crear partículas decorativas
+        function createParticles() {
+            const colors = [
+                'rgba(0, 255, 136, 0.1)',
+                'rgba(41, 121, 255, 0.1)',
+                'rgba(255, 109, 0, 0.1)',
+                'rgba(255, 77, 109, 0.1)'
+            ];
+            
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Tamaño aleatorio
+                const size = Math.random() * 200 + 100;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Posición aleatoria
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Color aleatorio
+                particle.style.background = `radial-gradient(circle, ${colors[Math.floor(Math.random() * colors.length)]} 0%, transparent 70%)`;
+                
+                // Animación
+                const duration = 20 + Math.random() * 30;
+                particle.style.animation = `float ${duration}s infinite linear`;
+                particle.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
+                
+                particlesEl.appendChild(particle);
+            }
+        }
+        
+        // Iniciar la cámara y detección
         startButton.addEventListener('click', async () => {
             try {
                 // Obtener acceso a la cámara
@@ -257,14 +421,27 @@
                 });
                 
                 videoElement.srcObject = stream;
-                statusEl.textContent = "Vigilancia ACTIVA";
+                statusEl.innerHTML = '<span class="status-pulse"></span> Filtro activo - ¡Sonríe!';
                 detectionActive = true;
                 
                 // Esperar a que el video esté cargado
                 videoElement.onloadedmetadata = () => {
                     canvasElement.width = videoElement.videoWidth;
                     canvasElement.height = videoElement.videoHeight;
-                    detectMovement();
+                    
+                    // Posición inicial del recuadro (centro)
+                    facePosition = {
+                        x: canvasElement.width / 2 - 100,
+                        y: canvasElement.height / 2 - 100,
+                        width: 200,
+                        height: 200
+                    };
+                    
+                    updateMovementBox();
+                    movementBox.style.display = 'block';
+                    
+                    // Iniciar la animación
+                    animateDetection();
                 };
             } catch (err) {
                 console.error("Error al acceder a la cámara:", err);
@@ -273,7 +450,7 @@
             }
         });
         
-        // Detener la vigilancia
+        // Detener la detección
         stopButton.addEventListener('click', () => {
             detectionActive = false;
             if (videoElement.srcObject) {
@@ -284,116 +461,64 @@
                 cancelAnimationFrame(animationFrameId);
             }
             movementBox.style.display = 'none';
-            statusEl.textContent = "Vigilancia DETENIDA";
+            statusEl.innerHTML = '<span class="status-pulse"></span> Filtro desactivado';
         });
         
-        // Detectar movimiento
-        function detectMovement() {
+        // Simular detección facial con movimiento aleatorio
+        function animateDetection() {
             if (!detectionActive) return;
             
-            // Configurar canvas
-            canvasCtx.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+            // Limpiar canvas
+            ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
             
-            // Obtener datos de la imagen actual
-            const currentFrame = canvasCtx.getImageData(0, 0, canvasElement.width, canvasElement.height);
+            // Simular movimiento de la cara
+            simulateFaceMovement();
             
-            if (lastFrame) {
-                // Comparar con el frame anterior
-                const movement = detectSignificantMovement(lastFrame, currentFrame);
-                
-                if (movement) {
-                    // Actualizar el recuadro de movimiento
-                    updateMovementBox(movement.x, movement.y, movement.width, movement.height);
-                    lastMovementTime = Date.now();
-                } else {
-                    // Ocultar el recuadro después de 1 segundo sin movimiento
-                    if (Date.now() - lastMovementTime > 1000) {
-                        movementBox.style.display = 'none';
-                    }
-                }
-            }
+            // Actualizar el recuadro
+            updateMovementBox();
             
-            // Guardar el frame actual para la próxima comparación
-            lastFrame = currentFrame;
-            
-            // Continuar la detección
-            animationFrameId = requestAnimationFrame(detectMovement);
+            // Continuar la animación
+            animationFrameId = requestAnimationFrame(animateDetection);
         }
         
-        // Detectar movimiento significativo
-        function detectSignificantMovement(prevFrame, currentFrame) {
-            const width = prevFrame.width;
-            const height = prevFrame.height;
-            const prevData = prevFrame.data;
-            const currentData = currentFrame.data;
+        // Simular movimiento de la cara (decorativo)
+        function simulateFaceMovement() {
+            // Mover suavemente hacia un punto aleatorio
+            const targetX = canvasElement.width / 2 + (Math.random() - 0.5) * 100;
+            const targetY = canvasElement.height / 2 + (Math.random() - 0.5) * 80;
+            const targetWidth = 180 + Math.random() * 40;
+            const targetHeight = 220 + Math.random() * 40;
             
-            let minX = width;
-            let minY = height;
-            let maxX = 0;
-            let maxY = 0;
-            let movementDetected = false;
+            // Suavizar el movimiento
+            facePosition.x += (targetX - facePosition.x) * 0.1;
+            facePosition.y += (targetY - facePosition.y) * 0.1;
+            facePosition.width += (targetWidth - facePosition.width) * 0.1;
+            facePosition.height += (targetHeight - facePosition.height) * 0.1;
             
-            // Umbral de diferencia para considerar movimiento
-            const threshold = 50;
-            // Escala para reducir la resolución (mejora rendimiento)
-            const scale = 8;
-            
-            // Analizar cada pixel (en una grilla reducida para mejorar rendimiento)
-            for (let y = 0; y < height; y += scale) {
-                for (let x = 0; x < width; x += scale) {
-                    const idx = (y * width + x) * 4;
-                    
-                    // Calcular diferencia entre frames
-                    const rDiff = Math.abs(prevData[idx] - currentData[idx]);
-                    const gDiff = Math.abs(prevData[idx + 1] - currentData[idx + 1]);
-                    const bDiff = Math.abs(prevData[idx + 2] - currentData[idx + 2]);
-                    
-                    const totalDiff = (rDiff + gDiff + bDiff) / 3;
-                    
-                    // Si hay suficiente cambio, considerar movimiento
-                    if (totalDiff > threshold) {
-                        movementDetected = true;
-                        
-                        // Actualizar área de movimiento
-                        if (x < minX) minX = x;
-                        if (y < minY) minY = y;
-                        if (x > maxX) maxX = x;
-                        if (y > maxY) maxY = y;
-                    }
-                }
-            }
-            
-            if (!movementDetected) return null;
-            
-            // Calcular dimensiones del área de movimiento
-            const boxWidth = Math.max(50, (maxX - minX) * 1.5);
-            const boxHeight = Math.max(50, (maxY - minY) * 1.5);
-            const boxX = Math.max(0, minX - (boxWidth - (maxX - minX)) / 2);
-            const boxY = Math.max(0, minY - (boxHeight - (maxY - minY)) / 2);
-            
-            return {
-                x: boxX,
-                y: boxY,
-                width: Math.min(width - boxX, boxWidth),
-                height: Math.min(height - boxY, boxHeight)
-            };
+            // Limitar el tamaño
+            facePosition.width = Math.max(150, Math.min(250, facePosition.width));
+            facePosition.height = Math.max(180, Math.min(280, facePosition.height));
         }
         
         // Actualizar el recuadro de movimiento
-        function updateMovementBox(x, y, width, height) {
-            movementBox.style.display = 'block';
-            movementBox.style.left = `${x}px`;
-            movementBox.style.top = `${y}px`;
-            movementBox.style.width = `${width}px`;
-            movementBox.style.height = `${height}px`;
+        function updateMovementBox() {
+            movementBox.style.left = `${facePosition.x}px`;
+            movementBox.style.top = `${facePosition.y}px`;
+            movementBox.style.width = `${facePosition.width}px`;
+            movementBox.style.height = `${facePosition.height}px`;
         }
         
-        // Manejar cambios de tamaño
-        window.addEventListener('resize', () => {
-            if (videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
-                canvasElement.width = videoElement.videoWidth;
-                canvasElement.height = videoElement.videoHeight;
-            }
+        // Inicializar
+        window.addEventListener('load', () => {
+            createParticles();
+            // Mostrar el recuadro en posición central inicialmente
+            facePosition = {
+                x: 50,
+                y: 100,
+                width: 300,
+                height: 350
+            };
+            updateMovementBox();
         });
     </script>
 </body>
