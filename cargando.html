@@ -21,16 +21,11 @@
 
     .mensaje {
       font-size: 1.8em;
-      animation: blink 1s infinite alternate;
-      margin-bottom: 20px;
+          margin-bottom: 20px;
       text-align: center;
     }
 
-    @keyframes blink {
-      0% { opacity: 1; }
-      100% { opacity: 0.2; }
-    }
-
+  
     .barra-carga {
       width: 80%;
       height: 30px;
@@ -80,7 +75,7 @@
   <div class="progreso" id="progreso"></div>
 </div>
 <div class="porcentaje" id="porcentaje">Cargando... 8%</div>
-<div class="glitch">espera...</div>
+<div class="glitch">⏳</div>
 
 <script>
   const barra = document.getElementById('progreso');
