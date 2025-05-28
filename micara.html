@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -23,7 +24,7 @@
           }
     h1 {
   font-size: 1.8em;
-  margin-bottom: 0px;
+  margin-bottom: 20px;
   color: #111;
   font-weight: 900;
   font-family: 'Anton', sans-serif;
@@ -32,7 +33,7 @@
 
     .smartphone-frame {
       width: 300px;
-      height: 500px;
+      height: 600px;
       border: 0;
       border-radius: 30px;
       overflow: hidden;
@@ -63,9 +64,6 @@
       scroll-snap-type: x mandatory;
       scroll-behavior: smooth;
     }
-    .slider::-webkit-scrollbar {
-  display: none; /* elimina el scrollbar que podría interferir */
-}
 
     .slide {
       flex: 0 0 100%;
@@ -79,7 +77,7 @@
     }
 
     .fondo-texto {
-      font-size: 1.5em;
+      font-size: 3em;
            font-family: 'Arial Black', Impact, sans-serif;
       font-weight: 900;
       text-align: center;
@@ -184,7 +182,7 @@
   function updateDots() {
     const slideWidth = slider.clientWidth;
     const scrollLeft = slider.scrollLeft;
-    const index = Math.round(scrollLeft / slideWidth);
+    const index = Math.floor((scrollLeft + slideWidth / 2) / slideWidth); // más preciso
     if (index !== currentIndex) {
       currentIndex = index;
       dots.forEach(dot => dot.classList.remove('active'));
