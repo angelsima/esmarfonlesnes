@@ -43,7 +43,6 @@
 <script>
   const texto = document.getElementById('escurreTexto');
 
-  // Orientaciones erróneas respecto al dispositivo
   const malasRotaciones = {
     0: [90, 180, 270],
     90: [0, 180, 270],
@@ -52,36 +51,26 @@
     270: [0, 90, 180],
   };
 
-  // Posiciones descentradas
-  const posiciones = [
-    { top: '15%', left: '70%' },
-    { top: '80%', left: '20%' },
-    { top: '30%', left: '30%' },
-    { top: '70%', left: '60%' },
-    { top: '10%', left: '15%' },
-  ];
-
-  let paso = 0;
-
   function desorientar() {
     const orient = window.orientation || screen.orientation.angle || 0;
     const rotaciones = malasRotaciones[orient] || [90, 180, 270];
     const rotacion = rotaciones[Math.floor(Math.random() * rotaciones.length)];
-    const pos = posiciones[paso % posiciones.length];
-    
-    texto.style.transform = `translate(-50%, -50%) rotate(${rotacion}deg)`;
-    texto.style.top = pos.top;
-    texto.style.left = pos.left;
-    
-    paso++;
+
+    // Posición aleatoria dentro de la pantalla (evitando salir del viewport)
+    const maxTop = window.innerHeight - texto.offsetHeight - 20;
+    const maxLeft = window.innerWidth - texto.offsetWidth - 20;
+    const newTop = Math.floor(Math.random() * maxTop);
+    const newLeft = Math.floor(Math.random() * maxLeft);
+
+    texto.style.top = `${newTop}px`;
+    texto.style.left = `${newLeft}px`;
+    texto.style.transform = `rotate(${rotacion}deg)`;
   }
 
-  // Detectar cambios de orientación
   window.addEventListener("orientationchange", () => {
     setTimeout(desorientar, 300);
   });
 
-  // Desorientar al cargar
   window.addEventListener("load", desorientar);
 </script>
 
