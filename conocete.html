@@ -3,27 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Algoritmo, Yo, Vigilancia</title>
+  <title>Algoritmo activo</title>
   <style>
-     @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
+
     html, body {
       height: 100%;
       margin: 0;
+      background: #1e1e1e;
+      color: #e0e0e0;
+      font-family: 'IBM Plex Mono', monospace;
+      overflow: hidden;
     }
 
-    body {
+    .contenedor {
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #242424; /* gris oscuro cálido */
-      color: #fff;
-      font-family: 'IBM Plex Sans', sans-serif;
+      height: 100vh;
+      text-align: center;
+      flex-direction: column;
     }
 
-    .centrado {
-      text-align: center;
-      font-size: 1.6em;
-      line-height: 1.4;
+    .titulo {
+      font-size: 2rem;
+      line-height: 1.5;
     }
 
     .algoritmo {
@@ -32,13 +36,30 @@
       letter-spacing: 0.5px;
     }
 
-    .observa {
-      font-size: 0.9em;
-      color: #89caff;
-      margin-top: 1.5rem;
-      opacity: 0.7;
+    .console {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 0.75rem;
+      color: #66ffcc;
+      opacity: 0.8;
+      pointer-events: none;
+      white-space: pre;
     }
-     .scanline::after {
+
+    @keyframes escribir {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    .linea {
+      overflow: hidden;
+      display: inline-block;
+      white-space: nowrap;
+      border-right: 2px solid #66ffcc;
+      animation: escribir 4s steps(40, end) infinite alternate;
+    }
+      .scanline::after {
     content: '';
     display: block;
     height: 2px;
@@ -56,9 +77,38 @@
   </style>
 </head>
 <body>
-  <div class="centrado scanline">
-    <p>Conócete<br>como te<br>conoce<br><span class="algoritmo">tu algoritmo</span></p>
-    <div class="observa">Siempre estás siendo observado.</div>
+  <div class="contenedor">
+    <div class="titulo">
+      Conócete<br>como te conoce<br><span class="algoritmo">tu algoritmo</span>
+    </div>
   </div>
+
+  <div class="console" id="consoleLog"></div>
+
+  <script>
+    const mensajes = [
+      ">> scanning user geolocation%%#%",
+      ">> face proximity sensor: active",
+      ">> battery health: compromised / flag sent",
+      ">> cookies: 148 found (risk profile: HIGH)",
+      ">> report queue full – awaiting upload",
+      ">> microphone active (flag: unaware)",
+      ">> user gaze = unstable / pattern irregular"
+    ];
+
+    function mostrarMensajes() {
+      const consola = document.getElementById("consoleLog");
+      let index = 0;
+      function escribir() {
+        consola.textContent += mensajes[index] + "\n";
+        index = (index + 1) % mensajes.length;
+        if (index === 0) consola.textContent = "";
+        setTimeout(escribir, 4000 + Math.random() * 3000);
+      }
+      escribir();
+    }
+
+    mostrarMensajes();
+  </script>
 </body>
 </html>
