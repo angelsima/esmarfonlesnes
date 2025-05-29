@@ -3,116 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comparación Patrimonio Elon Musk vs. Salarios</title>
+    <title>Patrimonio de Elon Musk vs Salarios Anuales</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
-            background-color: #FFD700;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
             margin: 0 auto;
-            max-width: 600px;
+            max-width: 800px;
             padding: 20px;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-weight: bold;
-            overflow-x: hidden;
+            color: #222;
+            line-height: 1.6;
+        }
+        
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 215, 0, 0.95);
+            padding: 15px;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border-radius: 0 0 15px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header-content img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
         }
         
         h1 {
-            margin-top: 30px;
             text-align: center;
-            padding: 10px;
-        }
-         
-        h3 {
-            text-align: center;
-            padding: 0px;
+            padding: 25px 15px 15px;
+            font-size: 1.8rem;
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
         }
         
-        #fixedHeader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: #FFD700;
-            padding: 10px;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            justify-content: center;
-        }
-
-        .info-block {
+        .intro-section {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             text-align: center;
-            margin: 15px auto 20px;
-            padding: 10px;
-            border: 1px solid black;
+        }
+        
+        .comparison-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .comparison-box {
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid #333;
+            border-radius: 15px;
+            padding: 15px;
+            width: 45%;
+            min-width: 250px;
+            margin: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        .comparison-box h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        
+        .comparison-box .value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #c00;
+            margin: 10px 0;
+        }
+        
+        .symbol-explanation {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.85);
+            color: #FFD700;
             border-radius: 10px;
-            max-width: 300px;
+            margin: 20px 0;
+            font-size: 1.1rem;
         }
-
+        
         #symbolContainer {
-            margin-top: 100px;
-            font-size: 16px;
-            line-height: 1.1;
+            margin-top: 20px;
+            font-size: 12px;
+            line-height: 1;
             letter-spacing: -1px;
+            text-align: center;
         }
-
+        
         .symbol-line {
             display: block;
             white-space: nowrap;
             overflow: hidden;
-            height: 16px;
+            height: 10px;
+            margin-bottom: 2px;
         }
-
+        
         .million-message {
             width: 100%;
             text-align: center;
-            padding: 10px;
-            font-size: 1.5em;
-            background: #ff000055;
-            margin: 20px 0;
-            border-radius: 5px;
+            padding: 20px 10px;
+            font-size: 1.5rem;
+            background: linear-gradient(to right, #ff8c00, #ff4500);
+            margin: 30px 0;
+            border-radius: 10px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-weight: 900;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
         }
         
-        .scroll-message {
+        .final-message {
+            background: linear-gradient(to right, #4CAF50, #2E8B57);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 40px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .final-message h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .statistics {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            min-width: 200px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .stat-box .number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #c00;
+        }
+        
+        .scroll-indicator {
             position: fixed;
             bottom: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
+            left: 50%;
+            transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 10px;
-            font-size: 1.2em;
-            z-index: 1000;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            z-index: 100;
+            animation: pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+        
+        @media (max-width: 600px) {
+            .comparison-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .comparison-box {
+                width: 95%;
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="fixedHeader">
-        <span>🧑🏻</span>
-        <span id="counter">Elon Musk: 421.000 millones € = 15.592.593 salarios ⚒</span>
-    </div>
-
-    <h1>¿Cuántos asalariados⚒ hacen falta para igualar el patrimonio de Elon Musk🧑🏻?</h1>
+    <header>
+        <div class="header-content">
+            <span>🧑🏻</span>
+            <h2>Patrimonio de Elon Musk: 421.000 millones €</h2>
+        </div>
+        <div id="counter">15.592.593 salarios anuales</div>
+    </header>
     
-    <div class="info-block">
-        <div style="font-size: 24px;">🧑🏻<h3>Elon Musk = 421.000 millones €</h3></div>
-    </div>
-    <div class="info-block">
-        <div style="font-size: 24px;">⚒<h3>Sueldo medio anual = 27.000 €</h3></div>
-    </div>
+    <h1>¿Cuántos asalariados hacen falta para igualar el patrimonio de Elon Musk?</h1>
     
-    <div class="million-message">
-        🔥 CADA "+" REPRESENTA UN SALARIO ANUAL DE 27.000 € 🔥
-    </div>
-   
-    <div id="symbolContainer">
-        <!-- Los símbolos se generarán aquí -->
+    <div class="intro-section">
+        <p>Cada símbolo "+" representa un salario anual medio de <strong>27.000 €</strong>. Para igualar el patrimonio de Elon Musk, necesitamos...</p>
     </div>
     
-    <div class="scroll-message">
-        ⬇️ ¡Sigue desplazándote para ver la inmensidad de la desigualdad! ⬇️
+    <div class="comparison-container">
+        <div class="comparison-box">
+            <h3>Elon Musk</h3>
+            <div class="value">421.000 millones €</div>
+            <p>Patrimonio total (2024)</p>
+        </div>
+        <div class="comparison-box">
+            <h3>Salario medio</h3>
+            <div class="value">27.000 €</div>
+            <p>Anual en España</p>
+        </div>
+    </div>
+    
+    <div class="symbol-explanation">
+        ⬇️ DESPLÁZATE PARA VER LOS +15 MILLONES DE SALARIOS NECESARIOS ⬇️
+    </div>
+    
+    <div id="symbolContainer"></div>
+    
+    <div class="final-message">
+        <h2>¡HAS LLEGADO AL FINAL!</h2>
+        <p>Elon Musk tiene un patrimonio equivalente a los ingresos de <strong>15.592.593 personas</strong> durante un año completo.</p>
+        <p>Esta visualización ayuda a comprender la inmensa escala de la desigualdad económica actual.</p>
+    </div>
+    
+    <div class="statistics">
+        <div class="stat-box">
+            <div class="number">15.592.593</div>
+            <p>Salarios anuales necesarios</p>
+        </div>
+        <div class="stat-box">
+            <div class="number">421.000M €</div>
+            <p>Patrimonio total</p>
+        </div>
+        <div class="stat-box">
+            <div class="number">27.000 €</div>
+            <p>Por salario anual</p>
+        </div>
+    </div>
+    
+    <div class="scroll-indicator">
+        <span>⬇️</span> Sigue desplazándote para ver más
     </div>
 
     <script>
@@ -121,9 +284,9 @@
         const SALARY = 27000;
         const totalSymbols = Math.floor(TOTAL_TARGET / SALARY); // 15.592.593 símbolos
         const SYMBOLS_PER_LINE = 250; // Símbolos por línea
-        const MILESTONE_INTERVAL = 100000000; // Cada 100 millones de euros
+        const MILESTONE_INTERVAL = 1000000000; // Cada 1.000 millones de euros
         
-        // Calcular hitos (cada 100 millones de euros)
+        // Calcular hitos (cada 1.000 millones de euros)
         const milestones = [];
         for (let i = MILESTONE_INTERVAL; i <= TOTAL_TARGET; i += MILESTONE_INTERVAL) {
             milestones.push(i);
@@ -136,38 +299,58 @@
         let htmlContent = '';
         let currentAmount = 0;
         let milestoneIndex = 0;
+        let symbolsInCurrentLine = 0;
         
-        // Generar líneas de símbolos
+        // Mensaje inicial
+        htmlContent += `<div class="million-message">🔥 CADA "+" REPRESENTA UN SALARIO ANUAL DE 27.000 € 🔥</div>`;
+        
+        // Generar símbolos
         for (let i = 0; i < totalSymbols; i++) {
             currentAmount += SALARY;
             
-            // Comprobar si hemos alcanzado un hito
-            if (milestoneIndex < milestones.length && currentAmount >= milestones[milestoneIndex]) {
-                htmlContent += `</div><div class="million-message">🔥 YA LLEVAMOS ${milestones[milestoneIndex]/1000000} MILLONES 🔥</div><div class="symbol-line">`;
-                milestoneIndex++;
-            }
-            
-            // Comenzar nueva línea cada SYMBOLS_PER_LINE símbolos
-            if (i % SYMBOLS_PER_LINE === 0) {
-                if (i > 0) htmlContent += '</div>';
+            // Comenzar nueva línea si es necesario
+            if (symbolsInCurrentLine === 0) {
                 htmlContent += '<div class="symbol-line">';
             }
             
             htmlContent += '+';
+            symbolsInCurrentLine++;
+            
+            // Comprobar si hemos alcanzado un hito
+            if (milestoneIndex < milestones.length && currentAmount >= milestones[milestoneIndex]) {
+                // Cerrar línea actual
+                htmlContent += '</div>';
+                symbolsInCurrentLine = 0;
+                
+                // Agregar mensaje de hito
+                const milestoneText = (milestones[milestoneIndex] / 1000000000).toLocaleString('es', {minimumFractionDigits: 3});
+                htmlContent += `<div class="million-message">🔥 YA LLEVAMOS ${milestoneText} MILLONES 🔥</div>`;
+                milestoneIndex++;
+            }
+            // Comprobar si necesitamos nueva línea
+            else if (symbolsInCurrentLine >= SYMBOLS_PER_LINE) {
+                htmlContent += '</div>';
+                symbolsInCurrentLine = 0;
+            }
         }
-        htmlContent += '</div>';
         
-        // Añadir mensaje final
-        htmlContent += `<div class="million-message" style="background: #00ff0055;">
-            🎉 ¡TOTAL ALCANZADO! 🎉<br>
-            Patrimonio de Elon Musk: 421.000 millones €<br>
-            Equivalente a ${totalSymbols.toLocaleString('es')} salarios anuales
-        </div>`;
+        // Cerrar última línea si es necesario
+        if (symbolsInCurrentLine > 0) {
+            htmlContent += '</div>';
+        }
+        
+        // Mensaje final
+        htmlContent += `<div class="million-message">🎉 ¡TOTAL ALCANZADO! 421.000 MILLONES 🎉</div>`;
         
         container.innerHTML = htmlContent;
         
+        // Actualizar contador en cabecera
+        document.getElementById('counter').textContent = 
+            `${totalSymbols.toLocaleString('es')} salarios anuales`;
+        
         // Mensaje informativo en la consola
         console.log(`Se generaron ${totalSymbols.toLocaleString('es')} símbolos '+'`);
+        console.log(`Equivalente a ${(TOTAL_TARGET/1000000000).toLocaleString('es')} mil millones de euros`);
     </script>
 </body>
 </html>
