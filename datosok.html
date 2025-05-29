@@ -26,23 +26,43 @@
       text-align: center;
     }
 
+    .intro {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 1rem auto 2rem;
+    }
+
+    #dato-container {
+      max-width: 600px;
+      margin: 2rem;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
     #dato {
       font-size: 1.4rem;
-      margin: 2rem;
-      max-width: 600px;
-      min-height: 100px;
-      opacity: 1;
-      transition: opacity 0.3s ease;
       line-height: 1.6;
+      margin-bottom: 0.5rem;
     }
+
     #sub-dato {
-      font-size: 0.8rem;
-      margin: 2rem;
-      max-width: 600px;
-      min-height: 100px;
-      opacity: 1;
-      transition: opacity 0.3s ease;
+      font-size: 0.9rem;
+      color: var(--muted);
       line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    #enlace {
+      display: inline-block;
+      margin-top: 1rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    #enlace:hover {
+      text-decoration: underline;
     }
 
     button {
@@ -55,6 +75,7 @@
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.1s ease;
       font-weight: 500;
+      margin-top: 1rem;
     }
 
     button:hover {
@@ -64,70 +85,90 @@
     button:active {
       transform: scale(0.97);
     }
-
-    .intro {
-      font-size: 1rem;
-      color: var(--muted);
-      max-width: 480px;
-      margin: 1rem auto 2rem;
-    }
   </style>
 </head>
 <body>
   <div class="intro">Este libro también tiene datos que no has pedido y que cambiarán tu día:</div>
-  <div id="dato">Haz clic para descubrir uno.</div>
+  
+  <div id="dato-container">
+    <div id="dato">Haz clic para descubrir uno.</div>
+    <div id="sub-dato"></div>
+    <a id="enlace" href="#" style="display: none;">Saber más</a>
+  </div>
+  
   <button onclick="mostrarDato()">Dame un dato</button>
 
   <script>
     const datos = [
-  "Los smartphones han ayudado a cerrar la brecha digital,<br><div class='sub-dato'>facilitando el acceso a servicios esenciales como la banca, la salud y la educación en comunidades marginadas.</div><a href='https://defensoreshumanos.org/derechos-humanos-y-tecnologia/revolucion-movil-impacto-smartphones-cierre-brecha-digital/'>Saber más</a>",
-  
-  "La conectividad ha democratizado el acceso a la información,<br><div class='sub-dato'>permitiendo a las personas aprender sobre casi cualquier tema y mejorar su calidad de vida.</div><a href='https://dodepecho.com/democratizacion-acceso-internet/'>Saber más</a>",
-  
-  "La salud móvil (mHealth) permite el seguimiento de enfermedades y tratamientos,<br><div class='sub-dato'>mejorando la atención médica incluso en regiones remotas.</div><a href='https://www.ambit-iberia.com/blog/mhealth-todo-lo-que-debes-saber-sobre-la-salud-m%C3%B3vil'>Saber más</a>",
-  
-  "Las redes sociales ayudan a los jóvenes a desarrollar habilidades digitales esenciales,<br><div class='sub-dato'>como la gestión de la privacidad y la creación de una presencia en línea positiva.</div><a href='https://www.internetmatters.org/es/advice/by-activity/social-media-advice-hub/social-media-benefits/'>Saber más</a>",
-  
-  "La tecnología ha transformado la atención médica,<br><div class='sub-dato'>mejorando el diagnóstico y tratamiento de enfermedades a través de la telemedicina y otras innovaciones.</div><a href='https://www.mayoclinic.org/es/healthy-lifestyle/consumer-health/in-depth/telehealth/art-20044878'>Saber más</a>",
-  
-  "La tecnología ha cambiado la forma en que compramos y vendemos,<br><div class='sub-dato'>facilitando el comercio electrónico y ampliando el alcance de las empresas.</div><a href='https://sell.amazon.com/es/learn/what-is-ecommerce'>Saber más</a>",
-  
-  "La tecnología ha mejorado la seguridad,<br><div class='sub-dato'>implementando sistemas de identificación biométrica y mejorando la seguridad en el hogar y el trabajo.</div><a href='https://www.aratek.co/es/news/biometric-security-the-future-of-personal-and-public-safety'>Saber más</a>",
-  
-  "La tecnología ha creado nuevas oportunidades de trabajo,<br><div class='sub-dato'>especialmente en campos como la inteligencia artificial y el marketing digital.</div><a href='https://hayasmarketing.com/es/la-inteligencia-artificial-ia-y-su-aplicacion-en-marketing/'>Saber más</a>",
-  
-  "La tecnología ha mejorado la eficiencia,<br><div class='sub-dato'>automatizando procesos y mejorando la gestión de datos y la toma de decisiones.</div><a href='https://www.on24.com/es/blog/how-to-leverage-ai-in-digital-marketing-the-complete-guide/'>Saber más</a>",
-  
-  "Las redes sociales fomentan la conexión emocional,<br><div class='sub-dato'>permitiendo a las personas compartir experiencias y emociones de manera auténtica.</div><a href='https://blog.opresmedia.com/beneficios-emocionales-y-sociales-de-estar-activo-en-las-redes-sociales'>Saber más</a>",
-  
-  "Las redes sociales actúan como arquitectos digitales de relaciones,<br><div class='sub-dato'>facilitando la conexión con personas de ideas afines y estableciendo vínculos significativos.</div><a href='https://blog.opresmedia.com/beneficios-emocionales-y-sociales-de-estar-activo-en-las-redes-sociales'>Saber más</a>",
-  
-  "Las redes sociales amplifican la comunicación,<br><div class='sub-dato'>eliminando barreras geográficas y temporales y fortaleciendo las comunidades.</div><a href='https://blog.opresmedia.com/beneficios-emocionales-y-sociales-de-estar-activo-en-las-redes-sociales'>Saber más</a>",
-  
-  "La tecnología ha promovido la alfabetización digital,<br><div class='sub-dato'>reduciendo la brecha digital y facilitando el acceso a la tecnología para todos.</div><a href='https://deliveringhappiness.es/cual-es-el-impacto-social-de-la-tecnologia/'>Saber más</a>",
-  
-  "La tecnología ha facilitado el acceso a la educación digital,<br><div class='sub-dato'>permitiendo que personas de todo el mundo accedan a materiales educativos de alta calidad.</div><a href='https://www.bankilo.es/tecnologia-y-derechos-humanos/'>Saber más</a>",
-  
-  "La tecnología ha mejorado la atención médica,<br><div class='sub-dato'>permitiendo que los pacientes tengan acceso a información médica de alta calidad y tratamientos más efectivos.</div><a href='https://gea.lat/el-impacto-de-la-tecnologia-en-la-sociedad-progreso-o-retroceso/'>Saber más</a>",
-  
-  "La tecnología ha cambiado la forma en que aprendemos y enseñamos,<br><div class='sub-dato'>permitiendo el aprendizaje en cualquier momento y lugar.</div><a href='https://gea.lat/el-impacto-de-la-tecnologia-en-la-sociedad-progreso-o-retroceso/'>Saber más</a>",
-  
-  "La tecnología ha mejorado la comunicación,<br><div class='sub-dato'>permitiendo que las personas trabajen desde cualquier lugar del mundo y mejorando la comunicación en los negocios.</div><a href='https://gea.lat/el-impacto-de-la-tecnologia-en-la-sociedad-progreso-o-retroceso/'>Saber más</a>",
-  
-  "La tecnología ha mejorado la salud de las personas,<br><div class='sub-dato'>permitiendo el desarrollo de tratamientos más efectivos para enfermedades y lesiones.</div><a href='https://gea.lat/el-impacto-de-la-tecnologia-en-la-sociedad-progreso-o-retroceso/'>Saber más</a>",
-  
-  "La tecnología ha mejorado la calidad de vida,<br><div class='sub-dato'>permitiendo el acceso a servicios esenciales y mejorando la eficiencia en varios aspectos de la vida diaria.</div><a href='https://gea.lat/el-impacto-de-la-tecnologia-en-la-sociedad-progreso-o-retroceso/'>Saber más</a>",
-  
-  "La tecnología ha transformado nuestras ciudades,<br><div class='sub-dato'>utilizando innovaciones como la tecnología blockchain para contribuir al bienestar de la sociedad.</div><a href='https://www.fororsemalaga.es/transformando-ciudades-el-impacto-positivo-de-la-tecnologia-en-la-sociedad/'>Saber más</a>"
-];
+      {
+        titulo: "Los smartphones han ayudado a cerrar la brecha digital",
+        subtitulo: "Facilitando el acceso a servicios esenciales como la banca, la salud y la educación en comunidades marginadas.",
+        enlace: "https://defensoreshumanos.org/derechos-humanos-y-tecnologia/revolucion-movil-impacto-smartphones-cierre-brecha-digital/"
+      },
+      {
+        titulo: "La conectividad ha democratizado el acceso a la información",
+        subtitulo: "Permitiendo a las personas aprender sobre casi cualquier tema y mejorar su calidad de vida.",
+        enlace: "https://dodepecho.com/democratizacion-acceso-internet/"
+      },
+      {
+        titulo: "La salud móvil (mHealth) permite el seguimiento de enfermedades y tratamientos",
+        subtitulo: "Mejorando la atención médica incluso en regiones remotas.",
+        enlace: "https://www.ambit-iberia.com/blog/mhealth-todo-lo-que-debes-saber-sobre-la-salud-m%C3%B3vil"
+      },
+      {
+        titulo: "Las redes sociales ayudan a los jóvenes a desarrollar habilidades digitales esenciales",
+        subtitulo: "Como la gestión de la privacidad y la creación de una presencia en línea positiva.",
+        enlace: "https://www.internetmatters.org/es/advice/by-activity/social-media-advice-hub/social-media-benefits/"
+      },
+      {
+        titulo: "La tecnología ha transformado la atención médica",
+        subtitulo: "Mejorando el diagnóstico y tratamiento de enfermedades a través de la telemedicina y otras innovaciones.",
+        enlace: "https://www.mayoclinic.org/es/healthy-lifestyle/consumer-health/in-depth/telehealth/art-20044878"
+      },
+      {
+        titulo: "La tecnología ha cambiado la forma en que compramos y vendemos",
+        subtitulo: "Facilitando el comercio electrónico y ampliando el alcance de las empresas.",
+        enlace: "https://sell.amazon.com/es/learn/what-is-ecommerce"
+      },
+      {
+        titulo: "La tecnología ha mejorado la seguridad",
+        subtitulo: "Implementando sistemas de identificación biométrica y mejorando la seguridad en el hogar y el trabajo.",
+        enlace: "https://www.aratek.co/es/news/biometric-security-the-future-of-personal-and-public-safety"
+      },
+      {
+        titulo: "La tecnología ha creado nuevas oportunidades de trabajo",
+        subtitulo: "Especialmente en campos como la inteligencia artificial y el marketing digital.",
+        enlace: "https://hayasmarketing.com/es/la-inteligencia-artificial-ia-y-su-aplicacion-en-marketing/"
+      },
+      {
+        titulo: "La tecnología ha mejorado la eficiencia",
+        subtitulo: "Automatizando procesos y mejorando la gestión de datos y la toma de decisiones.",
+        enlace: "https://www.on24.com/es/blog/how-to-leverage-ai-in-digital-marketing-the-complete-guide/"
+      },
+      {
+        titulo: "Las redes sociales fomentan la conexión emocional",
+        subtitulo: "Permitiendo a las personas compartir experiencias y emociones de manera auténtica.",
+        enlace: "https://blog.opresmedia.com/beneficios-emocionales-y-sociales-de-estar-activo-en-las-redes-sociales"
+      }
+    ];
 
     function mostrarDato() {
-      const dato = datos[Math.floor(Math.random() * datos.length)];
-      const div = document.getElementById("dato");
-      div.style.opacity = 0;
+      const container = document.getElementById("dato-container");
+      const titulo = document.getElementById("dato");
+      const subtitulo = document.getElementById("sub-dato");
+      const enlace = document.getElementById("enlace");
+      
+      container.style.opacity = 0;
+      
       setTimeout(() => {
-        div.textContent = dato;
-        div.style.opacity = 1;
+        const datoAleatorio = datos[Math.floor(Math.random() * datos.length)];
+        
+        titulo.textContent = datoAleatorio.titulo;
+        subtitulo.textContent = datoAleatorio.subtitulo;
+        enlace.href = datoAleatorio.enlace;
+        enlace.style.display = "inline-block";
+        
+        container.style.opacity = 1;
       }, 200);
     }
   </script>
