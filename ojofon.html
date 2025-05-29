@@ -256,8 +256,7 @@
         {name:'L-eye',    pts:[33,133,144,145,153,154,155]},
         {name:'R-eye',    pts:[362,263,373,374,380,381,382]},
         {name:'mouth',    pts:[61,146,91,181,84,17,314,405,321]},
-        // Añadimos la región de la nariz con puntos clave
-        {name:'nose',     pts:[1, 2, 3, 4, 5, 6, 45, 51, 115, 122, 131, 134, 220, 237, 44, 125, 34, 143]}
+        {name:'nose', pts:[4, 5, 6, 195, 197, 220, 237, 44, 125]}
       ];
       let maxMov = 0, chosen = null;
 
@@ -291,7 +290,7 @@
         minX = Math.min(minX,x); maxX = Math.max(maxX,x);
         minY = Math.min(minY,y); maxY = Math.max(maxY,y);
       }
-      const m=10;
+      const m = chosen.name === 'nose' ? 5 : 10;
       return {
         x: Math.max(0,minX-m),
         y: Math.max(0,minY-m),
