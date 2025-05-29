@@ -22,14 +22,14 @@
       display:flex; flex-direction:column;
       align-items:center; gap:16px;
       padding:16px;
-    }
+         }
 
     header h1 {
       font-size:1.8rem;
-      background: linear-gradient(90deg, #00ff88, #00ddff);
-      -webkit-background-clip: text;
+       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing:1px;
+       text-align: center;
     }
     .subtitle {
       font-size:0.9rem;
@@ -49,9 +49,7 @@
     #videoElement {
       width:100%; height:100%;
       object-fit:cover;
-      transform:scaleX(-1);
-      filter: grayscale(80%) contrast(1.2);
-    }
+               }
     #overlayCanvas {
       position:absolute; top:0; left:0;
       width:100%; height:100%;
@@ -255,9 +253,11 @@
       const regions = [
         {name:'L-brow',   pts:[70,63,105,66,107]},
         {name:'R-brow',   pts:[300,293,334,296,336]},
-        {name:'L-eye ',    pts:[33,133,144,145,153,154,155]},
+        {name:'L-eye',    pts:[33,133,144,145,153,154,155]},
         {name:'R-eye',    pts:[362,263,373,374,380,381,382]},
-        {name:'mouth',       pts:[61,146,91,181,84,17,314,405,321]},
+        {name:'mouth',    pts:[61,146,91,181,84,17,314,405,321]},
+        // Añadimos la región de la nariz con puntos clave
+        {name:'nose',     pts:[1, 2, 3, 4, 5, 6, 45, 51, 115, 122, 131, 134, 220, 237, 44, 125, 34, 143]}
       ];
       let maxMov = 0, chosen = null;
 
@@ -281,11 +281,13 @@
       }
       if (!chosen) return null;
 
-      // bounding box
+      // bounding box con corrección de espejo
       let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
       for (let idx of chosen.pts) {
         const p = landmarks[idx];
-        const x = p.x * vw, y = p.y * vh;
+        // Corregimos la posición horizontal para que coincida con la cámara sin reflejo
+        const x = p.x * vw;
+        const y = p.y * vh;
         minX = Math.min(minX,x); maxX = Math.max(maxX,x);
         minY = Math.min(minY,y); maxY = Math.max(maxY,y);
       }
