@@ -58,7 +58,10 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
     }
-
+ .view-button.loading {
+      background: #333;
+      color: #00ff88;
+    }
     /* ----- CONTENT (HIDDEN INITIALLY) ----- */
     .content {
       display: none;
@@ -188,8 +191,7 @@
     </div>
 
     <div class="controls">
-      <button id="startButton" class="btn">Activar</button>
-      <button id="stopButton" class="btn btn-off">Detener</button>
+          <button id="stopButton" class="btn btn-off">Detener</button>
     </div>
 
     <div class="status-container">
@@ -202,7 +204,7 @@
     <div class="features">
       <div class="feature">Targeting > accurate !important</div>
       <div class="feature">Prints: #green</div>
-      <div class="feature">Scan grain > high</div>
+      <div class="feature">Scan granularity > high</div>
     </div>
  </div>
   </div>
@@ -227,34 +229,45 @@
 
     let faceMesh, camera, detectionActive=false, lastPositions={}, lastMovementTime=0;
 
- // Show content when view button is clicked
-    viewButton.addEventListener('click', () => {
-      viewButton.style.display = 'none';
-      content.style.display = 'block';
-      document.querySelector('header h1').style.marginBottom = '0';
-      document.querySelector('header .subtitle').style.marginBottom = '0';
-    });
+  // Show content and activate camera when view button is clicked
+    viewButton.addEventListener('click', async () => {
+      viewButton.textContent = 'Cargando...';
+      viewButton.classList.add('loading');
     
-    async function initFaceMesh() {
-      statusEl.innerHTML = '<span class="status-pulse"></span> Initializing detector...';
-      faceMesh = new FaceMesh({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
-      faceMesh.setOptions({ maxNumFaces:1, refineLandmarks:true, minDetectionConfidence:0.5, minTrackingConfidence:0.5 });
-      faceMesh.onResults(onResults);
+   try {
+        // Initialize face mesh
+      statusEl.innerHTML = '<span class="status-pulse"></span> Initializing scan...';
+   faceMesh = new FaceMesh({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
+        faceMesh.setOptions({ 
+          maxNumFaces:1, 
+          refineLandmarks:true, 
+          minDetectionConfidence:0.5, 
+          minTrackingConfidence:0.5 
+        });
+        faceMesh.onResults(onResults);
 
-      statusEl.innerHTML = '<span class="status-pulse"></span> Initalizing scan...';
-      camera = new Camera(videoElement, {
-        onFrame: async () => detectionActive && await faceMesh.send({image:videoElement}),
-        width:640, height:480, facingMode:'user'
-      });
-      try {
+        // Show content
+        viewButton.style.display = 'none';
+        content.style.display = 'block';
+        document.querySelector('header h1').style.marginBottom = '0';
+        document.querySelector('header .subtitle').style.marginBottom = '0';
+      
+     // Start camera
+        statusEl.innerHTML = '<span class="status-pulse"></span> Iniciando cámara...';
+        camera = new Camera(videoElement, {
+          onFrame: async () => await faceMesh.send({image:videoElement}),
+          width:640, height:480, facingMode:'user'
+        });
         await camera.start();
         detectionActive = true;
         statusEl.innerHTML = '<span class="status-pulse"></span> Surveillance ON';
       } catch(e) {
         statusEl.innerHTML = '<span class="status-pulse"></span> Error al iniciar';
         errorEl.textContent = e.message;
+       viewButton.textContent = 'Reintentar';
+        viewButton.classList.remove('loading');
       }
-    }
+    });
 
     function onResults(results) {
       // ajusta canvas al tamaño **visible** del vídeo
@@ -313,7 +326,8 @@
         }
       }
       if (!chosen) return null;
-
+      
+ const m = chosen.name === 'nose' ? 5 : 10;
       // bounding box con corrección de espejo
       let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
       for (let idx of chosen.pts) {
@@ -324,7 +338,7 @@
         minX = Math.min(minX,x); maxX = Math.max(maxX,x);
         minY = Math.min(minY,y); maxY = Math.max(maxY,y);
       }
-      const m = chosen.name === 'nose' ? 5 : 10;
+    
       return {
         x: Math.max(0,minX-m),
         y: Math.max(0,minY-m),
@@ -334,13 +348,16 @@
       };
     }
 
-    startButton .addEventListener('click', initFaceMesh);
-    stopButton  .addEventListener('click', ()=>{
+    stopButton.addEventListener('click', ()=>{
       detectionActive=false;
       camera?.stop();
       ctx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
       movementBox.style.display='none';
-      statusEl.innerHTML = '<span class="status-pulse"></span> Surveillance INTERRUPTED!';
+      content.style.display='none';
+      viewButton.style.display='block';
+      viewButton.textContent = 'Ver';
+      viewButton.classList.remove('loading');
+      statusEl.innerHTML = '<span class="status-pulse"></span> Vigilancia DETENIDA';
     });
   </script>
 </body>
