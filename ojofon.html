@@ -47,7 +47,7 @@
     .camera-frame {
       position:relative;
       width:100%;
-       aspect-ratio: 4 / 3;
+       aspect-ratio: 9/16;
       border-radius:20px;
       overflow:hidden;
       background:#000;
@@ -332,14 +332,15 @@
         }
         
         // Procesar resultados de Face Mesh
-        function onFaceMeshResults(results) {
-            // Configurar el canvas al tamaño del video
-            overlayCanvas.width = videoElement.videoWidth;
-            overlayCanvas.height = videoElement.videoHeight;
-            
-            ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-            
-            if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+       function onFaceMeshResults(results) {
+  // Usa el tamaño **visible** del elemento, no la resolución interna
+  const vw = videoElement.clientWidth;
+  const vh = videoElement.clientHeight;
+  overlayCanvas.width  = vw;
+  overlayCanvas.height = vh;
+  ctx.clearRect(0, 0, vw, vh);
+
+  if (results.multiFaceLandmarks && results.multiFaceLandmarks.length) {
                 faceDetected = true;
                 const landmarks = results.multiFaceLandmarks[0];
                 
@@ -420,8 +421,8 @@
         
         // Calcular el cuadro delimitador para un área
         function calculateAreaBoundingBox(landmarks, indices, label) {
-            let minX = Infinity, minY = Infinity;
-            let maxX = -Infinity, maxY = -Infinity;
+  const vw = videoElement.clientWidth;
+  const vh = videoElement.clientHeight;
             
             for (const index of indices) {
                 const point = landmarks[index];
