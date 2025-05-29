@@ -96,17 +96,23 @@
       ">> user gaze = unstable / pattern irregular"
     ];
 
-    function mostrarMensajes() {
-      const consola = document.getElementById("consoleLog");
-      let index = 0;
-      function escribir() {
-        consola.textContent += mensajes[index] + "\n";
-        index = (index + 1) % mensajes.length;
-        if (index === 0) consola.textContent = "";
-        setTimeout(escribir, 4000 + Math.random() * 3000);
-      }
-      escribir();
-    }
+   function mostrarMensajes() {
+  const consola = document.getElementById("consoleLog");
+  let index = 0;
+  let velocidad = 600; // empieza rápido (milisegundos)
+
+  function escribir() {
+    consola.textContent += mensajes[index] + "\n";
+    index = (index + 1) % mensajes.length;
+
+    // Ralentiza progresivamente, hasta estabilizar en 4000 ms
+    if (velocidad < 4000) velocidad += 300;
+
+    setTimeout(escribir, velocidad);
+  }
+
+  escribir();
+}
 
     mostrarMensajes();
   </script>
