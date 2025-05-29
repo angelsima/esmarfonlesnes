@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loa al Esmarfon</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #f6f7fb;
+      color: #1d1d1f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    #aforismo {
+      font-size: 1.5rem;
+      max-width: 600px;
+      margin: 2rem 0;
+      min-height: 4rem;
+      line-height: 1.6;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1rem;
+      background-color: #007aff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #005bb5;
+    }
+  </style>
+</head>
+<body>
+  <h1>Loa al Esmarfon</h1>
+  <div id="aforismo">Haz clic para generar sabiduría digital.</div>
+  <button onclick="generarAforismo()">Generar aforismo</button>
+
+  <script>
+    const sujetos = [
+      "El pulgar",
+      "La pantalla",
+      "La notificación",
+      "Tu algoritmo favorito",
+      "El feed infinito",
+      "La nube",
+      "Un sticker mal entendido",
+      "El brillo azul"
+    ];
+
+    const verbos = [
+      "revela",
+      "disfraza",
+      "construye",
+      "archiva",
+      "borra lentamente",
+      "despierta",
+      "traduce",
+      "simula"
+    ];
+
+    const complementos = [
+      "tus verdaderas intenciones.",
+      "una versión de ti más atractiva.",
+      "la nostalgia de lo no vivido.",
+      "el vacío con apariencia de contenido.",
+      "lo que Google ya sabía.",
+      "la ansiedad que antes no tenía nombre.",
+      "una rutina disfrazada de libertad.",
+      "una identidad que se actualiza cada 8 segundos."
+    ];
+
+    function generarAforismo() {
+      const s = sujetos[Math.floor(Math.random() * sujetos.length)];
+      const v = verbos[Math.floor(Math.random() * verbos.length)];
+      const c = complementos[Math.floor(Math.random() * complementos.length)];
+      document.getElementById("aforismo").textContent = `${s} ${v} ${c}`;
+    }
+  </script>
+</body>
+</html>
