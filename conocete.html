@@ -45,6 +45,7 @@
       opacity: 0.8;
       pointer-events: none;
       white-space: pre;
+      transition: opacity 0.3s ease;
     }
 
     .cursor {
@@ -96,34 +97,53 @@
       ">> cookies: 148 found (risk profile: HIGH)",
       ">> report queue full – awaiting upload",
       ">> microphone active (flag: unaware)",
-      ">> user gaze = unstable / pattern irregular"
+      ">> user gaze = unstable / pattern irregular",
+      ">> data collection complete",
+      ">> terminating connection...",
+      ">> session encrypted"
     ];
 
     async function mostrarMensajes() {
       const consola = document.getElementById("consoleLog");
-      const velocidadEscritura = 30; // ms por caracter (más rápido)
+      const velocidadEscritura = 5; // ms por caracter (muy rápido)
       
-      // Función para escribir un mensaje letra por letra
+      // Función para escribir un mensaje completo de golpe (más rápido)
       const escribirMensaje = async (mensaje) => {
-        for (let i = 0; i < mensaje.length; i++) {
-          consola.textContent += mensaje[i];
-          await new Promise(resolve => setTimeout(resolve, velocidadEscritura));
-        }
-        consola.textContent += "\n"; // Nueva línea al final
+        consola.textContent += mensaje + "\n";
+        await new Promise(resolve => setTimeout(resolve, 50)); // Pequeña pausa entre mensajes
       };
 
-      // Escribir todos los mensajes en secuencia
+      // Escribir todos los mensajes en secuencia muy rápida
       for (const mensaje of mensajes) {
         await escribirMensaje(mensaje);
       }
 
-      // Añadir cursor parpadeante al final
+      // Añadir cursor parpadeante al final brevemente
       const cursor = document.createElement('span');
       cursor.className = 'cursor';
       consola.appendChild(cursor);
+
+      // Esperar un momento y luego desaparecer rápidamente
+      setTimeout(() => {
+        consola.style.opacity = '0';
+        setTimeout(() => {
+          consola.textContent = '';
+          consola.style.opacity = '0.8';
+        }, 300);
+      }, 800);
     }
 
-    mostrarMensajes();
+    // Iniciar la secuencia cuando se carga la página
+    window.addEventListener('load', () => {
+      setTimeout(mostrarMensajes, 500); // Pequeño retraso inicial para mayor efecto
+    });
+
+    // Opcional: Repetir el efecto cada cierto tiempo para mayor inquietud
+    setInterval(() => {
+      if(Math.random() > 0.7) { // 30% de probabilidad de que reaparezca
+        mostrarMensajes();
+      }
+    }, 15000); // Cada 15 segundos
   </script>
 </body>
 </html>
