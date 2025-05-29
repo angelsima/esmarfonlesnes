@@ -56,7 +56,7 @@
     #enlace {
       display: inline-block;
       margin-top: 1rem;
-      color: var(--accent);
+      color: #f5a623;
       text-decoration: none;
       font-weight: 500;
     }
@@ -88,15 +88,15 @@
   </style>
 </head>
 <body>
-  <div class="intro">Este libro también tiene datos que no has pedido y que cambiarán tu día:</div>
-  
+  <div class="intro">We 🖤 tech</div>
+  <button onclick="mostrarDato()">¿Sabes por qué?</button>
   <div id="dato-container">
-    <div id="dato">Haz clic para descubrir uno.</div>
+    <div id="dato">Clica el botón para flipar.</div>
     <div id="sub-dato"></div>
     <a id="enlace" href="#" style="display: none;">Saber más</a>
   </div>
   
-  <button onclick="mostrarDato()">Dame un dato</button>
+  
 
   <script>
     const datos = [
