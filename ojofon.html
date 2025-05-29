@@ -1,32 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Filtro de Vigilancia Facial</title>
   <style>
     /* ----- RESET & BASE ----- */
-    * { margin:0; padding:0; box-sizing:border-box; }
+    * { margin:0; padding:0; box-sizing:border-box }
     body {
       font-family: 'IBM Plex Mono', monospace;
       background: #1e1e1e;
       color: #e0e0e0;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      min-height:100vh;
-      overflow:hidden;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      min-height:100vh; overflow:hidden;
     }
 
     /* ----- CONTAINER ----- */
     .container {
-      width:100%;
-      max-width:400px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:16px;
+      width:100%; max-width:400px;
+      display:flex; flex-direction:column;
+      align-items:center; gap:16px;
       padding:16px;
     }
 
@@ -39,15 +33,14 @@
     }
     .subtitle {
       font-size:0.9rem;
-      color:#89caff;
-      opacity:0.8;
+      color:#89caff; opacity:0.8;
     }
 
-    /* ----- CÁMARA ----- */
+    /* ----- CÁMARA 4:3 match video ----- */
     .camera-frame {
       position:relative;
       width:100%;
-       aspect-ratio: 9/16;
+      aspect-ratio: 4/3;      /* <-- ahora coincide con 640×480 */
       border-radius:20px;
       overflow:hidden;
       background:#000;
@@ -67,15 +60,14 @@
 
     /* ----- SCAN LINE ----- */
     .scan-line {
-      position:absolute;
-      top:0; left:0;
+      position:absolute; top:0; left:0;
       width:100%; height:2px;
       background: rgba(0,255,136,0.4);
       animation: scan 2.5s linear infinite;
       z-index:3;
     }
     @keyframes scan {
-      0% { top:0; }  100% { top:100%; }
+      0% { top:0 }  100% { top:100% }
     }
 
     /* ----- MOVEMENT BOX ----- */
@@ -101,30 +93,15 @@
     }
 
     /* ----- CONTROLES ----- */
-    .controls {
-      display:flex;
-      gap:12px;
-      margin-top:8px;
-    }
+    .controls { display:flex; gap:12px; margin-top:8px }
     .btn {
-      flex:1;
-      padding:10px;
-      font-size:.9rem;
-      font-weight:bold;
-      color:#1e1e1e;
-      background:#00ff88;
-      border:none;
-      border-radius:8px;
-      cursor:pointer;
+      flex:1; padding:10px; font-size:.9rem; font-weight:bold;
+      color:#1e1e1e; background:#00ff88;
+      border:none; border-radius:8px; cursor:pointer;
       transition:background .2s;
     }
-    .btn-off {
-      background:#ff4d6d;
-      color:#1e1e1e;
-    }
-    .btn:hover {
-      opacity:.9;
-    }
+    .btn-off { background:#ff4d6d; color:#1e1e1e }
+    .btn:hover { opacity:.9 }
 
     /* ----- STATUS BOX ----- */
     .status-container {
@@ -132,13 +109,11 @@
       border:1px solid #00ff88;
       border-radius:8px;
       padding:8px 16px;
-      margin-top:8px;
-      width:100%;
-      max-width:360px;
+      width:100%; max-width:360px;
       text-align:center;
       font-size:.85rem;
     }
-    #status { color:#00ff88; }
+    #status { color:#00ff88 }
     .status-pulse {
       display:inline-block;
       width:8px; height:8px;
@@ -149,39 +124,22 @@
       vertical-align:middle;
     }
     @keyframes pulse {
-      0%,100% { transform:scale(1); opacity:1; }
-      50% { transform:scale(1.4); opacity:.4; }
+      0%,100% { transform:scale(1); opacity:1 }
+      50%   { transform:scale(1.4); opacity:.4 }
     }
-    #error { color:#ff4d6d; margin-top:4px; font-size:.8rem; }
+    #error { color:#ff4d6d; margin-top:4px; font-size:.8rem }
 
     /* ----- INSTRUCCIONES & FEATURES ----- */
-    .instructions {
-      font-size:.8rem;
-      color:#a0a0ff;
-      line-height:1.4;
-      max-width:360px;
-      margin-top:8px;
-    }
-    .features {
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      margin-top:6px;
-    }
+    .instructions { font-size:.8rem; color:#a0a0ff; line-height:1.4; max-width:360px; margin-top:8px }
+    .features { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px }
     .feature {
-      background:rgba(0,255,136,0.1);
-      color:#00ff88;
-      font-size:.75rem;
-      padding:4px 8px;
-      border-radius:12px;
+      background:rgba(0,255,136,0.1); color:#00ff88;
+      font-size:.75rem; padding:4px 8px; border-radius:12px;
     }
 
     /* ----- FOOTER ----- */
-    .footer {
-      margin-top:12px;
-      font-size:.7rem;
-      color:#8090cc;
-    }
+    .footer { margin-top:12px; font-size:.7rem; color:#8090cc }
+
   </style>
 </head>
 <body>
@@ -227,272 +185,128 @@
     </div>
   </div>
 
-    <!-- Incluimos MediaPipe para detección facial -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+  <!-- MediaPipe libs... -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+  <script>
+    // DOM
+    const videoElement   = document.getElementById('videoElement');
+    const overlayCanvas  = document.getElementById('overlayCanvas');
+    const ctx            = overlayCanvas.getContext('2d');
+    const startButton    = document.getElementById('startButton');
+    const stopButton     = document.getElementById('stopButton');
+    const statusEl       = document.getElementById('status');
+    const errorEl        = document.getElementById('error');
+    const movementBox    = document.getElementById('movementBox');
 
-    <script>
-        // Elementos DOM
-        const videoElement = document.getElementById('videoElement');
-        const overlayCanvas = document.getElementById('overlayCanvas');
-        const ctx = overlayCanvas.getContext('2d');
-        const startButton = document.getElementById('startButton');
-        const stopButton = document.getElementById('stopButton');
-        const statusEl = document.getElementById('status');
-        const errorEl = document.getElementById('error');
-        const movementBox = document.getElementById('movementBox');
-        const particlesEl = document.getElementById('particles');
-        
-        // Variables globales
-        let faceMesh = null;
-        let camera = null;
-        let detectionActive = false;
-        let lastPositions = {};
-        let currentBox = { x: 0, y: 0, width: 0, height: 0 };
-        let lastMovementTime = 0;
-        let faceDetected = false;
-        
-        // Crear partículas decorativas
-        function createParticles() {
-            const colors = [
-                'rgba(0, 255, 136, 0.1)',
-                'rgba(41, 121, 255, 0.1)',
-                'rgba(255, 109, 0, 0.1)',
-                'rgba(255, 77, 109, 0.1)'
-            ];
-            
-            for (let i = 0; i < 15; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Tamaño aleatorio
-                const size = Math.random() * 200 + 100;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Posición aleatoria
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                
-                // Color aleatorio
-                particle.style.background = `radial-gradient(circle, ${colors[Math.floor(Math.random() * colors.length)]} 0%, transparent 70%)`;
-                
-                // Animación
-                const duration = 20 + Math.random() * 30;
-                particle.style.animation = `float ${duration}s infinite linear`;
-                particle.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
-                
-                particlesEl.appendChild(particle);
-            }
-        }
-        
-        // Inicializar Face Mesh
-        async function initFaceMesh() {
-            statusEl.innerHTML = '<span class="status-pulse"></span> Inicializando detector facial...';
-            
-            faceMesh = new FaceMesh({
-                locateFile: (file) => {
-                    return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
-                }
-            });
-            
-            faceMesh.setOptions({
-                maxNumFaces: 1,
-                refineLandmarks: true,
-                minDetectionConfidence: 0.5,
-                minTrackingConfidence: 0.5
-            });
-            
-            faceMesh.onResults(onFaceMeshResults);
-            
-            statusEl.innerHTML = '<span class="status-pulse"></span> Iniciando cámara...';
-            
-            try {
-                camera = new Camera(videoElement, {
-                    onFrame: async () => {
-                        if (detectionActive) {
-                            await faceMesh.send({image: videoElement});
-                        }
-                    },
-                    width: 640,
-                    height: 480,
-                    facingMode: 'user'
-                });
-                
-                await camera.start();
-                detectionActive = true;
-                statusEl.innerHTML = '<span class="status-pulse"></span> Vigilancia ACTIVA - Mueve tu rostro';
-            } catch (err) {
-                console.error("Error al iniciar cámara:", err);
-                errorEl.textContent = "Error: " + err.message;
-                statusEl.innerHTML = '<span class="status-pulse"></span> Error al iniciar cámara';
-            }
-        }
-        
-        // Procesar resultados de Face Mesh
-       function onFaceMeshResults(results) {
-  // Usa el tamaño **visible** del elemento, no la resolución interna
-  const vw = videoElement.clientWidth;
-  const vh = videoElement.clientHeight;
-  overlayCanvas.width  = vw;
-  overlayCanvas.height = vh;
-  ctx.clearRect(0, 0, vw, vh);
+    let faceMesh, camera, detectionActive=false, lastPositions={}, lastMovementTime=0;
 
-  if (results.multiFaceLandmarks && results.multiFaceLandmarks.length) {
-                faceDetected = true;
-                const landmarks = results.multiFaceLandmarks[0];
-                
-                // Encontrar el área con mayor movimiento
-                const movementArea = findMovementArea(landmarks);
-                
-                if (movementArea) {
-                    // Actualizar el recuadro de movimiento
-                    updateMovementBox(movementArea.x, movementArea.y, movementArea.width, movementArea.height);
-                    movementBox.querySelector('.box-label').textContent = movementArea.label;
-                    movementBox.style.display = 'block';
-                    lastMovementTime = Date.now();
-                } else {
-                    // Ocultar el recuadro después de 1 segundo sin movimiento
-                    if (Date.now() - lastMovementTime > 1000) {
-                        movementBox.style.display = 'none';
-                    }
-                }
-            } else {
-                faceDetected = false;
-                movementBox.style.display = 'none';
-            }
+    async function initFaceMesh() {
+      statusEl.innerHTML = '<span class="status-pulse"></span> Inicializando detector...';
+      faceMesh = new FaceMesh({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
+      faceMesh.setOptions({ maxNumFaces:1, refineLandmarks:true, minDetectionConfidence:0.5, minTrackingConfidence:0.5 });
+      faceMesh.onResults(onResults);
+
+      statusEl.innerHTML = '<span class="status-pulse"></span> Iniciando cámara...';
+      camera = new Camera(videoElement, {
+        onFrame: async () => detectionActive && await faceMesh.send({image:videoElement}),
+        width:640, height:480, facingMode:'user'
+      });
+      try {
+        await camera.start();
+        detectionActive = true;
+        statusEl.innerHTML = '<span class="status-pulse"></span> Vigilancia ACTIVA';
+      } catch(e) {
+        statusEl.innerHTML = '<span class="status-pulse"></span> Error al iniciar';
+        errorEl.textContent = e.message;
+      }
+    }
+
+    function onResults(results) {
+      // ajusta canvas al tamaño **visible** del vídeo
+      const vw = videoElement.clientWidth,
+            vh = videoElement.clientHeight;
+      overlayCanvas.width  = vw;
+      overlayCanvas.height = vh;
+      ctx.clearRect(0,0,vw,vh);
+
+      if (!results.multiFaceLandmarks?.length) {
+        movementBox.style.display = 'none';
+        return;
+      }
+      const lm = results.multiFaceLandmarks[0];
+      const area = findMovementArea(lm, vw, vh);
+      if (area) {
+        movementBox.style.left   = area.x + 'px';
+        movementBox.style.top    = area.y + 'px';
+        movementBox.style.width  = area.width + 'px';
+        movementBox.style.height = area.height + 'px';
+        movementBox.querySelector('.box-label').textContent = area.label;
+        movementBox.style.display = 'flex';
+        lastMovementTime = Date.now();
+      } else if (Date.now() - lastMovementTime > 1000) {
+        movementBox.style.display = 'none';
+      }
+    }
+
+    function findMovementArea(landmarks, vw, vh) {
+      const regions = [
+        {name:'ceja izq',   pts:[70,63,105,66,107]},
+        {name:'ceja der',   pts:[300,293,334,296,336]},
+        {name:'ojo izq',    pts:[33,133,144,145,153,154,155]},
+        {name:'ojo der',    pts:[362,263,373,374,380,381,382]},
+        {name:'boca',       pts:[61,146,91,181,84,17,314,405,321]},
+      ];
+      let maxMov = 0, chosen = null;
+
+      for (let region of regions) {
+        let total=0, count=0;
+        for (let idx of region.pts) {
+          const p = landmarks[idx];
+          const key = `${region.name}-${idx}`;
+          if (lastPositions[key]) {
+            const dx = p.x - lastPositions[key].x;
+            const dy = p.y - lastPositions[key].y;
+            total += Math.hypot(dx,dy);
+            count++;
+          }
+          lastPositions[key] = {x:p.x, y:p.y};
         }
-        
-        // Encontrar el área con mayor movimiento facial
-        function findMovementArea(landmarks) {
-            const areas = [
-                { name: "ceja izquierda", points: [70, 63, 105, 66, 107] },
-                { name: "ceja derecha", points: [300, 293, 334, 296, 336] },
-                { name: "ojo izquierdo", points: [33, 133, 144, 145, 153, 154, 155] },
-                { name: "ojo derecho", points: [362, 263, 373, 374, 380, 381, 382] },
-                { name: "boca", points: [61, 146, 91, 181, 84, 17, 314, 405, 321] }
-            ];
-            
-            let maxMovement = 0;
-            let selectedArea = null;
-            
-            for (const area of areas) {
-                let totalMovement = 0;
-                let validPoints = 0;
-                
-                for (const pointIndex of area.points) {
-                    const point = landmarks[pointIndex];
-                    const pointKey = `${area.name}-${pointIndex}`;
-                    const currentPos = {x: point.x, y: point.y};
-                    
-                    if (lastPositions[pointKey]) {
-                        const dx = currentPos.x - lastPositions[pointKey].x;
-                        const dy = currentPos.y - lastPositions[pointKey].y;
-                        const distance = Math.sqrt(dx * dx + dy * dy);
-                        totalMovement += distance;
-                        validPoints++;
-                    }
-                    
-                    lastPositions[pointKey] = currentPos;
-                }
-                
-                if (validPoints > 0) {
-                    const avgMovement = totalMovement / validPoints;
-                    
-                    if (avgMovement > maxMovement) {
-                        maxMovement = avgMovement;
-                        selectedArea = area;
-                    }
-                }
-            }
-            
-            // Umbral de movimiento para considerar significativo
-            if (maxMovement > 0.005) {
-                if (selectedArea) {
-                    // Calcular el cuadro delimitador para el área seleccionada
-                    return calculateAreaBoundingBox(landmarks, selectedArea.points, selectedArea.name);
-                }
-            }
-            
-            return null;
+        if (count>0 && (total/count) > maxMov && (total/count) > 0.005) {
+          maxMov = total/count;
+          chosen = region;
         }
-        
-        // Calcular el cuadro delimitador para un área
-        function calculateAreaBoundingBox(landmarks, indices, label) {
-  const vw = videoElement.clientWidth;
-  const vh = videoElement.clientHeight;
-            
-            for (const index of indices) {
-                const point = landmarks[index];
-                const x = point.x * overlayCanvas.width;
-                const y = point.y * overlayCanvas.height;
-                
-                if (x < minX) minX = x;
-                if (y < minY) minY = y;
-                if (x > maxX) maxX = x;
-                if (y > maxY) maxY = y;
-            }
-            
-            // Agregar un pequeño margen
-            const margin = 15;
-            const width = Math.max(40, (maxX - minX) + margin * 2);
-            const height = Math.max(40, (maxY - minY) + margin * 2);
-            const x = Math.max(0, minX - margin);
-            const y = Math.max(0, minY - margin);
-            
-            return {
-                x: x,
-                y: y,
-                width: Math.min(overlayCanvas.width - x, width),
-                height: Math.min(overlayCanvas.height - y, height),
-                label: label.toUpperCase()
-            };
-        }
-        
-        // Actualizar el recuadro de movimiento
-        function updateMovementBox(x, y, width, height) {
-            movementBox.style.left = `${x}px`;
-            movementBox.style.top = `${y}px`;
-            movementBox.style.width = `${width}px`;
-            movementBox.style.height = `${height}px`;
-        }
-        
-        // Iniciar la detección
-        startButton.addEventListener('click', async () => {
-            if (!faceMesh) {
-                errorEl.textContent = "";
-                startButton.disabled = true;
-                startButton.textContent = "Inicializando...";
-                await initFaceMesh();
-                startButton.disabled = false;
-                startButton.textContent = "ACTIVAR VIGILANCIA";
-            } else if (!detectionActive) {
-                detectionActive = true;
-                camera.start();
-                statusEl.innerHTML = '<span class="status-pulse"></span> Vigilancia ACTIVA - Mueve tu rostro';
-            }
-        });
-        
-        // Detener la detección
-        stopButton.addEventListener('click', () => {
-            if (camera) {
-                detectionActive = false;
-                camera.stop();
-                ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-                movementBox.style.display = 'none';
-                statusEl.innerHTML = '<span class="status-pulse"></span> Vigilancia DETENIDA';
-            }
-        });
-        
-        // Inicializar
-        window.addEventListener('load', () => {
-            createParticles();
-            // Configurar el canvas con el tamaño esperado
-            overlayCanvas.width = 640;
-            overlayCanvas.height = 480;
-        });
-    </script>
+      }
+      if (!chosen) return null;
+
+      // bounding box
+      let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
+      for (let idx of chosen.pts) {
+        const p = landmarks[idx];
+        const x = p.x * vw, y = p.y * vh;
+        minX = Math.min(minX,x); maxX = Math.max(maxX,x);
+        minY = Math.min(minY,y); maxY = Math.max(maxY,y);
+      }
+      const m=10;
+      return {
+        x: Math.max(0,minX-m),
+        y: Math.max(0,minY-m),
+        width: Math.min(vw, (maxX-minX)+2*m),
+        height: Math.min(vh,(maxY-minY)+2*m),
+        label: chosen.name.toUpperCase()
+      };
+    }
+
+    startButton .addEventListener('click', initFaceMesh);
+    stopButton  .addEventListener('click', ()=>{
+      detectionActive=false;
+      camera?.stop();
+      ctx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
+      movementBox.style.display='none';
+      statusEl.innerHTML = '<span class="status-pulse"></span> Vigilancia DETENIDA';
+    });
+  </script>
 </body>
 </html>
