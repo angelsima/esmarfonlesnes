@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lo que no querías saber</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+    :root {
+      --font-body: 'Space Mono', monospace;
+      --bg-color: #000;
+      --text-color: #f2f2f2;
+      --accent-color: #D50000;
+      --muted: #777;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-body);
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .intro {
+      color: var(--accent-color);
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    #dato-container {
+      max-width: 600px;
+      margin: 1rem auto;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    #dato {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    #sub-dato {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    #enlace {
+      display: inline-block;
+      margin-top: 1rem;
+      color: var(--accent-color);
+      text-decoration: none;
+    }
+
+    #enlace:hover {
+      text-decoration: underline;
+    }
+
+    button {
+      padding: 10px 24px;
+      font-size: 1rem;
+      border: 1px solid var(--accent-color);
+      border-radius: 8px;
+      background-color: transparent;
+      color: var(--accent-color);
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: var(--accent-color);
+      color: #000;
+    }
+
+    .blink {
+      animation: blink 1.2s linear infinite;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="intro blink">⚠ Tecnología no siempre significa progreso</div>
+  <button onclick="mostrarDato()">Muéstrame la verdad</button>
+  <div id="dato-container">
+    <div id="dato">Clica el botón para desvelar.</div>
+    <div id="sub-dato"></div>
+    <a id="enlace" href="#" style="display: none;" target="_blank">Leer artículo</a>
+  </div>
+
+  <script>
+    const datos = [
+      {
+        titulo: "El uso excesivo del móvil afecta la salud mental de los jóvenes",
+        subtitulo: "Ansiedad, aislamiento y adicción se están volviendo comunes entre adolescentes hiperconectados.",
+        enlace: "https://elpais.com/tecnologia/2023-09-18/el-coste-silencioso-del-telefono-movil-en-la-salud-mental-de-los-jovenes.html"
+      },
+      {
+        titulo: "Las redes sociales agravan los trastornos de la imagen corporal",
+        subtitulo: "El contenido algorítmico perpetúa estándares tóxicos de belleza, afectando la autoestima.",
+        enlace: "https://www.nytimes.com/es/2023/11/20/espanol/redes-sociales-danos-salud-mental.html"
+      },
+      {
+        titulo: "El tiempo frente a pantallas está vinculado a alteraciones del sueño",
+        subtitulo: "La luz azul de los dispositivos interfiere con la producción de melatonina.",
+        enlace: "https://www.bbc.com/mundo/noticias-62015749"
+      },
+      {
+        titulo: "El scroll infinito está diseñado para volvernos adictos",
+        subtitulo: "Los algoritmos explotan mecanismos cerebrales para maximizar el tiempo de uso.",
+        enlace: "https://www.scientificamerican.com/article/how-infinite-scroll-hijacks-your-attention/"
+      },
+      {
+        titulo: "El ciberacoso ha aumentado con la expansión digital",
+        subtitulo: "Millones de jóvenes son víctimas de violencia psicológica en línea cada año.",
+        enlace: "https://www.unicef.org/es/ciberacoso-que-es-y-como-detenerlo"
+      },
+      {
+        titulo: "Los smartphones están reduciendo nuestra capacidad de concentración",
+        subtitulo: "Estudios muestran que el uso constante fragmenta la atención y afecta la memoria.",
+        enlace: "https://www.nature.com/articles/d41586-020-03158-5"
+      },
+      {
+        titulo: "Las apps de mensajería generan una cultura de disponibilidad constante",
+        subtitulo: "Esto eleva el estrés y dificulta la desconexión real.",
+        enlace: "https://www.psychologytoday.com/us/blog/rewired-the-psychology-technology/202203/whatsapp-fatigue-is-real"
+      },
+      {
+        titulo: "La sobreexposición a pantallas afecta el desarrollo infantil",
+        subtitulo: "El uso temprano de móviles puede limitar habilidades sociales y lingüísticas.",
+        enlace: "https://www.aap.org/en/news-room/news-releases/aap/2020/aap-issues-guidance-on-screen-time-for-young-children/"
+      },
+      {
+        titulo: "El uso del smartphone mientras se camina aumenta los accidentes",
+        subtitulo: "Se ha registrado un alza en lesiones por distracción en peatones.",
+        enlace: "https://www.nsc.org/community-safety/safety-topics/distracted-walking"
+      },
+      {
+        titulo: "La vigilancia algorítmica está normalizada en redes sociales",
+        subtitulo: "Tus datos alimentan sistemas que predicen y manipulan tu comportamiento.",
+        enlace: "https://www.technologyreview.com/2022/07/20/1057073/algorithms-privacy-surveillance-digital-life/"
+      }
+    ];
+
+    function mostrarDato() {
+      const container = document.getElementById("dato-container");
+      const titulo = document.getElementById("dato");
+      const subtitulo = document.getElementById("sub-dato");
+      const enlace = document.getElementById("enlace");
+
+      container.style.opacity = 0;
+
+      setTimeout(() => {
+        const datoAleatorio = datos[Math.floor(Math.random() * datos.length)];
+
+        titulo.textContent = datoAleatorio.titulo;
+        subtitulo.textContent = datoAleatorio.subtitulo;
+        enlace.href = datoAleatorio.enlace;
+        enlace.style.display = "inline-block";
+
+        container.style.opacity = 1;
+      }, 200);
+    }
+  </script>
+</body>
+</html>
