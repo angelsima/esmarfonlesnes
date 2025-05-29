@@ -47,33 +47,36 @@
       white-space: pre;
     }
 
-    @keyframes escribir {
-      from { width: 0 }
-      to { width: 100% }
-    }
-
-    .linea {
-      overflow: hidden;
+    .cursor {
       display: inline-block;
-      white-space: nowrap;
-      border-right: 2px solid #66ffcc;
-      animation: escribir 4s steps(40, end) infinite alternate;
+      width: 8px;
+      height: 14px;
+      background-color: #66ffcc;
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+      margin-left: 2px;
     }
-      .scanline::after {
-    content: '';
-    display: block;
-    height: 2px;
-    width: 100%;
-    background: linear-gradient(to right, transparent, #00ff88, transparent);
-    animation: scan 5s linear infinite;
-    margin-top: 2rem;
-    opacity: 0.2;
-  }
 
-  @keyframes scan {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-  }
+    @keyframes blink {
+      from, to { opacity: 1 }
+      50% { opacity: 0 }
+    }
+
+    .scanline::after {
+      content: '';
+      display: block;
+      height: 2px;
+      width: 100%;
+      background: linear-gradient(to right, transparent, #00ff88, transparent);
+      animation: scan 5s linear infinite;
+      margin-top: 2rem;
+      opacity: 0.2;
+    }
+
+    @keyframes scan {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
   </style>
 </head>
 <body>
@@ -96,23 +99,29 @@
       ">> user gaze = unstable / pattern irregular"
     ];
 
-   function mostrarMensajes() {
-  const consola = document.getElementById("consoleLog");
-  let index = 0;
-  let velocidad = 600; // empieza rápido (milisegundos)
+    async function mostrarMensajes() {
+      const consola = document.getElementById("consoleLog");
+      const velocidadEscritura = 30; // ms por caracter (más rápido)
+      
+      // Función para escribir un mensaje letra por letra
+      const escribirMensaje = async (mensaje) => {
+        for (let i = 0; i < mensaje.length; i++) {
+          consola.textContent += mensaje[i];
+          await new Promise(resolve => setTimeout(resolve, velocidadEscritura));
+        }
+        consola.textContent += "\n"; // Nueva línea al final
+      };
 
-  function escribir() {
-    consola.textContent += mensajes[index] + "\n";
-    index = (index + 1) % mensajes.length;
+      // Escribir todos los mensajes en secuencia
+      for (const mensaje of mensajes) {
+        await escribirMensaje(mensaje);
+      }
 
-    // Ralentiza progresivamente, hasta estabilizar en 4000 ms
-    if (velocidad < 4000) velocidad += 40;
-
-    setTimeout(escribir, velocidad);
-  }
-
-  escribir();
-}
+      // Añadir cursor parpadeante al final
+      const cursor = document.createElement('span');
+      cursor.className = 'cursor';
+      consola.appendChild(cursor);
+    }
 
     mostrarMensajes();
   </script>
