@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Azucarillos digitales</title>
   <style>
+    :root {
+      --accent-color: #f5a623; /* dorado moderno */
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
       background: #f6f7fb;
@@ -19,13 +23,14 @@
     }
 
     h1 {
-      font-size: 2rem;
+      font-size: 2.4rem;
       margin-bottom: 1rem;
+      color: var(--accent-color);
     }
 
     #aforismo {
-      font-size: 1.5rem;
-      max-width: 600px;
+      font-size: 1.4rem;
+      max-width: 640px;
       margin: 2rem 0;
       min-height: 4rem;
       line-height: 1.6;
@@ -34,7 +39,7 @@
     button {
       padding: 12px 24px;
       font-size: 1rem;
-      background-color: #007aff;
+      background-color: var(--accent-color);
       color: white;
       border: none;
       border-radius: 10px;
@@ -43,7 +48,7 @@
     }
 
     button:hover {
-      background-color: #ffb300;
+      background-color: #d48813;
     }
   </style>
 </head>
@@ -60,7 +65,14 @@
       "Tu algoritmo favorito",
       "El feed infinito",
       "La nube",
+      "El modo avión",
+      "Tu selfie número 304",
+      "El teclado predictivo",
+      "La última pestaña abierta",
+      "El porcentaje de batería",
       "Un sticker mal entendido",
+      "El fondo de pantalla motivacional",
+      "La app que nunca abriste",
       "El brillo azul"
     ];
 
@@ -72,7 +84,14 @@
       "borra lentamente",
       "despierta",
       "traduce",
-      "simula"
+      "simula",
+      "apaga el pensamiento crítico",
+      "promete sin preguntar",
+      "te da la razón sin entender",
+      "repite lo irrelevante",
+      "finge escucha activa",
+      "reinventa lo trivial",
+      "confunde libertad con scroll"
     ];
 
     const complementos = [
@@ -83,7 +102,15 @@
       "lo que Google ya sabía.",
       "la ansiedad que antes no tenía nombre.",
       "una rutina disfrazada de libertad.",
-      "una identidad que se actualiza cada 8 segundos."
+      "una identidad que se actualiza cada 8 segundos.",
+      "como si fuera importante.",
+      "para que no preguntes más.",
+      "sin saber que nadie está mirando.",
+      "mientras tú crees que eres productivo.",
+      "con un delay emocional de 4G.",
+      "en nombre del engagement.",
+      "porque alguien, en alguna parte, lo monetiza.",
+      "y así no tengas que pensar demasiado."
     ];
 
     function generarAforismo() {
