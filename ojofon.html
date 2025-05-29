@@ -1,371 +1,231 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filtro de Vigilancia Facial</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(45deg, #0a0a1a, #1a1a3a);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .container {
-            max-width: 100%;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            z-index: 10;
-        }
-        
-        header {
-            text-align: center;
-            padding: 20px;
-            width: 100%;
-            max-width: 500px;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #00ff88, #00ddff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
-            letter-spacing: 1px;
-        }
-        
-        .subtitle {
-            font-size: 1.1rem;
-            color: #a0e6ff;
-            opacity: 0.9;
-        }
-        
-        .camera-frame {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 9/16;
-            border-radius: 30px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
-            border: 15px solid #111;
-            background: #000;
-        }
-        
-        #videoElement {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: scaleX(-1);
-            display: block;
-        }
-        
-        #overlayCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-        }
-        
-        .scan-line {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: rgba(0, 255, 136, 0.5);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
-            z-index: 3;
-            animation: scan 3s infinite ease-in-out;
-        }
-        
-        @keyframes scan {
-            0% { top: 0; }
-            50% { top: 100%; }
-            100% { top: 0; }
-        }
-        
-        .movement-box {
-            position: absolute;
-            border: 3px solid #00ff88;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
-            z-index: 4;
-            transition: all 0.3s ease-out;
-            border-radius: 15px;
-            background: rgba(0, 255, 136, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            pointer-events: none;
-        }
-        
-        .box-pulse {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 15px;
-            background: rgba(0, 255, 136, 0.1);
-            animation: pulse 2s infinite;
-            z-index: -1;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 0.3; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-        
-        .box-label {
-            color: #00ff88;
-            font-weight: bold;
-            font-size: 0.8rem;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-            background: rgba(0, 0, 0, 0.5);
-            padding: 3px 8px;
-            border-radius: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            background: rgba(0, 255, 136, 0.15);
-            color: #00ff88;
-            border: 2px solid #00ff88;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            min-width: 160px;
-            backdrop-filter: blur(5px);
-        }
-        
-        .btn:hover {
-            background: rgba(0, 255, 136, 0.25);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
-        }
-        
-        .btn:active {
-            transform: translateY(1px);
-        }
-        
-        .btn-off {
-            background: rgba(255, 77, 109, 0.15);
-            color: #ff4d6d;
-            border: 2px solid #ff4d6d;
-        }
-        
-        .btn-off:hover {
-            background: rgba(255, 77, 109, 0.25);
-            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
-        }
-        
-        .status-container {
-            background: rgba(10, 15, 30, 0.8);
-            border-radius: 50px;
-            padding: 15px 30px;
-            margin-top: 10px;
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            max-width: 400px;
-        }
-        
-        #status {
-            color: #00ff88;
-            font-size: 1.1rem;
-            min-height: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .status-pulse {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #00ff88;
-            box-shadow: 0 0 10px #00ff88;
-            animation: pulse 1.5s infinite;
-        }
-        
-        #error {
-            color: #ff4d6d;
-            margin-top: 10px;
-            font-size: 1rem;
-        }
-        
-        .instructions {
-            max-width: 500px;
-            margin-top: 20px;
-            color: #a0b0ff;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-        
-        .features {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .feature {
-            background: rgba(0, 255, 136, 0.1);
-            color: #00ff88;
-            padding: 8px 15px;
-            border-radius: 50px;
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            font-size: 0.9rem;
-        }
-        
-        .footer {
-            margin-top: 30px;
-            color: #8090cc;
-            font-size: 0.8rem;
-        }
-        
-        /* Efectos decorativos */
-        .glitch-text {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .glitch-text::before,
-        .glitch-text::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .glitch-text::before {
-            color: #ff00ff;
-            z-index: -1;
-            animation: glitch 3s infinite;
-        }
-        
-        .glitch-text::after {
-            color: #00ffff;
-            z-index: -2;
-            animation: glitch 2s infinite reverse;
-        }
-        
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-3px, 3px); }
-            40% { transform: translate(-3px, -3px); }
-            60% { transform: translate(3px, 3px); }
-            80% { transform: translate(3px, -3px); }
-            100% { transform: translate(0); }
-        }
-        
-        /* Efecto de partículas */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-        
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 255, 136, 0.2) 0%, transparent 70%);
-            animation: float 15s infinite linear;
-        }
-        
-        @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 0.8; }
-            100% { transform: translate(100px, 100px) rotate(360deg); opacity: 0; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Filtro de Vigilancia Facial</title>
+  <style>
+    /* ----- RESET & BASE ----- */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      background: #1e1e1e;
+      color: #e0e0e0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      overflow:hidden;
+    }
+
+    /* ----- CONTAINER ----- */
+    .container {
+      width:100%;
+      max-width:400px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:16px;
+      padding:16px;
+    }
+
+    header h1 {
+      font-size:1.8rem;
+      background: linear-gradient(90deg, #00ff88, #00ddff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing:1px;
+    }
+    .subtitle {
+      font-size:0.9rem;
+      color:#89caff;
+      opacity:0.8;
+    }
+
+    /* ----- CÁMARA ----- */
+    .camera-frame {
+      position:relative;
+      width:100%;
+      aspect-ratio:9/16;
+      border-radius:20px;
+      overflow:hidden;
+      background:#000;
+      border:4px solid #111;
+    }
+    #videoElement {
+      width:100%; height:100%;
+      object-fit:cover;
+      transform:scaleX(-1);
+      filter: grayscale(80%) contrast(1.2);
+    }
+    #overlayCanvas {
+      position:absolute; top:0; left:0;
+      width:100%; height:100%;
+      z-index:2;
+    }
+
+    /* ----- SCAN LINE ----- */
+    .scan-line {
+      position:absolute;
+      top:0; left:0;
+      width:100%; height:2px;
+      background: rgba(0,255,136,0.4);
+      animation: scan 2.5s linear infinite;
+      z-index:3;
+    }
+    @keyframes scan {
+      0% { top:0; }  100% { top:100%; }
+    }
+
+    /* ----- MOVEMENT BOX ----- */
+    .movement-box {
+      position:absolute;
+      border:2px solid #00ff88;
+      border-radius:12px;
+      background: rgba(0,255,136,0.05);
+      box-shadow:0 0 8px rgba(0,255,136,0.5);
+      transition:all .2s ease-out;
+      pointer-events:none;
+      display:flex; align-items:center; justify-content:center;
+      z-index:4;
+    }
+    .box-label {
+      font-size:.75rem;
+      color:#00ff88;
+      background:rgba(0,0,0,0.6);
+      padding:2px 6px;
+      border-radius:6px;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+
+    /* ----- CONTROLES ----- */
+    .controls {
+      display:flex;
+      gap:12px;
+      margin-top:8px;
+    }
+    .btn {
+      flex:1;
+      padding:10px;
+      font-size:.9rem;
+      font-weight:bold;
+      color:#1e1e1e;
+      background:#00ff88;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      transition:background .2s;
+    }
+    .btn-off {
+      background:#ff4d6d;
+      color:#1e1e1e;
+    }
+    .btn:hover {
+      opacity:.9;
+    }
+
+    /* ----- STATUS BOX ----- */
+    .status-container {
+      background:rgba(0,0,0,0.6);
+      border:1px solid #00ff88;
+      border-radius:8px;
+      padding:8px 16px;
+      margin-top:8px;
+      width:100%;
+      max-width:360px;
+      text-align:center;
+      font-size:.85rem;
+    }
+    #status { color:#00ff88; }
+    .status-pulse {
+      display:inline-block;
+      width:8px; height:8px;
+      border-radius:50%;
+      background:#00ff88;
+      margin-right:6px;
+      animation:pulse 1s infinite;
+      vertical-align:middle;
+    }
+    @keyframes pulse {
+      0%,100% { transform:scale(1); opacity:1; }
+      50% { transform:scale(1.4); opacity:.4; }
+    }
+    #error { color:#ff4d6d; margin-top:4px; font-size:.8rem; }
+
+    /* ----- INSTRUCCIONES & FEATURES ----- */
+    .instructions {
+      font-size:.8rem;
+      color:#a0a0ff;
+      line-height:1.4;
+      max-width:360px;
+      margin-top:8px;
+    }
+    .features {
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:6px;
+    }
+    .feature {
+      background:rgba(0,255,136,0.1);
+      color:#00ff88;
+      font-size:.75rem;
+      padding:4px 8px;
+      border-radius:12px;
+    }
+
+    /* ----- FOOTER ----- */
+    .footer {
+      margin-top:12px;
+      font-size:.7rem;
+      color:#8090cc;
+    }
+  </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
-    
-    <div class="container">
-        <header>
-            <h1 class="glitch-text" data-text="VIGILANCIA FACIAL">VIGILANCIA FACIAL</h1>
-            <p class="subtitle">Recuadro verde preciso sobre movimientos faciales</p>
-        </header>
-        
-        <div class="camera-frame">
-            <video id="videoElement" autoplay playsinline muted></video>
-            <canvas id="overlayCanvas"></canvas>
-            <div class="scan-line"></div>
-            <div id="movementBox" class="movement-box">
-                <div class="box-pulse"></div>
-                <div class="box-label">MOVIMIENTO</div>
-            </div>
-        </div>
-        
-        <div class="controls">
-            <button id="startButton" class="btn">ACTIVAR VIGILANCIA</button>
-            <button id="stopButton" class="btn btn-off">DESACTIVAR</button>
-        </div>
-        
-        <div class="status-container">
-            <div id="status"><span class="status-pulse"></span> Esperando activación</div>
-            <div id="error"></div>
-        </div>
-        
-        <div class="instructions">
-            <p>Este filtro detecta tu rostro y muestra un recuadro verde sobre la zona con mayor movimiento.</p>
-            <p>Mueve tus cejas, ojos o boca para ver el efecto de vigilancia.</p>
-            
-            <div class="features">
-                <div class="feature">Detección precisa</div>
-                <div class="feature">Recuadro verde</div>
-                <div class="feature">Movimiento facial</div>
-                <div class="feature">Efecto vigilancia</div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            Filtro de vigilancia facial con tecnología MediaPipe
-        </div>
+  <div class="container">
+    <header>
+      <h1>Vigilancia Facial</h1>
+      <p class="subtitle">Escaneo algorítmico en tiempo real</p>
+    </header>
+
+    <div class="camera-frame">
+      <video id="videoElement" autoplay playsinline muted></video>
+      <canvas id="overlayCanvas"></canvas>
+      <div class="scan-line"></div>
+      <div id="movementBox" class="movement-box">
+        <div class="box-label">MOVIMIENTO</div>
+      </div>
     </div>
+
+    <div class="controls">
+      <button id="startButton" class="btn">Activar</button>
+      <button id="stopButton" class="btn btn-off">Detener</button>
+    </div>
+
+    <div class="status-container">
+      <div id="status">
+        <span class="status-pulse"></span> Esperando activación
+      </div>
+      <div id="error"></div>
+    </div>
+
+    <div class="instructions">
+      <p>Mueve tu rostro para que el filtro detecte la zona de mayor actividad.</p>
+    </div>
+
+    <div class="features">
+      <div class="feature">Precisión Alta</div>
+      <div class="feature">Rastro Verde</div>
+      <div class="feature">Escaneo Continuo</div>
+    </div>
+
+    <div class="footer">
+      Basado en MediaPipe FaceMesh
+    </div>
+  </div>
 
     <!-- Incluimos MediaPipe para detección facial -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
