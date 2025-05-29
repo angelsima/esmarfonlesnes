@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Publico, luego existo</title>
+  <style>
+    :root {
+      --accent: #f5a623;
+      --bg: #fffdf8;
+      --text: #1d1d1f;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    #frase {
+      font-size: 2rem;
+      max-width: 80%;
+      padding: 2rem;
+      cursor: pointer;
+      transition: opacity 0.4s ease;
+      line-height: 1.5;
+      color: var(--accent);
+    }
+
+    #frase:hover {
+      opacity: 0.8;
+    }
+
+    .muted {
+      font-size: 1rem;
+      color: #999;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div id="frase" onclick="mostrarFrase()">Publico, luego existo.</div>
+    <div class="muted">Haz clic o espera.</div>
+  </div>
+
+  <script>
+    const frases = [
+      "Publico, luego existo.",
+      "Luego publico. También existo.",
+      "Publico el ego: existo.",
+      "L'ego público",
+      "¡Público! ¡Éxito!",
+      "Público luego éxito luego público luego",
+      "¿Publico o existo?",
+      "Éxito púbico.",
+      "El ego, el éxito, el público"
+    ];
+
+    let index = Math.floor(Math.random() * frases.length);
+
+    function mostrarFrase() {
+      index = (index + 1) % frases.length;
+      const fraseDiv = document.getElementById("frase");
+      fraseDiv.style.opacity = 0;
+      setTimeout(() => {
+        fraseDiv.textContent = frases[index];
+        fraseDiv.style.opacity = 1;
+      }, 300);
+    }
+
+    // Cambio automático cada 7 segundos
+    setInterval(mostrarFrase, 7000);
+  </script>
+</body>
+</html>
