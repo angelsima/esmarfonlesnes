@@ -11,6 +11,7 @@
       font-family: 'IBM Plex Mono', monospace;
       background: #1e1e1e;
       color: #e0e0e0;
+          text-align: center;
       display:flex; flex-direction:column;
       align-items:center; justify-content:center;
       min-height:100vh; overflow:hidden;
@@ -26,6 +27,7 @@
 
     header h1 {
       font-size:1.8rem;
+        color: #e0e0e0;
        -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing:1px;
@@ -127,16 +129,11 @@
     }
     #error { color:#ff4d6d; margin-top:4px; font-size:.8rem }
 
-    /* ----- INSTRUCCIONES & FEATURES ----- */
-    .instructions { font-size:.8rem; color:#a0a0ff; line-height:1.4; max-width:360px; margin-top:8px }
-    .features { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px }
+       .features { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; align-items:center; justify-content:center;}
     .feature {
       background:rgba(0,255,136,0.1); color:#00ff88;
       font-size:.75rem; padding:4px 8px; border-radius:12px;
     }
-
-    /* ----- FOOTER ----- */
-    .footer { margin-top:12px; font-size:.7rem; color:#8090cc }
 
   </style>
 </head>
@@ -168,19 +165,12 @@
       <div id="error"></div>
     </div>
 
-    <div class="instructions">
-      <p>Mueve tu rostro para que el filtro detecte la zona de mayor actividad.</p>
-    </div>
-
     <div class="features">
-      <div class="feature">Precisión Alta</div>
-      <div class="feature">Rastro Verde</div>
-      <div class="feature">Escaneo Continuo</div>
+      <div class="feature">Targeting > accurate !important</div>
+      <div class="feature">Prints: #green</div>
+      <div class="feature">Scan grain > high</div>
     </div>
 
-    <div class="footer">
-      Basado en MediaPipe FaceMesh
-    </div>
   </div>
 
   <!-- MediaPipe libs... -->
@@ -202,12 +192,12 @@
     let faceMesh, camera, detectionActive=false, lastPositions={}, lastMovementTime=0;
 
     async function initFaceMesh() {
-      statusEl.innerHTML = '<span class="status-pulse"></span> Inicializando detector...';
+      statusEl.innerHTML = '<span class="status-pulse"></span> Initializing detector...';
       faceMesh = new FaceMesh({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
       faceMesh.setOptions({ maxNumFaces:1, refineLandmarks:true, minDetectionConfidence:0.5, minTrackingConfidence:0.5 });
       faceMesh.onResults(onResults);
 
-      statusEl.innerHTML = '<span class="status-pulse"></span> Iniciando cámara...';
+      statusEl.innerHTML = '<span class="status-pulse"></span> Initalizing scan...';
       camera = new Camera(videoElement, {
         onFrame: async () => detectionActive && await faceMesh.send({image:videoElement}),
         width:640, height:480, facingMode:'user'
@@ -215,7 +205,7 @@
       try {
         await camera.start();
         detectionActive = true;
-        statusEl.innerHTML = '<span class="status-pulse"></span> Vigilancia ACTIVA';
+        statusEl.innerHTML = '<span class="status-pulse"></span> Surveillance ON';
       } catch(e) {
         statusEl.innerHTML = '<span class="status-pulse"></span> Error al iniciar';
         errorEl.textContent = e.message;
@@ -306,7 +296,7 @@
       camera?.stop();
       ctx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
       movementBox.style.display='none';
-      statusEl.innerHTML = '<span class="status-pulse"></span> Vigilancia DETENIDA';
+      statusEl.innerHTML = '<span class="status-pulse"></span> Surveillance INTERRUPTED!';
     });
   </script>
 </body>
