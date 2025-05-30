@@ -5,14 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dispárate un mensaje</title>
   <style>
-    body {
+    :root {
+      --bg: #1C1C1C;
+      --text: #CCCCCC;
+      --highlight: #4D94FF;
+      --ironía: #FFB3C1;
+      --mono: 'Courier New', monospace;
+      --serif: Georgia, serif;
+    }
+
+    html, body {
       margin: 0;
       padding: 0;
-      background-color: #eaf1f8;
-      color: #444c55;
-      font-family: 'Courier New', monospace;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--serif);
       line-height: 1.7;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -20,23 +29,23 @@
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(6px);
-      border: 1px solid #c9d6e3;
-      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(8px);
+      border: 1px solid #333;
+      border-radius: 16px;
       max-width: 720px;
       padding: 2rem;
-      box-shadow: 0 4px 12px rgba(0, 30, 60, 0.1);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
     }
 
     h1 {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       margin-bottom: 1.5rem;
-      color: #222e38;
+      color: var(--highlight);
+      font-family: var(--mono);
       text-align: center;
-      font-weight: 500;
-      text-transform: uppercase;
       letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
 
     p {
@@ -48,6 +57,7 @@
       body {
         padding: 1rem;
       }
+
       .container {
         padding: 1.2rem;
       }
