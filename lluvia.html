@@ -8,14 +8,17 @@
     html, body {
       margin: 0;
       padding: 0;
-      background: white;
-      overflow: hidden;
-      height: 100%;
+       background: #1C1C1C;
+  overflow: hidden;
+  height: 100%;
+  font-family: 'Courier New', monospace;
     }
 
     canvas {
-      display: block;
-    }
+  display: block;
+  /* capa de grano */
+  background: url('data:image/png;base64,iVBORw0…') repeat;
+}
   </style>
 </head>
 <body>
@@ -35,8 +38,8 @@
   
   // Configuración visual
   const fontSize = 24;
-  const velocidad = 2;
-  const colorAzul = "#0066cc"; // Tonos azules alternativos: #1a75ff, #0052cc, #3399ff
+  const velocidad = 3;
+ const colorAzul = "#4D94FF"; // Tonos azules alternativos: #1a75ff, #0052cc, #3399ff
 
   // Array para guardar las posiciones de cada palabra
   const palabrasPosiciones = palabras.map((_, index) => ({
@@ -49,7 +52,7 @@
     // Fondo blanco sólido (sin transparencia para eliminar el efecto de barrido)
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+ ctx.globalAlpha = 0.8 + Math.random()*0.2;
     ctx.fillStyle = colorAzul;
     ctx.font = `bold ${fontSize}px 'Courier New', monospace`;
     ctx.textAlign = "center";
@@ -68,8 +71,8 @@
         pos.x = (index + 1) * (canvas.width / (palabras.length + 1));
       }
     });
-
-    requestAnimationFrame(dibujarLluvia);
+ctx.globalAlpha = 1;
+  requestAnimationFrame(dibujarLluvia);
   }
 
   // Iniciar animación
