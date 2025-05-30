@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lluvia de palabras</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
-       background: #1C1C1C;
-  overflow: hidden;
-  height: 100%;
-  font-family: 'Courier New', monospace;
+      background: #1C1C1C;
+      overflow: hidden;
+      height: 100%;
+      font-family: 'Courier New', monospace;
     }
 
     canvas {
-  display: block;
-  /* capa de grano */
-  background: url('data:image/png;base64,iVBORw0…') repeat;
-}
+      display: block;
+      background: #1C1C1C;
+    }
   </style>
 </head>
 <body>
@@ -28,61 +27,49 @@
   const canvas = document.getElementById('matrixCanvas');
   const ctx = canvas.getContext('2d');
 
-  // Ajustar el canvas al tamaño de la pantalla
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  // Frase completa que caerá
   const frase = "Veo la lluvia tras mi esmarfon ";
   const palabras = frase.split(" ");
-  
-  // Configuración visual
   const fontSize = 24;
   const velocidad = 3;
- const colorAzul = "#4D94FF"; // Tonos azules alternativos: #1a75ff, #0052cc, #3399ff
+  const colorAzul = "#4D94FF";
 
-  // Array para guardar las posiciones de cada palabra
   const palabrasPosiciones = palabras.map((_, index) => ({
     x: (index + 1) * (canvas.width / (palabras.length + 1)),
-    y: -Math.random() * canvas.height, // Comienzan en posiciones aleatorias arriba
+    y: -Math.random() * canvas.height,
     velocidad: 1 + Math.random() * velocidad
   }));
 
   function dibujarLluvia() {
-    // Fondo blanco sólido (sin transparencia para eliminar el efecto de barrido)
-ctx.fillStyle = "#1C1C1C";
+    // Fondo parcialmente transparente para efecto de rastro
+    ctx.fillStyle = "rgba(28,28,28,0.08)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
- ctx.globalAlpha = 0.8 + Math.random()*0.2;
+
     ctx.fillStyle = colorAzul;
     ctx.font = `bold ${fontSize}px 'Courier New', monospace`;
     ctx.textAlign = "center";
 
-    // Dibujar cada palabra en su posición
     palabras.forEach((palabra, index) => {
       const pos = palabrasPosiciones[index];
       ctx.fillText(palabra, pos.x, pos.y);
-      
-      // Mover la palabra hacia abajo
       pos.y += pos.velocidad;
-      
-      // Reiniciar posición cuando sale de la pantalla
+
       if (pos.y > canvas.height + fontSize) {
         pos.y = -fontSize;
         pos.x = (index + 1) * (canvas.width / (palabras.length + 1));
       }
     });
-ctx.globalAlpha = 1;
-  requestAnimationFrame(dibujarLluvia);
+
+    requestAnimationFrame(dibujarLluvia);
   }
 
-  // Iniciar animación
   dibujarLluvia();
 
-  // Redimensionar al cambiar tamaño de ventana
   window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    // Recalcular posiciones X al redimensionar
     palabrasPosiciones.forEach((pos, index) => {
       pos.x = (index + 1) * (canvas.width / (palabras.length + 1));
     });
@@ -90,3 +77,4 @@ ctx.globalAlpha = 1;
 </script>
 </body>
 </html>
+
