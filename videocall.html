@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Videollamada</title>
+  <style>
+    :root {
+      --bg: #2A2A2A;
+      --text: #CCCCCC;
+      --highlight: #4D94FF;
+      --ironía: #FFB3C1;
+      --font-mono: 'Courier New', monospace;
+      --font-serif: Georgia, serif;
+    }
+    body {
+      margin: 0; padding: 2rem;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-serif);
+      line-height: 1.6;
+    }
+    .transcript {
+      max-width: 600px;
+      margin: auto;
+      border-left: 4px solid var(--highlight);
+      padding-left: 1rem;
+    }
+    .line {
+      margin: 1rem 0;
+      position: relative;
+      padding: .5rem;
+      border-radius: 8px;
+      transition: filter .15s;
+    }
+    .line:hover {
+      filter: url('#glitch'); /* referencia al filtro SVG glitch */
+    }
+    .speaker {
+      font-family: var(--font-mono);
+      font-weight: bold;
+      color: var(--highlight);
+      display: block;
+      margin-bottom: .3rem;
+    }
+    .message {
+      padding-left: 1rem;
+    }
+    .ellipsis {
+      opacity: .4;
+      font-style: italic;
+    }
+    /* Filtro SVG para glitch */
+  </style>
+</head>
+<body>
+  <div class="transcript">
+    <div class="line">
+      <span class="speaker">SARA:</span>
+      <span class="message">¡Holaaa! ¿Cómo estáaaas?</span>
+    </div>
+    <div class="line ellipsis">
+      <span class="message">…</span>
+    </div>
+    <div class="line">
+      <span class="speaker">SARA:</span>
+      <span class="message">¿Hola?</span>
+    </div>
+    <div class="line ellipsis">
+      <span class="message">…</span>
+    </div>
+   <div class="line">
+      <span class="speaker">SARA:</span>
+      <span class="message">¿Jaime? ¿Hola? No te escucho.</span>
+    </div> 
+<div class="line ellipsis">
+      <span class="message">…</span>
+    </div>
+   <div class="line">
+      <span class="speaker">SARA:</span>
+      <span class="message">Te veo, pero no te escucho.</span>
+    </div> 
+<div class="line ellipsis">
+      <span class="message">…</span>
+    </div>
+   <div class="line">
+      <span class="speaker">SARA:</span>
+      <span class="message">¿Me escuchas tú a mí? Hol. Holaaa
+</span>
+    </div> 
+    <div class="line ellipsis">
+      <span class="message">…</span>
+    </div>
+   <div class="line">
+      <span class="speaker">SARA:</span>
+      <span class="message">No, nada. No te</span>
+    </div> 
+    <div class="line">
+      <span class="speaker">JAIME:</span>
+      <span class="message">¿Hola? ¿Me escuch?</span>
+    </div> 
+    <div class="line">
+      <span class="speaker">SARA:</span>
+      <span class="message">escucho. Espera un momento…
+</span>
+    </div> 
+    <div class="line">
+      <span class="speaker">JAIME:</span>
+      <span class="message">escuchas?</span>
+    </div> 
+    <div class="line">
+      <span class="speaker">SARA:</span>
+      <span class="message">¡Ahora sí!</span>
+    </div> 
+    <div class="line">
+      <span class="speaker">JAIME:</span>
+      <span class="message">Sí, yo a ti te escucho.</span>
+    </div> 
+    <div class="line ellipsis">
+      <span class="message">…</span>
+    </div>
+   <div class="line">
+      <span class="speaker">SARA:</span>
+      <span class="message">¿Cómo estás guapo?</span>
+    </div> 
+    <div class="line">
+      <span class="speaker">JAIME:</span>
+      <span class="message">Vale, me espero.</span>
+    </div>
+     <div class="line ellipsis">
+      <span class="message">…</span>
+    </div>
+   <div class="line">
+      <span class="speaker">SARA:</span>
+      <span class="message">¿Jaime?
+</span>
+    </div> 
+     <div class="line ellipsis">
+      <span class="message">…</span>
+    </div>
+   <div class="line">
+      <span class="speaker">JAIME:</span>
+      <span class="message">¡Holaa! ¡Pues muy bien!</span>
+    </div> 
+  </div>
+
+  <!-- Definición del filtro glitch -->
+  <svg width="0" height="0">
+    <filter id="glitch">
+      <feColorMatrix in="SourceGraphic"
+        type="matrix"
+        values="1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 1 0" />
+      <feOffset dx="1" dy="0" result="off1"/>
+      <feOffset dx="-1" dy="0" result="off2"/>
+      <feMerge>
+        <feMergeNode in="off1"/>
+        <feMergeNode in="off2"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </svg>
+</body>
+</html>
