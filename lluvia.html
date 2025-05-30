@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lluvia de palabras</title>
   <style>
     html, body {
@@ -32,49 +32,76 @@
 
   const frase = "Veo la lluvia tras mi esmarfon ";
   const palabras = frase.split(" ");
-  const fontSize = 24;
-  const velocidad = 3;
-  const colorAzul = "#4D94FF";
+  const color = "#4D94FF";
+  const maxTrail = 8;
 
-  const palabrasPosiciones = palabras.map((_, index) => ({
-    x: (index + 1) * (canvas.width / (palabras.length + 1)),
-    y: -Math.random() * canvas.height,
-    velocidad: 1 + Math.random() * velocidad
-  }));
+  class Palabra {
+    constructor(texto, x) {
+      this.texto = texto;
+      this.x = x;
+      this.reset();
+    }
 
-  function dibujarLluvia() {
-    // Fondo parcialmente transparente para efecto de rastro
-    ctx.fillStyle = "rgba(28,28,28,0.08)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    reset() {
+      this.y = -Math.random() * canvas.height;
+      this.velocidad = 1 + Math.random() * 2.5;
+      this.trail = []; // [{y, size, alpha}]
+    }
 
-    ctx.fillStyle = colorAzul;
-    ctx.font = `bold ${fontSize}px 'Courier New', monospace`;
-    ctx.textAlign = "center";
+    actualizar() {
+      // Añadir nueva posición al rastro
+      this.trail.unshift({
+        y: this.y,
+        size: 16 + Math.random() * 14,
+        alpha: 1.0
+      });
 
-    palabras.forEach((palabra, index) => {
-      const pos = palabrasPosiciones[index];
-      ctx.fillText(palabra, pos.x, pos.y);
-      pos.y += pos.velocidad;
-
-      if (pos.y > canvas.height + fontSize) {
-        pos.y = -fontSize;
-        pos.x = (index + 1) * (canvas.width / (palabras.length + 1));
+      // Limitar largo del rastro
+      if (this.trail.length > maxTrail) {
+        this.trail.pop();
       }
-    });
 
-    requestAnimationFrame(dibujarLluvia);
+      this.y += this.velocidad;
+
+      if (this.y > canvas.height + 50) {
+        this.reset();
+      }
+    }
+
+    dibujar() {
+      this.trail.forEach((paso, i) => {
+        const fade = paso.alpha * (1 - i / maxTrail);
+        ctx.font = `bold ${paso.size}px 'Courier New', monospace`;
+        ctx.fillStyle = `rgba(77,148,255,${fade.toFixed(2)})`;
+        ctx.fillText(this.texto, this.x, paso.y);
+      });
+    }
   }
 
-  dibujarLluvia();
+  // Crear las palabras espaciadas
+  const instancias = palabras.map((p, i) => {
+    const x = (i + 1) * (canvas.width / (palabras.length + 1));
+    return new Palabra(p, x);
+  });
+
+  function animar() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    instancias.forEach(p => {
+      p.actualizar();
+      p.dibujar();
+    });
+    requestAnimationFrame(animar);
+  }
+
+  animar();
 
   window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    palabrasPosiciones.forEach((pos, index) => {
-      pos.x = (index + 1) * (canvas.width / (palabras.length + 1));
+    instancias.forEach((p, i) => {
+      p.x = (i + 1) * (canvas.width / (palabras.length + 1));
     });
   });
 </script>
 </body>
 </html>
-
